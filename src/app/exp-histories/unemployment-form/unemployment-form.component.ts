@@ -24,7 +24,7 @@ export class UnemploymentFormComponent implements OnInit, OnChanges {
     this.unemploymentForm = this.fb.group({
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
-      comments: [''],
+      comments: ['', Validators.required],
     });
   }
 

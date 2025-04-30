@@ -37,6 +37,8 @@ import { SinglePageComponent } from './single-page/single-page.component';
 import { PagenPageComponent } from './pagen-page/pagen-page.component';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import {HTTPFA} from '../../models/start-data';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dform',
@@ -44,7 +46,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./dform.component.scss'],
   standalone: true,
   imports: [
-    ReactiveFormsModule,
+    ReactiveFormsModule, 
     FormsModule,
     NgIf,
     NgForOf,
@@ -53,7 +55,8 @@ import { Subscription } from 'rxjs';
     NgTemplateOutlet,
     PagenPageComponent,
     SinglePageComponent,
-    CpipSummaryPipe
+    CpipSummaryPipe,
+    CommonModule
   ]
 })
 export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
@@ -61,6 +64,7 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
 
   public ssn: string = '';
   public bday: string = '';
+  public param: string = 'default';   
   public maxItems: number = 15;
   public isEditing: boolean = false;
   public selectedIndex: number | null = null;
@@ -81,7 +85,7 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
     cd: ChangeDetectorRef,
     private formDataService: FormDataService,
     private http: HttpClient,
-    private fb: FormBuilder,
+    private fb: FormBuilder,   
     private toastr: ToastrService,
     @Optional() @Inject('ssn') ssnToken: string,
     @Optional() @Inject('bday') bdayToken: string,
@@ -89,16 +93,19 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   ) {
     super(dinFormService, cd);
 
-    // Инициализация ssn/bday (если на клиенте)
+    // Инициализация ssn/bday/param
     if (isPlatformBrowser(this.platformId)) {
       this.ssn = ssnToken || localStorage.getItem('currentUserSSN') || '';
       this.bday = bdayToken || localStorage.getItem('currentUserBday') || '';
+      this.param = localStorage.getItem('currentUserParam') || 'default';
     } else {
       this.ssn = ssnToken || '';
       this.bday = bdayToken || '';
+       this.param = 'default'
     }
 
-    // Пустая форма (для редактирования конкретного элемента FormArray)
+
+
     this.editForm = this.fb.group({});
   }
 
@@ -131,7 +138,8 @@ private loadPrefillData(): void {
     return;
   }
 
-  const url = `http://localhost:8000/api/form-data/${this.componentName}/${this.ssn}`;
+  const url = HTTPFA.FORM_DATA(this.componentName, this.ssn, this.bday, this.param);
+
   //console.log('[DformComponent] Loading prefill data from:', url);
 
   // 1. Ставим таймер на 10с. Если ответа не будет, покажем пустую форму
@@ -347,6 +355,7 @@ private loadPrefillData(): void {
   const payload = {
     ssn: this.ssn,
     bday: this.bday,
+    param: this.param,
     items: formArray.value
   };
 
@@ -384,6 +393,7 @@ private loadPrefillData(): void {
     const payload = {
       ssn: this.ssn,
       bday: this.bday,
+      param: this.param,
       items: formArray.value // вся коллекция
     };
     this.formDataService.createFormData(this.componentName, payload).subscribe({
@@ -416,42 +426,65 @@ private loadPrefillData(): void {
   }
 
   override onSubmitFormArray(): void {
-    if (this.form.invalid) {
-      this.markFormGroupTouched(this.form);
-      this.toastr.error('Please fill all required fields.');
-      return;
-    }
-    const formArray = this.form as FormArray;
-    const payload = {
-      ssn: this.ssn,
-      bday: this.bday,
-      items: formArray.value
-    };
-    this.formDataService.createFormData(this.componentName, payload).subscribe({
-      next: () => {
-        this.toastr.success('Form submitted successfully.');
-        this.isSurveySaved = true;
-      },
-      error: (error: any) => {
-        console.error('[DformComponent] onSubmitFormArray error:', error);
-        this.toastr.error('Failed to submit form.');
-      }
-    });
+  if (!(this.form instanceof FormArray)) {
+    console.error('[DformComponent] Form is not a FormArray.');
+    return;
   }
+
+  const formArray = this.form as FormArray;
+
+  formArray.controls.forEach(ctrl => ctrl.updateValueAndValidity());
+
+  if (formArray.invalid || formArray.length === 0) {
+    this.markFormGroupTouched(formArray);
+    this.toastr.error('Please complete all surveys before submitting.');
+    return;
+  }
+
+  const payload = {
+    ssn: this.ssn,
+    bday: this.bday,
+    param: this.param,
+    items: formArray.value
+  };
+
+  this.formDataService.createFormData(this.componentName, payload).subscribe({
+    next: () => {
+      this.toastr.success('All surveys submitted successfully.');
+      this.isSurveySaved = true;
+    },
+    error: (error: any) => {
+      console.error('[DformComponent] onSubmitFormArray error:', error);
+      this.toastr.error('Failed to submit surveys.');
+    }
+  });
+}
+
 
   override onSubmitSingleForm(): void {
   const group = this.getFormGroup() as FormGroup;
-  if (!group || group.invalid) {
+
+  if (!group) {
+    console.error('[DformComponent] No FormGroup found.');
+    return;
+  }
+
+  group.updateValueAndValidity();
+
+  if (group.invalid) {
     this.markFormGroupTouched(group);
     this.toastr.error('Please fill all required fields.');
     return;
   }
 
-  // ① очищаем payload от пустых/сиротских полей
   let payloadCore = this.preparePayload(group.value);
   payloadCore = this.removeOrphanControlsFromPayload(group, payloadCore);
 
-  // ② если поле state исчезло (страна без штатов) – добавляем пустую строку
+  if (!payloadCore || Object.keys(payloadCore).length === 0) {
+    this.toastr.error('Form is empty. Please fill it.');
+    return;
+  }
+
   if (!('state' in payloadCore)) {
     payloadCore.state = '';
   }
@@ -459,6 +492,7 @@ private loadPrefillData(): void {
   const payload = {
     ssn: this.ssn,
     bday: this.bday,
+    param: this.param,
     ...payloadCore
   };
 
@@ -473,6 +507,7 @@ private loadPrefillData(): void {
     }
   });
 }
+
 
 
   private markFormGroupTouched(formGroup: FormGroup | FormArray): void {

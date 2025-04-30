@@ -10,6 +10,8 @@ import {
 } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-single-page',
@@ -469,102 +471,70 @@ export class SinglePageComponent implements OnInit, OnDestroy, AfterViewInit {
   currentStates: string[] = [];
   private yesnoSub?: Subscription;
 
+  constructor(private cd: ChangeDetectorRef) {}
+
   ngOnInit(): void {
-    setTimeout(() => {
-      const ctrlName = this.el?.formControlName || this.el?.id;
-      if (!ctrlName || !this.form) return;
+    const ctrlName = this.el?.formControlName || this.el?.id;
+    if (!ctrlName || !this.form) return;
 
-      const ctrl = this.form.get(ctrlName);
-      if (!ctrl) {
-        //console.warn(`[SinglePageComponent] Контрол '${ctrlName}' не найден в форме.`);
-        return;
-      }
+    const ctrl = this.form.get(ctrlName);
+    if (!ctrl) return;
 
-      const rawVal = ctrl.value;
-      let normalizedVal: string = '';
-      if (typeof rawVal === 'object' && rawVal !== null && 'value' in rawVal) {
-        normalizedVal = String(rawVal.value).toLowerCase();
-      } else if (typeof rawVal === 'string') {
-        normalizedVal = rawVal.toLowerCase();
-      }
+    const rawVal = ctrl.value;
+    let normalizedVal = '';
+    if (typeof rawVal === 'object' && rawVal !== null && 'value' in rawVal) {
+      normalizedVal = String(rawVal.value).toLowerCase();
+    } else if (typeof rawVal === 'string') {
+      normalizedVal = rawVal.toLowerCase();
+    }
 
-      if (this.el?.type === 'countryDropdown') {
-        const selectedCountry = this.form.get(ctrlName)?.value;
+    if (this.el?.type === 'countryDropdown') {
+      Promise.resolve().then(() => {
         this.currentStates = this.getStatesForSelectedCountry();
-
-        //console.log(`[SinglePageComponent] 🌍 Init countryDropdown "${ctrlName}" value="${selectedCountry}"`);
-        //console.log(`[SinglePageComponent] ⛳ Initial state options:`, this.currentStates);
-
-        const stateCtrl = this.form.get('state');
-        if (stateCtrl) {
-          //console.log(`[SinglePageComponent] 📝 Current "state" control value:`, stateCtrl.value);
-          //console.log(`[SinglePageComponent] 🧩 "state" control options length:`, this.currentStates.length);
-          //console.log(`[SinglePageComponent] 🧩 "state" control exists in form:`, true);
-        } else {
-          //console.log(`[SinglePageComponent] ⚠️ "state" control not found in form.`);
-        }
-      }
-
-      if (normalizedVal === 'yes' || normalizedVal === 'no') {
-        this.yesNoStates[ctrlName] = normalizedVal;
-      }
-
-      this.yesnoSub = ctrl.valueChanges.subscribe((value: any) => {
-        let newVal: string = '';
-        if (typeof value === 'object' && value !== null && 'value' in value) {
-          newVal = String(value.value).toLowerCase();
-        } else if (typeof value === 'string') {
-          newVal = value.toLowerCase();
-        }
-        if (newVal === 'yes' || newVal === 'no') {
-          this.yesNoStates[ctrlName] = newVal;
-          //console.log(`[SinglePageComponent] ✅ yesno changed: ${ctrlName} = ${newVal}`);
-        }
+        this.cd.detectChanges();
       });
+    }
+
+    if (normalizedVal === 'yes' || normalizedVal === 'no') {
+      this.yesNoStates[ctrlName] = normalizedVal;
+    }
+
+    this.yesnoSub = ctrl.valueChanges.subscribe((value: any) => {
+      let newVal = '';
+      if (typeof value === 'object' && value !== null && 'value' in value) {
+        newVal = String(value.value).toLowerCase();
+      } else if (typeof value === 'string') {
+        newVal = value.toLowerCase();
+      }
+      if (newVal === 'yes' || newVal === 'no') {
+        this.yesNoStates[ctrlName] = newVal;
+      }
     });
   }
 
   ngAfterViewInit(): void {
     if (this.el?.type === 'countryDropdown') {
-      const ctrlName = this.el?.formControlName || this.el?.id;
-      this.currentStates = this.getStatesForSelectedCountry();
-
-      setTimeout(() => {
-        const stateCtrl = this.form.get('state');
-        if (stateCtrl) {
-          //console.log(`[SinglePageComponent] 📝 [ngAfterViewInit] "state" control value:`, stateCtrl.value);
-          //console.log(`[SinglePageComponent] 🧪 [ngAfterViewInit] Available states:`, this.currentStates);
-        } else {
-          //console.warn(`[SinglePageComponent] ⚠️ [ngAfterViewInit] "state" control not found in form.`);
-        }
+      Promise.resolve().then(() => {
+        this.currentStates = this.getStatesForSelectedCountry();
+        this.cd.detectChanges();
       });
     }
   }
 
   ngOnDestroy(): void {
-    if (this.yesnoSub) {
-      this.yesnoSub.unsubscribe();
-    }
+    this.yesnoSub?.unsubscribe();
   }
 
-  onCountryChangeAndUpdate(event: Event) {
+  onCountryChangeAndUpdate(event: Event): void {
     this.onCountryChange(event);
-    this.currentStates = this.getStatesForSelectedCountry();
-    //console.log('[SinglePageComponent] 🔄 Страна изменена, штаты обновлены:', this.currentStates);
-
-    const stateCtrl = this.form.get('state');
-    if (stateCtrl) {
-      //console.log('[SinglePageComponent] 🔎 Текущее значение контрола "state":', stateCtrl.value);
-    } else {
-      //console.warn('[SinglePageComponent] ⚠️ Контрол "state" не найден в форме.');
-    }
+    Promise.resolve().then(() => {
+      this.currentStates = this.getStatesForSelectedCountry();
+      this.cd.detectChanges();
+    });
   }
 
-  onYesNoChange(el: any, value: string) {
+  onYesNoChange(el: any, value: string): void {
     const ctrlName = el?.formControlName || el?.id;
     this.yesNoStates[ctrlName] = value;
   }
 }
-
-
-

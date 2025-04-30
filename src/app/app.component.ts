@@ -1,21 +1,22 @@
-import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { StartComponent } from './base/start/start.component';
 import { ReqComponent } from './base/req/req.component';
 import { UserAuthComponent } from './user-auth/user-auth.component';
 import { PrivacyPolicyComponent } from './base/privacy-policy/privacy-policy.component';
-import { HistoryFormComponent } from './history-form/history-form.component';
+import { HistoryFormComponent } from './history-form/history-form.component'; // 👈 добавляем сюда
 import { NgIf } from '@angular/common';
 import { SsnMaskDirective } from './dirs/ssn-mask.directive';
+import { RequirementsService } from './services/requirements.service';
+import { DinFormJsonWorkerService } from './services/din-form-json-worker.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterModule, // Для маршрутизации
     StartComponent,
     ReqComponent,
     UserAuthComponent,
-    HistoryFormComponent,
+    HistoryFormComponent, // 👈 обязательно импортируем
     PrivacyPolicyComponent,
     NgIf,
     SsnMaskDirective,
@@ -23,98 +24,83 @@ import { SsnMaskDirective } from './dirs/ssn-mask.directive';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  public index = 1; // Текущий индекс
-  public currentComponent: any = null; // Текущий отображаемый компонент (на основе массива components)
-  public isPrivacyPolicyVisible = false; // Флаг отображения политики конфиденциальности
+export class AppComponent implements OnInit {
+  index = 1;
+  ready = false;
+  currentComponent: any = null;
+  isPrivacyPolicyVisible = false;
+  showHistoryForm = false; // 👈 новый флаг для переключения на HistoryForm
 
-  // Массив компонентов для навигации (0-й индекс – заглушка)
-  private readonly components = [
+  private components = [
     null,
-    StartComponent,
-    ReqComponent,
-    UserAuthComponent,
+    StartComponent,    // 1
+    ReqComponent,      // 2
+    UserAuthComponent, // 3
   ];
 
-  // Маршруты для навигации
-  private readonly routes = [
-    '/',            // Главная страница
-    '/req',         // Страница требований
-    '/auth',        // Аутентификация
-    '/history-form',// История
-  ];
+  constructor(
+    private requirementsService: RequirementsService,
+    private dinFormService: DinFormJsonWorkerService,
+    private cdr: ChangeDetectorRef,
+  ) {}
 
-  constructor(private router: Router) {
+  ngOnInit() {
+    const param = this.getParamFromUrl();
+    localStorage.setItem('param', param);
+    console.log(`[AppComponent] URL param = ${param}`);
+    this.requirementsService.setParam(param);
+    this.dinFormService.setRequirementsPath(`/requirements_${param}.json`);
     this.updateComponent();
   }
 
-  /**
-   * Переход на следующий компонент
-   */
-  public next(): void {
+  private getParamFromUrl(): string {
+    const m = window.location.search.match(/[?&]param=([^&]+)/);
+    return m ? decodeURIComponent(m[1]) : 'default';
+  }
+
+  private updateComponent() {
+    this.ready = false;
+    setTimeout(() => {
+      this.currentComponent = this.components[this.index] || null;
+      this.ready = true;
+      this.cdr.detectChanges();
+      console.log(`[AppComponent] Showing component index=${this.index}`);
+    }, 0);
+  }
+
+  canShowPrev(): boolean {
+    return this.index >= 2 && this.index <= 3;
+  }
+
+  canShowNext(): boolean {
+    return this.index >= 1 && this.index <= 2;
+  }
+
+  prev(): void {
+    if (this.canShowPrev()) {
+      this.index--;
+      this.updateComponent();
+    }
+  }
+
+  next(): void {
     if (this.canShowNext()) {
       this.index++;
       this.updateComponent();
-      this.router.navigate([this.routes[this.index - 1]]);
     }
   }
 
-  /**
-   * Переход на предыдущий компонент
-   */
-  public red(): void {
-    if (this.canShowPreview()) {
-      this.index--;
-      this.updateComponent();
-      this.router.navigate([this.routes[this.index - 1]]);
-    }
-  }
-
-  /**
-   * Обновление текущего компонента
-   */
-  private updateComponent(): void {
-    this.currentComponent = this.components[this.index] || null;
-  }
-
-  /**
-   * Проверка, можно ли отобразить кнопку "Previous"
-   * Кнопка скрывается, если:
-   * - Текущий индекс меньше или равен 1, или
-   * - Текущий компонент – UserAuthComponent
-   */
-  public canShowPreview(): boolean {
-    if (this.components[this.index] === UserAuthComponent) {
-      return false;
-    }
-    return this.index > 1;
-  }
-
-  /**
-   * Проверка, можно ли отобразить кнопку "Next"
-   * Кнопка скрывается, если:
-   * - Текущий маршрут – "/history-form"
-   * - Или если текущий маршрут – "/auth"
-   * - Или если достигнут конец массива компонентов
-   */
-  public canShowNext(): boolean {
-    if (this.router.url === '/history-form' || this.router.url === '/auth') {
-      return false;
-    }
-    return this.index < this.components.length - 1;
-  }
-
-  /**
-   * Показ политики конфиденциальности
-   */
-  public showPrivacyPolicy(): void {
+  showPrivacyPolicy() {
     this.isPrivacyPolicyVisible = true;
   }
 
-  /**
-   * Скрытие политики конфиденциальности
-   */
-  public hidePrivacyPolicy(): void {
+  hidePrivacyPolicy() {
     this.isPrivacyPolicyVisible = false;
+  }
+
+  // 👇 Вот это добавляем!
+  onAuthSuccess() {
+    console.log('[AppComponent] Authentication success received, showing HistoryFormComponent');
+    this.showHistoryForm = true;
   }
 }

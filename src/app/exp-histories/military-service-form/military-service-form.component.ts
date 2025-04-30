@@ -31,7 +31,7 @@ export class MilitaryServiceFormComponent implements OnInit {
       countryMilit: ['', Validators.required],
       stateMilit: [''],
       branch: ['', Validators.required],
-      rank: [''],
+      rank: ['', Validators.required],
       dd214: ['yes', Validators.required],
     });
   }

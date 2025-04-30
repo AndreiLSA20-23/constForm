@@ -4,6 +4,7 @@
   <ng-container *ngIf="responseData?.data; else noData">
     <span class="ms-2">SSN: <strong>{{ responseData.data.ssn }}</strong></span>,
     <span class="ms-2">DOB: <strong>{{ responseData.data.bday | date: 'dd MMM yyyy' }}</strong></span>,
+    <span class="ms-2">Bis: <strong>{{ responseData?.data?.param || 'default' }}</strong></span>,
     <span class="ms-2">Mode: <strong>{{ responseData.data.created ? 'Created' : 'Editing' }}</strong></span>
   </ng-container>
   <ng-template #noData>

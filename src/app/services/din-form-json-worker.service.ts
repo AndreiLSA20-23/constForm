@@ -112,6 +112,9 @@ const INPUT_TYPES: ElementType[] = [
   'yesno', 'signaturePad', 'tagInput',
   'countryDropdown'
 ];
+const validators: ValidatorFn[] = [];
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -120,7 +123,19 @@ export class DinFormJsonWorkerService {
   private requirementsData: RequirementsData = {};
   private elementsCache = new Map<string, ElementData[]>();
   private readonly REQUIRED_CONTROLS = ['startDate', 'endDate', 'state', 'country'];
+  
+  //Запрос пути
+  private requirementsPath = '/requirements_default.json'; // по умолчанию
 
+  setRequirementsPath(path: string) {
+    this.requirementsPath = path;
+  }
+
+  getRequirementsPath(): string {
+    return this.requirementsPath;
+  }
+  //Конец
+  
   private countryDropdownData: CountryDropdown = {
     id: 'countryDropdown1',
     type: 'countryDropdown',
@@ -189,6 +204,9 @@ export class DinFormJsonWorkerService {
     private http: HttpClient,
     private fb: FormBuilder
   ) {}
+
+
+
 
   loadRequirements(jsonPath: string): Observable<RequirementsData> {
     return new Observable((observer) => {
@@ -268,7 +286,7 @@ export class DinFormJsonWorkerService {
     if (struct.rows) {
       this.parseElementsRecursively(struct.rows, result, useCache);
     }
-    if (struct.subElements) {
+    if (struct.type !== 'yesno' && struct.subElements) {
       this.parseElementsRecursively(struct.subElements, result, useCache);
     }
     if (INPUT_TYPES.includes(struct.type)) {
@@ -294,12 +312,37 @@ export class DinFormJsonWorkerService {
     return undefined;
   }
 
+
+  cleanNulls(value: any): any {
+    if (Array.isArray(value)) {
+      return value.map(v => this.cleanNulls(v));
+    }
+    if (value !== null && typeof value === 'object') {
+      const cleaned: any = {};
+      for (const key in value) {
+        if (value.hasOwnProperty(key)) {
+          const val = value[key];
+          if (typeof val === 'boolean') {
+            cleaned[key] = val; // оставляем как есть
+          } else if (val === null || val === undefined) {
+            cleaned[key] = ''; // заменяем null/undefined на ''
+          } else {
+            cleaned[key] = this.cleanNulls(val); // рекурсивно
+          }
+        }
+      }
+      return cleaned;
+    }
+    return value === null || value === undefined ? '' : value;
+  }
+
   generateSingleFormGroup(
     struct: any,
     options: { skipDefaults?: boolean; initialValues?: any; keepNulls?: boolean; } = {}
   ): FormGroup {
     const { skipDefaults = false, initialValues = {}, keepNulls = false } = options;
-    const clonedValues = JSON.parse(JSON.stringify(initialValues));
+    const cleanedValues = this.cleanNulls(initialValues);
+    const clonedValues = JSON.parse(JSON.stringify(cleanedValues));
 
     let structForForm = struct;
     if (struct["pages"]) {
@@ -318,93 +361,88 @@ export class DinFormJsonWorkerService {
     const formElements = this.parseElementsRecursively(structForForm, [], false);
     const controls: Record<string, AbstractControl> = {};
 
-    formElements.forEach(el => {
-      const baseName = this.getControlName(el);
-      const ctrlName = el.formControlName ? baseName : this.getUniqueControlName(baseName, controls);
-      
-      let startValue = clonedValues[ctrlName];
-      if ((startValue === undefined || startValue === '') && !skipDefaults) {
-        startValue = el.defaultValue;
-      }
-      if (startValue === null && !keepNulls) {
-        startValue = '';
-      }
-      
-      switch (el.type) {
-        case 'dayMonthYear':
-          controls[ctrlName] = this.fb.group({
-            day: new FormControl(startValue?.day ?? ''),
-            month: new FormControl(startValue?.month ?? ''),
-            year: new FormControl(startValue?.year ?? ''),
-          });
-          break;
-        case 'monthYear':
-          controls[ctrlName] = this.fb.group({
-            month: new FormControl(startValue?.month ?? ''),
-            year: new FormControl(startValue?.year ?? ''),
-          });
-          break;
-        case 'multiselect':
-          controls[ctrlName] = new FormControl(Array.isArray(startValue) ? startValue : []);
-          break;
-        case 'countryDropdown':
-          const controlName = this.getControlName(el);
-          const stateName = el["stateControlName"] ?? 'state';
-          const countryValue = clonedValues[controlName] ??
-          this.findNestedValue(clonedValues, controlName) ?? '';
-          const stateValue = clonedValues[stateName] ??
-          this.findNestedValue(clonedValues, stateName) ?? '';
+   formElements.forEach(el => {
+  const baseName = this.getControlName(el);
+  const ctrlName = el.formControlName ? baseName : this.getUniqueControlName(baseName, controls);
 
-          controls[controlName] = new FormControl(countryValue);
-          if (this.countryDropdownData.stateOptions.hasOwnProperty(countryValue)) {
-            controls[stateName] = new FormControl(stateValue);
-          }
+  let startValue = clonedValues[ctrlName];
+  if ((startValue === undefined || startValue === '') && !skipDefaults) {
+    startValue = el.defaultValue;
+  }
+  if (startValue === null && !keepNulls) {
+    startValue = '';
+  }
 
+  const validators = this.buildValidators(el);
 
-          console.log(`Pre-fill country (${controlName}) value:`, countryValue);
-          console.log(`Pre-fill state (${stateName}) value:`, stateValue);
-          break;
-        case 'yesno':
-          // Если значение не найдено напрямую, пробуем найти его рекурсивно
-          if (startValue === undefined || startValue === '') {
-            const nestedValue = this.findNestedValue(clonedValues, ctrlName);
-            if (nestedValue !== undefined) {
-              startValue = nestedValue;
-            }
-          }
-          let normalizedValue = startValue;
-          // Если значение представлено объектом с полем "value", используем его
-          if (typeof normalizedValue === 'object' && normalizedValue !== null && 'value' in normalizedValue) {
-            normalizedValue = normalizedValue.value;
-          }
-          // Если значение boolean, преобразуем в строку "yes"/"no"
-          if (typeof normalizedValue === 'boolean') {
-            normalizedValue = normalizedValue ? 'yes' : 'no';
-          } else if (typeof normalizedValue === 'string') {
-            normalizedValue = normalizedValue.trim().toLowerCase();
-          }
-          // Если значение пустое после нормализации, устанавливаем значение по умолчанию "no"
-          if (!normalizedValue) {
-            normalizedValue = 'no';
-          }
-          console.log(`[DinFormJsonWorkerService] Normalizing yesno: original=${JSON.stringify(startValue)}, normalized=${normalizedValue}`);
-          
-          // Создаем пустую группу для yesno и добавляем контрол "value" и subElements
-          const yesNoGroup = this.fb.group({}) as FormGroup<any>;
-          yesNoGroup.addControl('value', new FormControl(normalizedValue));
-          if (el.subElements) {
-            el.subElements.forEach(subEl => {
-              const subName = subEl.formControlName || subEl.id;
-              const subValue = clonedValues[subName] ?? subEl.defaultValue ?? '';
-              yesNoGroup.addControl(subName, new FormControl(subValue));
-            });
-          }
-          controls[ctrlName] = yesNoGroup;
-          break;
-        default:
-          controls[ctrlName] = new FormControl(startValue);
+  switch (el.type) {
+    case 'dayMonthYear':
+      controls[ctrlName] = this.fb.group({
+        day: new FormControl(startValue?.day ?? '', validators),
+        month: new FormControl(startValue?.month ?? '', validators),
+        year: new FormControl(startValue?.year ?? '', validators),
+      });
+      break;
+    case 'monthYear':
+      controls[ctrlName] = this.fb.group({
+        month: new FormControl(startValue?.month ?? '', validators),
+        year: new FormControl(startValue?.year ?? '', validators),
+      });
+      break;
+    case 'multiselect':
+      controls[ctrlName] = new FormControl(Array.isArray(startValue) ? startValue : [], validators);
+      break;
+    case 'countryDropdown':
+      const controlName = this.getControlName(el);
+      const stateName = el["stateControlName"] ?? 'state';
+      const countryValue = clonedValues[controlName] ?? this.findNestedValue(clonedValues, controlName) ?? '';
+      const stateValue = clonedValues[stateName] ?? this.findNestedValue(clonedValues, stateName) ?? '';
+      controls[controlName] = new FormControl(countryValue ?? '', validators);
+      if (this.countryDropdownData.stateOptions.hasOwnProperty(countryValue)) {
+        controls[stateName] = new FormControl(stateValue ?? '', validators);
       }
-    });
+      break;
+    case 'yesno':
+      const yesNoGroup = this.fb.group({});
+      let normalizedValue = startValue;
+      if (typeof normalizedValue === 'object' && normalizedValue !== null && 'value' in normalizedValue) {
+        normalizedValue = normalizedValue.value;
+      }
+      if (typeof normalizedValue === 'boolean') {
+        normalizedValue = normalizedValue ? 'yes' : 'no';
+      } else if (typeof normalizedValue === 'string') {
+        normalizedValue = normalizedValue.trim().toLowerCase();
+      }
+      if (!normalizedValue) {
+        normalizedValue = 'no';
+      }
+      const valueValidators = el.required ? [Validators.required] : [];
+      yesNoGroup.addControl('value', new FormControl(normalizedValue, valueValidators));
+      if (el.subElements) {
+        el.subElements.forEach(subEl => {
+          const subName = subEl.formControlName || subEl.id;
+          let subValue = clonedValues[subName];
+          if (subValue === null || subValue === undefined) {
+            subValue = subEl.defaultValue ?? '';
+          }
+          const subValidators = this.buildValidators(subEl);
+          yesNoGroup.addControl(subName, new FormControl(subValue ?? '', subValidators));
+        });
+      }
+      controls[ctrlName] = yesNoGroup;
+      break;
+    default:
+      if (el.type === 'checkbox') {
+        startValue = (startValue === null || startValue === undefined) ? false : startValue;
+        controls[ctrlName] = new FormControl(startValue, validators);
+      } else {
+        startValue = (startValue === null || startValue === undefined) ? '' : startValue;
+        controls[ctrlName] = new FormControl(startValue, validators);
+      }
+  }
+});
+
+
 
     return this.fb.group(controls);
   }
@@ -432,19 +470,29 @@ export class DinFormJsonWorkerService {
 
   private buildValidators(el: ElementData, subField?: string): ValidatorFn[] {
     const validators: ValidatorFn[] = [];
-    if (el.required) {
-      validators.push(Validators.required);
-    }
-    const validationPattern = subField ? el[`${subField}Validation`] : el.validation;
-    if (typeof validationPattern === 'string') {
-      try {
-        validators.push(Validators.pattern(new RegExp(validationPattern)));
-      } catch (err) {
-        // Логирование исключено для не критичных случаев
+
+    const validationField = subField ? el[`${subField}Validation`] : el.validation;
+
+    if (el.required || validationField === true) {
+      if (el.type === 'checkbox') {
+        validators.push(Validators.requiredTrue);
+      } else {
+        validators.push(Validators.required);
       }
     }
-    return validators;
-  }
+
+
+    if (typeof validationField === 'string' && validationField.trim() !== '') {
+      try {
+        validators.push(Validators.pattern(new RegExp(validationField)));
+      } catch (err) {
+        console.warn(`[DinFormJsonWorkerService] Invalid regex pattern: ${validationField}`);
+      } 
+    }
+
+  return validators;
+}
+
 
   replaceTextVariablesInObject(struct: any, variables: Record<string, any>): any {
     if (Array.isArray(struct)) {

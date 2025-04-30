@@ -17,7 +17,9 @@ import { EmploymentFormComponent } from '../../exp-histories/employment-form/emp
 import { UnemploymentFormComponent } from '../../exp-histories/unemployment-form/unemployment-form.component';
 import { SchoolFormComponent } from '../../exp-histories/school-form/school-form.component';
 import { MilitaryServiceFormComponent } from '../../exp-histories/military-service-form/military-service-form.component';
-import { START_DATA_1 } from '../../models/start-data';
+import { HTTPFA } from '../../models/start-data';
+import { RequirementsService, IStartData } from '../../services/requirements.service';
+//import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'app-exp-history',
@@ -53,25 +55,50 @@ export class ExpHistoryComponent implements OnInit {
   processedHistories: any[] = [];
   gaps: { startDate: Date; endDate: Date }[] = [];
   gapData: { startDate: Date; endDate: Date } | null = null;
-  gapYears: number = START_DATA_1.empHistory;
+  gapYears: number = 0
 
   isModalOpen = false;
   isDirty = false;
 
   private ssn = localStorage.getItem('currentUserSSN') ?? '';
   private bday = localStorage.getItem('currentUserBday') ?? '';
+  private param = localStorage.getItem('currentUserParam') ?? '';
 
   constructor(
     private addAddressService: AddAddressService,
     private timestoreService: TimestoreService,
-    private http: HttpClient
+    private http: HttpClient,
+    private reqSvc: RequirementsService
   ) {}
 
   ngOnInit(): void {
-    this.initializeCountries();
-    this.setDateIntervals();
-    this.loadPrefill();
+  this.initializeCountries();
+
+  if (!this.ssn) {
+    console.warn('[ExpHistory] SSN not provided');
+    return;
   }
+
+  this.reqSvc.getStartData().subscribe({
+    next: (startData: IStartData) => {
+      if (startData?.empHistory) {
+        this.gapYears = startData.empHistory;
+      } else {
+        console.warn('[ExpHistory] ⚠️ Стартовые данные без empHistory');
+        this.gapYears = 10;
+      }
+      this.setDateIntervals();
+      this.loadPrefill();
+    },
+    error: (err) => {
+      console.error('[ExpHistory] ❌ Ошибка загрузки стартовых данных', err);
+      this.gapYears = 10;
+      this.setDateIntervals();
+      this.loadPrefill();
+    }
+  });
+}
+
 
   private initializeCountries(): void {
     this.countries = this.addAddressService.getCountries();
@@ -84,7 +111,7 @@ export class ExpHistoryComponent implements OnInit {
       this.calculateGaps();
       return;
     }
-    const url = `http://localhost:8000/api/form-data/experience-history/${this.ssn}`;
+    const url = HTTPFA.FORM_DATA('experience-history', this.ssn, this.bday, this.param);
     this.http.get<{ data: any[] }>(url).subscribe({
       next: resp => {
         this.processedHistories = Array.isArray(resp.data) ? resp.data : [];
@@ -245,10 +272,11 @@ export class ExpHistoryComponent implements OnInit {
     const payload = {
       ssn: this.ssn,
       bday: this.bday,
+      param: this.param,
       additional_data: { 'experience-history': this.processedHistories }
     };
     this.http.post(
-      'http://localhost:8000/api/create-or-update-json',
+      HTTPFA.UPSET,
       payload
     ).subscribe({
       next: () => {

@@ -183,7 +183,7 @@ export abstract class BaseComponent implements OnInit {
    * Загружает JSON-данные (requirements.json), берёт нужный компонент по имени, создаёт форму.
    * Если данные содержат pages, также обрабатываем логику пагинации.
    */
-  protected loadRequirements(): void {
+  /*protected loadRequirements(): void {
     this.dinFormService.loadRequirements('requirements.json').subscribe({
       next: (data: RequirementsData) => {
         const componentData =
@@ -243,12 +243,65 @@ export abstract class BaseComponent implements OnInit {
         console.error('[BaseComponent] Error loading requirements:', err);
       }
     });
-  }
+  }*/
+  protected loadRequirements(): void {
+  const filePath = this.dinFormService.getRequirementsPath();
 
-  /**
-   * Инициализирует контролы "country" и "state" для заданного индекса (или для одиночной формы),
-   * устанавливая значения из prefill (если они заданы) и корректируя state, если текущее значение не входит в список опций.
-   */
+  // Log the path being requested
+  console.log(`[BaseComponent] loading requirements from ${filePath}`);
+
+  this.dinFormService.loadRequirements(filePath).subscribe({
+    next: (data: RequirementsData) => {
+      const componentData = this.dinFormService.getComponentData(this.componentName);
+      if (!componentData) {
+        this.errorMessage = `No data found for component "${this.componentName}".`;
+        this.isLoading = false;
+        console.error(`[BaseComponent] No component data found for: ${this.componentName}`);
+        return;
+      }
+      const vars = data.variables || {};
+      const replaced = this.dinFormService.replaceTextVariablesInObject(componentData, vars);
+      this.processedData = replaced as FormComponentData;
+
+      let dataForForm = { ...this.processedData };
+      if (this.processedData['pages']) {
+        const flatElements =
+          this.findArrayInObject('elements', this.processedData['pages']) ||
+          this.findArrayInObject('rows', this.processedData['pages']);
+        if (flatElements) {
+          dataForForm = { ...this.processedData, elements: flatElements };
+        }
+      }
+
+      if (this.processedData['pages']) {
+        this.pageKeys = Object.keys(this.processedData['pages']);
+        this.currentPage = this.pageKeys.length > 0 ? this.pageKeys[0] : '';
+      } else {
+        this.pageKeys = [];
+        this.currentPage = '';
+      }
+
+      this.form = this.dinFormService.generateFormFromJson(dataForForm);
+
+      if (this.form instanceof FormArray) {
+        for (let i = 0; i < this.form.length; i++) {
+          this.initializeCountryAndState(i);
+        }
+      }
+
+      this.isLoading = false;
+      this.cd.detectChanges();
+    },
+    error: (err) => {
+      this.errorMessage = 'Failed to load data.';
+      this.isLoading = false;
+      console.error('[BaseComponent] Error loading requirements:', err);
+    }
+  });
+}
+
+
+
   protected initializeCountryAndState(index: number = 0): void {
   const group = this.getFormGroupAt(index);
   if (!group) return;

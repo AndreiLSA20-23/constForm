@@ -1,3 +1,5 @@
+// start-data.ts
+
 import {
   IEmploymentHistory,
   IUnemploymentHistory,
@@ -5,6 +7,16 @@ import {
   IMilitaryServiceHistory,
   IStartData,
 } from './data.model';
+
+
+export const HTTPFA = {
+  UPSET: 'http://localhost:8000/api/create-or-update-json',
+  CHECKER: 'http://localhost:8000/api/check-ssn',
+  HISTORY: 'http://localhost:8000/api/history',
+  FORM_DATA: (componentKey: string, ssn: string, bday: string, param: string = 'default') =>
+    `http://localhost:8000/api/form-data/${componentKey}/${ssn}?bday=${bday}&param=${param}`,
+} as const;
+
 
 export const START_DATA_1: IStartData = {
   sampleCmpName: 'GOOD NEWS CARRIER',

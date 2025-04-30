@@ -1,32 +1,30 @@
 <div>
-  <!-- Основное отображение компонентов через маршруты -->
+  <!-- Main component display without routing -->
   <ng-container *ngIf="!isPrivacyPolicyVisible">
     <div class="component-container">
-      <router-outlet></router-outlet>
+      <!-- Показываем HistoryForm, если успешно авторизовались -->
+      <app-history *ngIf="showHistoryForm"></app-history>
+
+      <!-- Иначе показываем обычные компоненты -->
+      <ng-container *ngIf="!showHistoryForm">
+        <app-start *ngIf="index === 1"></app-start>
+        <app-req *ngIf="index === 2"></app-req>
+        <app-user-auth *ngIf="index === 3" (authSuccess)="onAuthSuccess()"></app-user-auth>
+      </ng-container>
     </div>
 
-    <!-- Кнопки управления -->
-    <div class="navigation-buttons mt-3 d-flex justify-content-start">
-      <button
-        *ngIf="canShowPreview()"
-        (click)="red()"
-        class="btn btn-secondary me-2"
-        aria-label="Previous Component"
-      >
+    <!-- Navigation buttons только если НЕ в HistoryForm -->
+    <div *ngIf="!showHistoryForm && index <= 3" class="navigation-buttons mt-3 d-flex justify-content-start">
+      <button *ngIf="canShowPrev()" (click)="prev()" class="btn btn-secondary me-2">
         Previous
       </button>
-      <button
-        *ngIf="canShowNext()"
-        (click)="next()"
-        class="btn btn-primary"
-        aria-label="Next Component"
-      >
+      <button *ngIf="canShowNext()" (click)="next()" class="btn btn-primary">
         Next
       </button>
     </div>
 
-    <!-- Скрытые компоненты для устранения предупреждений компилятора -->
-    <div class="hidden-components">
+    <!-- Hidden components to avoid compiler warnings -->
+    <div class="hidden-components" style="display: none;">
       <app-start></app-start>
       <app-req></app-req>
       <app-user-auth></app-user-auth>
@@ -34,18 +32,16 @@
       <input type="text" appSsnMask />
     </div>
 
-    <!-- Ссылка для отображения политики конфиденциальности -->
+    <!-- Privacy Policy link -->
     <div class="privacy-policy-link text-center mt-4">
-      <!-- Вызываем метод для показа политики, а не переходим по маршруту -->
       <a (click)="showPrivacyPolicy()" class="text-muted small" style="cursor: pointer;">
         View Privacy Policy
       </a>
     </div>
   </ng-container>
 
-  <!-- Отображение политики конфиденциальности -->
+  <!-- Privacy Policy content -->
   <ng-container *ngIf="isPrivacyPolicyVisible">
-    <!-- Передаем событие back для возврата -->
     <app-privacy-policy (back)="hidePrivacyPolicy()"></app-privacy-policy>
   </ng-container>
 </div>

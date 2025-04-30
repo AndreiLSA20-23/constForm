@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -40,36 +40,45 @@ export class FormDataService {
    * @param data - Значения формы, содержащие ssn, bday и остальные данные формы.
    */
   createFormData(formSection: string, data: any): Observable<any> {
-    console.info(`[FormDataService] createFormData: Received data:`, data);
-    const { ssn, bday, ...rest } = data;
+  console.info(`[FormDataService] createFormData: Received data:`, data);
+  const { ssn, bday, param, ...rest } = data;
 
-    // Проверяем наличие обязательных полей
-    if (!ssn || !bday) {
-      console.error(`[FormDataService] Missing required fields: ssn or bday in data:`, data);
-      return of(null);
-    }
-
-    const requestData = {
-      ssn,
-      bday,
-      additional_data: {
-        [formSection]: rest
-      }
-    };
-
-    console.info(`[FormDataService] createFormData: Request data for "${formSection}":`, requestData);
-    console.info(`[FormDataService] createFormData: Sending POST request to ${this.upsertUrl}`);
-    return this.http.post(this.upsertUrl, requestData).pipe(
-      map(response => {
-        console.info(`[FormDataService] Record for "${formSection}" created successfully via upsert endpoint. Response:`, response);
-        return response;
-      }),
-      catchError(error => {
-        console.error(`[FormDataService] Error creating record for "${formSection}":`, error);
-        return of(null);
-      })
-    );
+  // Проверяем наличие обязательных полей
+  if (!ssn || !bday) {
+    console.error(`[FormDataService] Missing required fields: ssn or bday in data:`, data);
+    return of(null);
   }
+
+  const requestData = {
+    ssn,
+    bday,
+    param,
+    additional_data: {
+      [formSection]: rest
+    }
+  };
+
+  console.info(
+    `[FormDataService] createFormData: Sending POST to ${this.upsertUrl}`, 
+    requestData
+  );
+  return this.http.post(this.upsertUrl, requestData).pipe(
+    tap(response => {
+      console.info(
+        `[FormDataService] Upsert response for "${formSection}":`, 
+        response
+      );
+    }),
+    map(response => response),
+    catchError(error => {
+      console.error(
+        `[FormDataService] Error creating record for "${formSection}":`, 
+        error
+      );
+      return of(null);
+    })
+  );
+}
 
   /**
    * Метод обновления данных. Преобразует form.value аналогично createFormData,
@@ -80,7 +89,7 @@ export class FormDataService {
    */
   editFormData(formSection: string, data: any): Observable<any> {
     console.info(`[FormDataService] editFormData: Received data:`, data);
-    const { ssn, bday, ...rest } = data;
+    const { ssn, bday, param, ...rest } = data;
 
     // Проверяем наличие обязательных полей
     if (!ssn || !bday) {
@@ -91,6 +100,7 @@ export class FormDataService {
     const requestData = {
       ssn,
       bday,
+      param,
       additional_data: {
         [formSection]: rest
       }

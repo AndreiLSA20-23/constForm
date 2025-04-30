@@ -21,6 +21,7 @@ import { ExpHistoryComponent } from '../polls/exp-history/exp-history.component'
 import { AddAddressComponent } from '../polls/add-address/add-address.component';
 import { FullResComponent } from '../polls/full-res/full-res.component';
 import { ReportGeneratorComponent } from '../polls/report-generator/report-generator.component';
+import { HTTPFA } from '../models/start-data';
 
 @Component({
   selector: 'app-history',
@@ -43,13 +44,17 @@ import { ReportGeneratorComponent } from '../polls/report-generator/report-gener
   styleUrls: ['./history-form.component.scss']
 })
 export class HistoryFormComponent implements OnInit, OnDestroy {
-  apiUrl = 'http://localhost:8000/api/history';
+  apiUrl = HTTPFA.HISTORY;
   responseData: any = null;
-  public index: number = 1;
-  public currentComponent: any = null;
-  public customInjector!: Injector;
-  public prefillStatusMap: Map<number, boolean> = new Map();
-  public prefillStatusReady: boolean = false;
+  index: number = 1;
+  currentComponent: any = null;
+  customInjector!: Injector;
+  prefillStatusMap: Map<number, boolean> = new Map();
+  prefillStatusReady: boolean = false;
+
+  currentUserSSN: string | null = null;
+  currentUserBday: string | null = null;
+  currentUserParam: string = 'default';
 
   private readonly components = [
     null,
@@ -72,20 +77,22 @@ export class HistoryFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const currentUserSSN = localStorage.getItem('currentUserSSN');
-      const currentUserBday = localStorage.getItem('currentUserBday');
+      this.currentUserSSN = localStorage.getItem('currentUserSSN');
+      this.currentUserBday = localStorage.getItem('currentUserBday');
+      this.currentUserParam = localStorage.getItem('currentUserParam') || 'default';
 
       this.customInjector = Injector.create({
         providers: [
-          { provide: 'ssn', useValue: currentUserSSN },
-          { provide: 'bday', useValue: currentUserBday }
+          { provide: 'ssn', useValue: this.currentUserSSN },
+          { provide: 'bday', useValue: this.currentUserBday },
+          { provide: 'param', useValue: this.currentUserParam },
         ],
         parent: this.injector
       });
 
-      this.fetchHistory(currentUserSSN);
-      this.checkAllPrefillBlocks(currentUserSSN, currentUserBday);
-      this.startPollingPrefillStatus(currentUserSSN, currentUserBday);
+      this.fetchHistory();
+      this.checkAllPrefillBlocks();
+      this.startPollingPrefillStatus();
     }
 
     this.updateComponent();
@@ -95,24 +102,26 @@ export class HistoryFormComponent implements OnInit, OnDestroy {
     if (this.pollingInterval) clearInterval(this.pollingInterval);
   }
 
-  fetchHistory(currentUserSSN: string | null): void {
-    if (!currentUserSSN) return;
+  fetchHistory(): void {
+    if (!this.currentUserSSN || !this.currentUserBday) return;
 
-    fetch(`${this.apiUrl}/${currentUserSSN}`)
+    const url = `${this.apiUrl}/${this.currentUserSSN}?bday=${this.currentUserBday}&param=${this.currentUserParam}`;
+
+    fetch(url)
       .then((res) => res.json())
       .then((data) => (this.responseData = data))
       .catch(() => (this.responseData = null));
   }
 
-  async checkAllPrefillBlocks(ssn: string | null, bday: string | null): Promise<void> {
+  async checkAllPrefillBlocks(): Promise<void> {
     this.prefillStatusReady = false;
-    if (!ssn || !bday) return;
+    if (!this.currentUserSSN || !this.currentUserBday) return;
 
     const results: [number, boolean][] = [];
 
     for (let index = 1; index < this.components.length; index++) {
       const componentKey = this.getComponentKeyByIndex(index);
-      const url = `http://localhost:8000/api/form-data/${componentKey}/${ssn}`;
+      const url = HTTPFA.FORM_DATA(componentKey, this.currentUserSSN, this.currentUserBday, this.currentUserParam);
 
       try {
         const res = await fetch(url);
@@ -122,7 +131,7 @@ export class HistoryFormComponent implements OnInit, OnDestroy {
         }
         const json = await res.json();
         const data = json?.data;
-        let isFilled = this.isComponentFilled(data);
+        const isFilled = this.isComponentFilled(data);
 
         results.push([index, isFilled]);
       } catch (err) {
@@ -152,11 +161,11 @@ export class HistoryFormComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  private startPollingPrefillStatus(ssn: string | null, bday: string | null): void {
-    if (!ssn || !bday) return;
+  private startPollingPrefillStatus(): void {
+    if (!this.currentUserSSN || !this.currentUserBday) return;
 
     this.pollingInterval = setInterval(() => {
-      this.checkAllPrefillBlocks(ssn, bday);
+      this.checkAllPrefillBlocks();
     }, this.pollingDelay);
   }
 

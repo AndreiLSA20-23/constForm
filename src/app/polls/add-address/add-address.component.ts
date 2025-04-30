@@ -9,9 +9,9 @@ import { HttpClient } from '@angular/common/http';
 import { TimestoreService }  from '../../services/timestore.service';
 import { EditArrayService }  from '../../services/edit-array-service.service';
 import { AddAddressService } from '../../services/add-address-service.service';
-
+import { RequirementsService, IStartData } from '../../services/requirements.service';
 import { IAddressData } from '../../models/data.model';
-import { START_DATA_1 }  from '../../models/start-data';
+import { HTTPFA } from '../../models/start-data';
 
 @Component({
   selector:    'app-add-address',
@@ -22,6 +22,7 @@ import { START_DATA_1 }  from '../../models/start-data';
 })
 export class AddAddressComponent implements OnInit, AfterViewChecked {
   @ViewChild('countrySelect') countrySelectRef!: ElementRef;
+  stor!: IStartData;
 
   isDirty = false;
 
@@ -34,58 +35,106 @@ export class AddAddressComponent implements OnInit, AfterViewChecked {
   storage:   IAddressData[] = [];
   gaps:      { startDate: Date; endDate: Date }[] = [];
 
-  maxMonths = START_DATA_1.homeHistory * 12;
+  maxMonths = 0;
 
   private ssn  = localStorage.getItem('currentUserSSN')  ?? '';
   private bday = localStorage.getItem('currentUserBday') ?? '';
+  private param = localStorage.getItem('currentUserParam') ?? '';
 
   constructor(
     private addAddrSrv: AddAddressService,
     private editSrv:    EditArrayService<IAddressData>,
     private timeSrv:    TimestoreService,
-    private http:       HttpClient
+    private http:       HttpClient,
+    private reqSvc: RequirementsService
+
   ) {
     this.initForm();
-    this.timeSrv.setAge(START_DATA_1.homeHistory);
     this.countries = this.addAddrSrv.getCountries();
   }
 
   ngOnInit(): void {
-    this.addressForm.statusChanges.subscribe(status => {
-      //console.log('[Form Status Changed]', status, this.addressForm.errors);
-    });
+  this.addressForm.statusChanges.subscribe(status => {
+    // Здесь можно обработать изменение статуса формы, если нужно
+  });
 
-    if (!this.ssn) {
-      console.warn('[AddAddress] no SSN for prefill');
-      return;
-    }
-    const url = `http://localhost:8000/api/form-data/add-address/${this.ssn}`;
-    //console.log('[AddAddress] Loading prefill from:', url);
-    this.http.get<any>(url).subscribe({
-      next: (resp) => {
-        const raw = resp?.data ?? [];
-        this.storage = Array.isArray(raw) ? raw : [];
-        if (!Array.isArray(raw)) {
-          console.warn('[AddAddress] ⚠️ add-address не найден или не является массивом');
-        }
-
-        this.timeSrv.storage = this.storage
-          .filter(a => a && a.startDate && a.endDate)
-          .map(a => ({
-            startDate: new Date(a.startDate),
-            endDate:   new Date(a.endDate)
-          }));
-
-        this.calculateGaps();
-      },
-      error: (err) => {
-        //console.error('[AddAddress] prefill error', err);
-        this.storage = [];
-        this.timeSrv.storage = [];
-        this.calculateGaps();
-      }
-    });
+  if (!this.ssn) {
+    console.warn('[AddAddress] no SSN for prefill');
+    return;
   }
+
+  // ✅ Загружаем стартовые данные (homeHistory) перед префиллом
+  this.reqSvc.getStartData().subscribe({
+    next: (startData: IStartData) => {
+      if (startData?.homeHistory) {
+        this.maxMonths = startData.homeHistory * 12;
+        this.timeSrv.setAge(startData.homeHistory);
+      } else {
+        console.warn('[AddAddress] ⚠️ Стартовые данные без homeHistory');
+        this.maxMonths = 120; // Фолбек на 10 лет
+      }
+
+      // ✅ После загрузки стартовых данных, грузим префилл
+      const url = HTTPFA.FORM_DATA('add-address', this.ssn, this.bday, this.param);
+      this.http.get<any>(url).subscribe({
+        next: (resp) => {
+          const raw = resp?.data ?? [];
+          this.storage = Array.isArray(raw) ? raw : [];
+          if (!Array.isArray(raw)) {
+            console.warn('[AddAddress] ⚠️ add-address не найден или не является массивом');
+          }
+
+          this.timeSrv.storage = this.storage
+            .filter(a => a && a.startDate && a.endDate)
+            .map(a => ({
+              startDate: new Date(a.startDate),
+              endDate:   new Date(a.endDate)
+            }));
+
+          this.calculateGaps();
+        },
+        error: (err) => {
+          console.error('[AddAddress] ❌ Ошибка загрузки префилла', err);
+          this.storage = [];
+          this.timeSrv.storage = [];
+          this.calculateGaps();
+        }
+      });
+    },
+    error: (err) => {
+      console.error('[AddAddress] ❌ Ошибка загрузки стартовых данных', err);
+      this.maxMonths = 120; // Фолбек на 10 лет
+      this.timeSrv.setAge(10);
+      // Даже при ошибке стартовых данных пробуем загрузить префилл
+      const url = HTTPFA.FORM_DATA('add-address', this.ssn, this.bday, this.param);
+      this.http.get<any>(url).subscribe({
+        next: (resp) => {
+          const raw = resp?.data ?? [];
+          this.storage = Array.isArray(raw) ? raw : [];
+          if (!Array.isArray(raw)) {
+            console.warn('[AddAddress] ⚠️ add-address не найден или не является массивом');
+          }
+
+          this.timeSrv.storage = this.storage
+            .filter(a => a && a.startDate && a.endDate)
+            .map(a => ({
+              startDate: new Date(a.startDate),
+              endDate:   new Date(a.endDate)
+            }));
+
+          this.calculateGaps();
+        },
+        error: (err2) => {
+          console.error('[AddAddress] ❌ Ошибка загрузки префилла при fallback', err2);
+          this.storage = [];
+          this.timeSrv.storage = [];
+          this.calculateGaps();
+        }
+      });
+    }
+  });
+}
+
   isStateValid(): boolean {
   const c = this.addressForm.get('country')?.value;
   const s = this.addressForm.get('state')?.value;
@@ -214,13 +263,14 @@ export class AddAddressComponent implements OnInit, AfterViewChecked {
     const payload = {
       ssn:  this.ssn,
       bday: this.bday,
+      param: this.param,
       additional_data: {
         'add-address': cleaned
       }
     };
-    //console.log('[AddAddress] will persist payload:', payload);
+    console.log('[AddAddress] will persist payload:', payload);
     this.http.post(
-      `http://localhost:8000/api/create-or-update-json`,
+      HTTPFA.UPSET,
       payload
     ).subscribe({
       next: ()   => console.log('[AddAddress] addresses saved'),

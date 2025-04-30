@@ -34,7 +34,7 @@ export class SchoolFormComponent implements OnInit, OnChanges {
       city: ['', Validators.required],
       phoneSchool: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
       fieldOfStudy: ['', Validators.required], // Added "What did you study?"
-      graduationDate: [''] // Added "Graduation Date"
+      graduationDate: ['', Validators.required] // Added "Graduation Date"
     });
   }
 

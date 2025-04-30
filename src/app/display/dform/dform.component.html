@@ -52,7 +52,13 @@
         </ng-container>
       </ng-template>
       <div class="form-actions mt-3">
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-success"  [disabled]="mainFormGroup.invalid">Save</button>
+        <div class="mt-4">
+          <h5>Form Debug:</h5>
+          <pre>{{ mainFormGroup.status }}</pre>
+          <pre>{{ mainFormGroup.errors | json }}</pre>
+          <pre>{{ mainFormGroup.value | json }}</pre>
+        </div>
         <!--button type="button" (click)="onCancel()" class="btn btn-outline-secondary">Cancel</button-->
       </div>
     </form>
@@ -73,9 +79,18 @@
             context: { rows: getRows(), form: getActiveFormGroup() }
           ">
         </ng-container>
-        <div class="form-actions mt-3 d-flex justify-content-between">
+        <!--div class="form-actions mt-3 d-flex justify-content-between"-->
+        <div class="form-actions mt-3 d-flex flex-column align-items-start gap-2">
           <div>
-            <button type="submit" class="btn btn-success">Save Changes</button>
+            <button type="submit" class="btn btn-success" [disabled]="getActiveFormGroup().invalid">Save Changes</button>
+            <div class="bg-light p-2 rounded border w-100">
+              <h6 class="text-muted mb-1">Form Debug (Active Form):</h6>
+              <pre class="mb-0">Status: {{ getActiveFormGroup().status }}</pre>
+              <pre class="mb-0">Errors: {{ getActiveFormGroup().errors | json }}</pre>
+              <pre class="mb-0">Value: {{ getActiveFormGroup().value | json }}</pre>
+            </div>
+
+
             <!--app-dform type="button" (click)="onCancel()" class="btn btn-outline-secondary ms-2">
               Cancel
             </button>-->
@@ -129,7 +144,7 @@
         </div>
 
         <div class="form-actions d-flex justify-content-end">
-          <button type="submit" class="btn btn-success me-2">Save Changes</button>
+          <button type="submit" class="btn btn-success me-2" [disabled]="formArray.invalid">Save Changes</button>
           <!--<button type="button" (click)="onCancel()" class="btn btn-outline-secondary">
             CancelXXX
           </button>-->
@@ -168,7 +183,7 @@
                 </ng-template>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Update Survey</button>
+                <button type="submit" class="btn btn-success" [disabled]="editForm.invalid">Update Survey</button>
                 <button type="button" class="btn btn-secondary" (click)="onCancel()">
                   Cancel
                 </button>

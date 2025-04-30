@@ -1,284 +1,233 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import uvicorn
-import os
-import json
-import logging
+from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel, EmailStr
+import uvicorn, json, logging, pdfkit, smtplib
 from fastapi.middleware.cors import CORSMiddleware
+from logging.handlers import TimedRotatingFileHandler
+from pathlib import Path
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+from email.message import EmailMessage
+from io import BytesIO
+from fastapi.responses import StreamingResponse
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
-logger = logging.getLogger(__name__)
+# ─────────────────────────────────────────────  Configuration / Paths
+BASE_DIR      = Path(__file__).resolve().parent
+STORAGE_DIR   = BASE_DIR / "storage"     # JSON-файлы пользователей
+TEMPLATES_DIR = BASE_DIR / "templates"   # HTML-шаблоны для PDF
+LOGS_DIR      = BASE_DIR / "logs"
+REGISTRY_FILE = BASE_DIR / "ssn_registry.json"  # список файлов
 
-app = FastAPI()
+for p in (STORAGE_DIR, TEMPLATES_DIR, LOGS_DIR):
+    p.mkdir(exist_ok=True)
+
+# ─────────────────────────────────────────────  Jinja2 Setup
+jinja_env = Environment(
+    loader=FileSystemLoader(str(TEMPLATES_DIR)),
+    autoescape=select_autoescape(["html", "xml"])
+)
+
+# ─────────────────────────────────────────────  Logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger("backend")
+
+fail2ban_handler = TimedRotatingFileHandler(
+    LOGS_DIR / "fail2ban.log", when="midnight", backupCount=7, encoding="utf-8"
+)
+fail2ban_handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+)
+logging.getLogger("fail2ban").addHandler(fail2ban_handler)
+
+# ─────────────────────────────────────────────  FastAPI App
+app = FastAPI(title="SSN backend")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=["*"], allow_credentials=True,
+    allow_methods=["*"], allow_headers=["*"]
 )
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-STORAGE_DIR = os.path.join(BASE_DIR, "storage")
-SSN_FILE = os.path.join(BASE_DIR, "ssn_checker.json")
-
-os.makedirs(STORAGE_DIR, exist_ok=True)
-
-# Создаём ssn_checker.json, если его нет
-if not os.path.exists(SSN_FILE):
-    with open(SSN_FILE, "w") as f:
-        json.dump({}, f, indent=4)
-    logger.info(f"Создан файл {SSN_FILE}")
-
-
-# Модель данных для запроса проверки SSN
+# ─────────────────────────────────────────────  Models
 class UserData(BaseModel):
-    ssn: str  # Социальный номер
-    bday: str  # Дата рождения
+    ssn: str
+    bday: str
+    param: str | None = None
 
+# ─────────────────────────────────────────────  Helpers
+def file_name_for(ssn: str, bday: str, param: str | None) -> str:
+    return f"{ssn}_{bday}_{param or 'default'}.json"
 
-def deep_merge(source: dict, overrides: dict) -> dict:
+def load_json(path: Path) -> any:
+    with path.open(encoding="utf-8") as f:
+        return json.load(f)
 
-    for key, value in overrides.items():
-        if key in source and isinstance(source[key], dict) and isinstance(value, dict):
-            source[key] = deep_merge(source[key], value)
+def save_json(path: Path, data: any):
+    path.write_text(json.dumps(data, indent=4, ensure_ascii=False), encoding="utf-8")
+
+# Initialize registry as list
+if not REGISTRY_FILE.exists():
+    save_json(REGISTRY_FILE, [])
+    logger.info("Создан пустой ssn_registry.json")
+
+# Deep merge utility for additional_data
+def deep_merge(dst: dict, src: dict) -> dict:
+    for k, v in src.items():
+        if isinstance(v, dict) and isinstance(dst.get(k), dict):
+            dst[k] = deep_merge(dst[k], v)
         else:
-            source[key] = value
-    return source
+            dst[k] = v
+    return dst
 
+# Prune empty values
+def prune_empty(o):
+    if isinstance(o, dict):
+        return {k: prune_empty(v) for k, v in o.items() if prune_empty(v) not in ("", None, {}, [])}
+    if isinstance(o, list):
+        return [prune_empty(i) for i in o if prune_empty(i) not in ("", None, {}, [])]
+    return o
 
-def normalize_yesno_like_fields(data):
+# Always exact lookup <ssn>_<bday>_<param>.json
+def resolve_file(ssn: str, bday: str, param: str) -> Path:
+    fname = file_name_for(ssn, bday, param)
+    fp = STORAGE_DIR / fname
+    if fp.exists():
+        return fp
+    raise FileNotFoundError(f"File {fname} not found")
 
-    if isinstance(data, dict):
-        for key, value in data.items():
-            if isinstance(value, str):
-                lower_val = value.lower()
-                if lower_val in ("yes", "no"):
-                    # Проверяем, содержит ли ключ одно из ключевых слов
-                    key_lower = key.lower()
-                    if any(word in key_lower for word in [
-                        "license", "endorsement", "confirmation",
-                        "agreement", "authorization", "permission",
-                        "approval", "consent", "verification"
-                    ]):
-                        data[key] = {"value": lower_val}
-            else:
-                data[key] = normalize_yesno_like_fields(value)
-        return data
-    elif isinstance(data, list):
-        return [normalize_yesno_like_fields(item) for item in data]
-    else:
-        return data
-
-
-def prune_no_fields(data):
-
-    if isinstance(data, dict):
-        result = {}
-        for key, value in data.items():
-            # Обрабатываем вложенные значения
-            processed_value = prune_no_fields(value)
-
-            # Сохраняем только непустые значения
-            if processed_value is not None and processed_value != {} and processed_value != []:
-                # Для yes/no полей
-                if isinstance(processed_value, dict) and "value" in processed_value:
-                    if processed_value["value"] == "no":
-                        result[key] = processed_value
-                    elif processed_value["value"] == "yes":
-                        # Для "yes" оставляем только value, если вложенные данные пустые
-                        if all(v in (None, {}, []) for k, v in processed_value.items() if k != "value"):
-                            result[key] = {"value": "yes"}
-                        else:
-                            result[key] = prune_no_fields(processed_value)
-                else:
-                    result[key] = processed_value
-        return result  # Убрали проверку if result else None - всегда возвращаем dict
-    elif isinstance(data, list):
-        result = [prune_no_fields(item) for item in data if prune_no_fields(item) is not None]
-        return result if result else []
-    else:
-        return data if data is not None and data != "" else None
-
-
-@app.get("/api/form-data/{component_name}/{ssn}")
-async def get_form_data(component_name: str, ssn: str):
-    """
-    Возвращает данные для указанной компоненты (component_name) из additional_data для SSN.
-    Поддерживает компоненты с типом list, dict и вложенными items.
-    """
-    file_path = os.path.join(STORAGE_DIR, f"{ssn}.json")
-    logger.info(f"Запрос данных для компоненты '{component_name}' и SSN: {ssn}")
-
-    if not os.path.exists(file_path):
-        logger.warning(f"Файл для SSN {ssn} не найден")
-        raise HTTPException(status_code=404, detail="Данные не найдены")
-
-    try:
-        with open(file_path, "r") as file:
-            data = json.load(file)
-
-        additional_data = data.get("additional_data", {}) or {}
-
-        # Важно: НЕ подставляем {} по умолчанию, иначе массив превращается в dict
-        component_data = additional_data.get(component_name)
-
-        # Унифицированный ответ: верни как есть, если компонент существует
-        return {
-            "ssn": data.get("ssn"),
-            "bday": data.get("bday"),
-            "data": component_data if component_data is not None else {}
-        }
-
-    except Exception as e:
-        logger.error(f"Ошибка при обработке файла {file_path}: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.get("/")
+# ─────────────────────────────────────────────  Endpoints
+@app.get("/", summary="Heartbeat")
 async def root():
-
-    logger.info("Получен запрос на главную страницу API")
-    return {
-        "message": (
-            "API is working. Используйте эндпоинты: "
-            "/api/check-ssn, /api/create-or-update-json, /api/history, "
-            "/api/history/{ssn}, /api/form-data/{component_name}/{ssn}."
-        )
-    }
-
+    return {"status": "ok"}
 
 @app.post("/api/check-ssn")
 async def check_ssn(data: UserData):
-   
-    logger.info(f"Начало проверки SSN: {data.ssn}, дата рождения: {data.bday}")
-    try:
-        with open(SSN_FILE, "r") as f:
-            ssn_data = json.load(f)
-    except Exception as e:
-        logger.error(f"Ошибка чтения файла {SSN_FILE}: {e}")
-        raise HTTPException(status_code=500, detail="Ошибка чтения файла данных.")
-
-    if data.ssn in ssn_data:
-        if ssn_data[data.ssn] != data.bday:
-            logger.warning(
-                f"Неверная дата рождения для SSN {data.ssn}. "
-                f"Ожидалось: {ssn_data[data.ssn]}, получено: {data.bday}"
-            )
-            raise HTTPException(status_code=403, detail="Ошибка данных: Неверная дата рождения.")
-        logger.info(f"SSN {data.ssn} найден, данные верны. (Повторная авторизация)")
-        return {"message": "Доступ разрешён"}
-
-    ssn_data[data.ssn] = data.bday
-    try:
-        with open(SSN_FILE, "w") as f:
-            json.dump(ssn_data, f, indent=4)
-        logger.info(f"Новый SSN {data.ssn} добавлен. Доступ разрешён.")
-    except Exception as e:
-        logger.error(f"Ошибка записи файла {SSN_FILE}: {e}")
-        raise HTTPException(status_code=500, detail="Ошибка записи файла данных.")
-
-    return {"message": "Новый SSN добавлен, доступ разрешён"}
-
+    registry: list[str] = load_json(REGISTRY_FILE)
+    fname = file_name_for(data.ssn, data.bday, data.param)
+    logger.debug(f"/check-ssn → looking for {fname} in registry")
+    if fname in registry:
+        logger.info("Комбинация уже зарегистрирована, доступ разрешён")
+        return {"message": "Access approved"}
+    registry.append(fname)
+    save_json(REGISTRY_FILE, registry)
+    logger.info("Новая комбинация добавлена, доступ разрешён")
+    return {"message": "New combination stored, Access approved"}
 
 @app.post("/api/create-or-update-json")
-async def create_or_update_json(data: dict):
-
-    ssn = data.get("ssn")
-    bday = data.get("bday")
+async def create_or_update_json(payload: dict):
+    ssn   = payload.get("ssn")
+    bday  = payload.get("bday")
+    param = payload.get("param", "default")
     if not ssn or not bday:
-        raise HTTPException(status_code=400, detail="Missing required fields: ssn and bday")
+        raise HTTPException(400, "ssn & bday required")
 
-    file_path = os.path.join(STORAGE_DIR, f"{ssn}.json")
+    # 1) Обновляем registry
+    registry: list[str] = load_json(REGISTRY_FILE)
+    fname = file_name_for(ssn, bday, param)
+    if fname not in registry:
+        registry.append(fname)
+        save_json(REGISTRY_FILE, registry)
+        logger.debug(f"ssn_registry.json обновлён (добавлен {fname})")
 
-    # Собираем новые дополнительные данные
-    new_additional = {}
-    if "additional_data" in data and isinstance(data["additional_data"], dict):
-        merged_data = deep_merge({}, data["additional_data"])
-        merged_data = normalize_yesno_like_fields(merged_data)
-        new_additional = deep_merge(new_additional, merged_data)
+    # 2) Работа с файлом данных
+    fpath = STORAGE_DIR / fname
+    created = not fpath.exists()
+    doc = {"ssn": ssn, "bday": bday, "param": param,
+           "additional_data": {}, "created": created}
 
-    for key, value in data.items():
-        if key not in ("ssn", "bday", "additional_data"):
-            new_additional[key] = value
+    if fpath.exists():
+        existing = load_json(fpath)
+        # сохраняем все поля из старого
+        doc.update(existing)
+        doc["created"] = False
 
-    if os.path.exists(file_path):
-        logger.info(f"Файл {file_path} существует. Начинается процесс обновления.")
-        try:
-            with open(file_path, "r") as file:
-                existing_data = json.load(file)
-        except Exception as e:
-            logger.error(f"Ошибка чтения файла {file_path}: {e}")
-            raise HTTPException(status_code=500, detail=f"Ошибка чтения файла: {e}")
+    add_data = payload.get("additional_data") or {}
+    doc["additional_data"] = prune_empty(
+        deep_merge(doc.get("additional_data", {}), add_data)
+    )
 
-        existing_additional = existing_data.get("additional_data", {})
-        updated_additional = deep_merge(existing_additional, new_additional)
-        # Применяем динамическую очистку
-        updated_additional = prune_no_fields(updated_additional)
+    save_json(fpath, doc)
+    logger.info(f"Файл {fname} сохранён (created={doc['created']})")
+    return {"message": "saved", "file_name": fname, "data": doc}
 
-        updated_data = {
-            "ssn": ssn,
-            "bday": bday,
-            "created": False,
-            "additional_data": updated_additional
+@app.get("/api/form-data/{component}/{ssn}")
+async def get_form_data(
+    component: str,
+    ssn: str,
+    bday:  str  = Query(..., description="YYYY-MM-DD"),
+    param: str  = Query("default", description="param or default")
+):
+    try:
+        fp = resolve_file(ssn, bday, param)
+        data = load_json(fp)
+        return {
+            "ssn": data["ssn"],
+            "bday": data["bday"],
+            "param": data.get("param"),
+            "data": data["additional_data"].get(component, {})
         }
-
-        try:
-            with open(file_path, "w") as file:
-                json.dump(updated_data, file, indent=4)
-            logger.info(f"Файл {file_path} успешно обновлен.")
-            return {
-                "message": "Файл успешно обновлен",
-                "file_name": f"{ssn}.json",
-                "data": updated_data
-            }
-        except Exception as e:
-            logger.error(f"Ошибка записи файла {file_path}: {e}")
-            raise HTTPException(status_code=500, detail=f"Ошибка записи файла: {e}")
-
-    else:
-        logger.info(f"Файл для SSN {ssn} не найден. Начинается создание нового файла.")
-        new_additional = normalize_yesno_like_fields(new_additional)
-        new_additional = prune_no_fields(new_additional)
-        new_data = {
-            "ssn": ssn,
-            "bday": bday,
-            "created": True,
-            "additional_data": new_additional
-        }
-        try:
-            with open(file_path, "w") as file:
-                json.dump(new_data, file, indent=4)
-            logger.info(f"Новый файл {file_path} успешно создан.")
-            return {
-                "message": "Файл успешно создан",
-                "file_name": f"{ssn}.json",
-                "data": new_data
-            }
-        except Exception as e:
-            logger.error(f"Ошибка создания файла {file_path}: {e}")
-            raise HTTPException(status_code=500, detail=f"Ошибка создания файла: {e}")
+    except FileNotFoundError:
+        logger.warning("form-data: файл не найден")
+        raise HTTPException(404, "form-data not found")
 
 @app.get("/api/history/{ssn}")
-async def get_history_by_ssn(ssn: str):
+async def get_history(
+    ssn:   str,
+    bday:  str  = Query(...),
+    param: str  = Query("default")
+):
+    try:
+        fp = resolve_file(ssn, bday, param)
+        return {"file_name": fp.name, "data": load_json(fp)}
+    except FileNotFoundError:
+        raise HTTPException(404, "history not found")
 
-    file_path = os.path.join(STORAGE_DIR, f"{ssn}.json")
-    logger.info(f"Запрос данных для SSN: {ssn}")
-    if os.path.exists(file_path):
-        try:
-            with open(file_path, "r") as file:
-                data = json.load(file)
-            logger.info(f"Данные для SSN {ssn} успешно загружены")
-            return {"file_name": f"{ssn}.json", "data": data}
-        except Exception as e:
-            logger.error(f"Ошибка чтения файла {file_path}: {e}")
-            raise HTTPException(status_code=500, detail="Ошибка при чтении файла данных")
-    else:
-        logger.warning(f"Файл для SSN {ssn} не найден")
-        raise HTTPException(status_code=404, detail="Данные не найдены")
+@app.get("/api/history/{ssn}/pdf")
+async def history_pdf(
+    ssn:   str,
+    bday:  str           = Query(...),
+    param: str           = Query("default"),
+    email: EmailStr | None = Query(None)
+):
+    try:
+        fp = resolve_file(ssn, bday, param)
+    except FileNotFoundError:
+        raise HTTPException(404, "history not found")
+
+    data = load_json(fp)
+    html = jinja_env.get_template("application.html").render(
+        data=data["additional_data"], ssn=ssn
+    )
+    pdf = pdfkit.from_string(html, False)
+
+    if email:
+        tmp = STORAGE_DIR / f"{fp.stem}.pdf"
+        tmp.write_bytes(pdf)
+        _send_pdf(tmp, email, ssn)
+        tmp.unlink(missing_ok=True)
+        logger.info(f"PDF для {ssn} отправлен на {email}")
+        return {"status": "sent", "to": email}
+
+    return StreamingResponse(
+        BytesIO(pdf),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"attachment; filename={fp.stem}.pdf"}
+    )
+
+def _send_pdf(path: Path, to: str, ssn: str):
+    msg = EmailMessage()
+    msg["Subject"] = f"PDF for {ssn}"
+    msg["From"]    = "noreply@example.com"
+    msg["To"]      = to
+    msg.set_content("Attached file.")
+    msg.add_attachment(
+        path.read_bytes(),
+        maintype="application", subtype="pdf", filename=path.name
+    )
+    with smtplib.SMTP("localhost") as srv:
+        srv.send_message(msg)
 
 if __name__ == "__main__":
-
-    logger.info("Запуск приложения через uvicorn")
+    logger.info("⇢  starting backend on 0.0.0.0:8000")
     uvicorn.run(app, host="0.0.0.0", port=8000)

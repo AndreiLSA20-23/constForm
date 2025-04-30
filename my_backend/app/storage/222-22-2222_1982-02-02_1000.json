@@ -1,0 +1,171 @@
+{
+    "ssn": "222-22-2222",
+    "bday": "1982-02-02",
+    "param": "1000",
+    "additional_data": {
+        "app-perdates": {
+            "suffix": "Sr.",
+            "firstName": "Andre",
+            "middleName": "Alex",
+            "lastName": "Sarancha",
+            "birthday": "2020-01-01",
+            "email": "ik2k@bk.ru",
+            "driverLicense": "67995454599A122",
+            "phoneNumber": "89097893959",
+            "termsConfirmation": true,
+            "promoEmails": true
+        },
+        "app-license-details": {
+            "licenseNumber": "6799545",
+            "country": "Germany",
+            "licenseExpirationDate": "2030-01-01",
+            "medicalExpirationDate": "2040-01-02",
+            "currentLicense": {
+                "value": "yes",
+                "licenseType": "Class A",
+                "licenseIssuedState": "Indiana",
+                "licenseExpirationDate1": "2030-01-01"
+            },
+            "hazmatLicense": {
+                "value": "yes",
+                "hazmatClass": "Class 2 - Gases",
+                "effectiveDate": "2023-01-01"
+            },
+            "commercialLicense": {
+                "value": "yes"
+            },
+            "otherEndorsement": true,
+            "tankerEndorsement": true,
+            "doublesTriplesEndorsement": false,
+            "xEndorsement": false
+        },
+        "app-driver-training": {
+            "items": [
+                {
+                    "startDate": "0111-01-01",
+                    "endDate": "2002-12-01",
+                    "province": "HUI",
+                    "schoolName": "aaa",
+                    "telephone": "89097893959",
+                    "address": "Andrei",
+                    "address2": "Kalana",
+                    "city": "Kaliningrad",
+                    "country": "United States",
+                    "didGraduate": {
+                        "value": "yes"
+                    },
+                    "subjectToRegulations": {
+                        "value": "no"
+                    },
+                    "safetySensitive": {
+                        "value": "no"
+                    },
+                    "gpa": "1",
+                    "instructionHours": "2",
+                    "skillsTrained": [
+                        "200+",
+                        "Border Crossing",
+                        "Log Books",
+                        "Federal Motor Carrier Regulations"
+                    ],
+                    "state": "California"
+                }
+            ]
+        },
+        "add-address": [
+            {
+                "country": "Japan",
+                "city": "Kaliningrad",
+                "addressLine1": "Andrei",
+                "addressLine2": "Kalana",
+                "zipCode": "23450",
+                "startDate": "2022-04-30",
+                "endDate": "2025-04-30"
+            }
+        ],
+        "experience-history": [
+            {
+                "companyName": "IP Sarancha",
+                "startDate": "2021-04-30",
+                "endDate": "2022-04-30",
+                "city": "Kaliningrad",
+                "state": "Pennsylvania",
+                "country": "United States",
+                "lineAddress_1": "Gorkogo",
+                "lineAddress_2": "Hurgda",
+                "zipCode": "23450",
+                "telephone": "89097893959",
+                "positionHeld": "Boss",
+                "reasonForLeaving": "dsclsdlc",
+                "terminated": true,
+                "currentEmployer": true,
+                "contactEmployer": false,
+                "commercialVehicle": true,
+                "federalRegulations": false,
+                "safetyFunctions": true,
+                "areasDriven": "2222",
+                "payRange": 2212,
+                "mostCommonTruck": "Reefer Truck: Carrier Reefer Truck",
+                "mostCommonTrailer": "Furniture Van",
+                "trailerLength": "53 ft",
+                "motorVehicleData": {
+                    "companyName": "IP Sarancha",
+                    "startDate": "2021-04-30",
+                    "endDate": "2022-04-30",
+                    "city": "Kaliningrad",
+                    "state": "Pennsylvania",
+                    "country": "United States",
+                    "lineAddress_1": "Gorkogo",
+                    "lineAddress_2": "Hurgda",
+                    "zipCode": "23450",
+                    "telephone": "89097893959",
+                    "positionHeld": "Boss",
+                    "reasonForLeaving": "dsclsdlc",
+                    "terminated": true,
+                    "currentEmployer": true,
+                    "contactEmployer": false,
+                    "commercialVehicle": true,
+                    "federalRegulations": false,
+                    "safetyFunctions": true,
+                    "areasDriven": "2222",
+                    "payRange": 2212,
+                    "mostCommonTruck": "Reefer Truck: Carrier Reefer Truck",
+                    "mostCommonTrailer": "Furniture Van",
+                    "trailerLength": "53 ft"
+                },
+                "type": "employment"
+            },
+            {
+                "schoolName": "Posderrer",
+                "startDate": "2022-05-01",
+                "endDate": "2023-04-30",
+                "countrySchool": "United States",
+                "stateSchool": "California",
+                "city": "Zalup",
+                "phoneSchool": "11111",
+                "fieldOfStudy": "wwww",
+                "graduationDate": "2020-10-10",
+                "type": "school",
+                "country": "United States",
+                "state": "California"
+            },
+            {
+                "startDate": "2023-05-01",
+                "endDate": "2024-04-30",
+                "countryMilit": "Germany",
+                "branch": "SOlder",
+                "rank": "Maior",
+                "dd214": "no",
+                "type": "militaryService",
+                "country": "Germany"
+            },
+            {
+                "startDate": "2024-05-01",
+                "endDate": "2025-04-30",
+                "comments": "Hueta",
+                "type": "unemployment"
+            }
+        ]
+    },
+    "created": false
+}

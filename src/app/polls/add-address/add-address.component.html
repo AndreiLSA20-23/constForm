@@ -75,12 +75,11 @@
 
 <!-- ============ КНОПКА «SAVE ADDRESSES» ============ -->
 <div class="d-flex justify-content-end mb-5 me-4">
-    <button class="btn btn-success" (click)="persistAll()" [disabled]="gaps.length > 0"
-        title="{{ gaps.length ? 'Fill all gaps to enable saving' : 'Save all addresses' }}">
+    <button class="btn btn-success" (click)="persistAll()" [disabled]="gaps.length > 0 || !isDirty"
+        [title]="gaps.length > 0 ? 'Fill all gaps to enable saving' : (!isDirty ? 'No changes to save' : 'Save all addresses')">
         Save&nbsp;Addresses
     </button>
 </div>
-
 <!-- ========================  M O D A L  ========================= -->
 <div class="modal fade" tabindex="-1" [ngClass]="{ show: isModalOpen }"
     [ngStyle]="{ display: isModalOpen ? 'block' : 'none' }">

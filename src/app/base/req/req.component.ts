@@ -1,16 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { IStartData } from '../../models/data.model'; // Импорт интерфейса IStartData
-import { START_DATA_1 } from '../../models/start-data';
-
+import { CommonModule } from '@angular/common';
+import { RequirementsService, IStartData } from '../../services/requirements.service';
 
 @Component({
   selector: 'app-req',
-  imports: [],
-  templateUrl: './req.component.html',
   standalone: true,
-  styleUrls: ['./req.component.scss']
+  templateUrl: './req.component.html',
+  styleUrls: ['./req.component.scss'],
+  imports: [CommonModule],
 })
-export class ReqComponent  {
-  public storage: IStartData = START_DATA_1;
+export class ReqComponent implements OnInit {
+  storage!: IStartData;
+  ready = false;
+  loading = true;  // Флаг загрузки
+  error: string | null = null; // Флаг ошибки
 
+  constructor(private reqSvc: RequirementsService) {}
+
+  ngOnInit(): void {
+    this.reqSvc.getStartData().subscribe({
+      next: (data) => {
+        this.storage = data;
+        this.ready = true;
+        this.loading = false; // Загрузка завершена
+        console.log('[ReqComponent] ✅ Данные успешно загружены', this.storage);
+      },
+      error: (error) => {
+        this.error = 'Error loading data'; // Сообщение об ошибке
+        this.loading = false; // Загрузка завершена с ошибкой
+        console.error('[ReqComponent] ❌ Ошибка загрузки данных', error);
+      }
+    });
+  }
 }
