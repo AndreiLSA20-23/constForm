@@ -1,3 +1,4 @@
+<!--req.html-->
 <ng-container *ngIf="storage">
   <div class="requirements">
     <h5 class="text-center text-dark mb-4">
@@ -15,7 +16,7 @@
         with HazMat (H) or combination (X) endorsement.
       </li>
       <li>
-        No more than two at-fault accidents and two moving violations within the past 36 months,
+        No more than two at-fault accidents and two moving violations within the past {{storage.felonyConvictions}} months,
         or no more than one at-fault accident and three moving violations within the same period.
         No involvement in preventable DOT-recordable accidents in the past 12 months.
       </li>
@@ -29,9 +30,9 @@
         Other felony or misdemeanor charges reviewed case-by-case.
       </li>
       <li>No positive drug or alcohol test results, including refusals or pre-employment test results.</li>
-      <li>No suspensions longer than 30 days for moving violations in the past 36 months.</li>
+      <li>No suspensions longer than 30 days for moving violations in the past {{storage.felonyConvictions}} months.</li>
       <li>
-        No more than one serious violation as defined in Table 2 of section 383.51 FMCSR within the last 36 months.
+        No more than one serious violation as defined in Table 2 of section 383.51 FMCSR within the last {{storage.felonyConvictions}} months.
       </li>
       <li>
         No railroad-highway grade crossing violations as defined in Table 3 of section 383.51 FMCSR within the last 36
@@ -41,7 +42,7 @@
         No citations or convictions for Reckless Driving or Careless Endangerment within the past 36 months.
       </li>
       <li>
-        No DUI charges within the last 60 months (personal or non-commercial vehicle),
+        No DUI charges within the last {{storage.felonyConvictions*12}} months (personal or non-commercial vehicle),
         and never in a commercial vehicle.
       </li>
       <li>
@@ -85,3 +86,8 @@
 <ng-container *ngIf="error">
   <p class="text-danger">Error loading data: {{ error }}</p>
 </ng-container>
+
+<div class="mt-4 p-3 bg-light border rounded small text-muted" *ngIf="ready">
+  <h6>Debug Output (Raw JSON):</h6>
+  <pre>{{ storage | json }}</pre>
+</div>

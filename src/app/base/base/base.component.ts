@@ -12,10 +12,11 @@ import {
   FormComponentData,
   ElementData
 } from '../../services/din-form-json-worker.service';
+import { Subject } from 'rxjs';
 
 @Directive()
 export abstract class BaseComponent implements OnInit {
-  // Обработанные данные, полученные из JSON
+  public requirementsReady$ = new Subject<void>();
   processedData!: FormComponentData;
 
   // Форма может быть либо FormGroup (монорежим), либо FormArray (полиформа)
@@ -183,73 +184,9 @@ export abstract class BaseComponent implements OnInit {
    * Загружает JSON-данные (requirements.json), берёт нужный компонент по имени, создаёт форму.
    * Если данные содержат pages, также обрабатываем логику пагинации.
    */
-  /*protected loadRequirements(): void {
-    this.dinFormService.loadRequirements('requirements.json').subscribe({
-      next: (data: RequirementsData) => {
-        const componentData =
-          this.dinFormService.getComponentData(this.componentName);
-        if (!componentData) {
-          this.errorMessage = `No data found for component "${this.componentName}".`;
-          this.isLoading = false;
-          console.error(
-            `[BaseComponent] No component data found for: ${this.componentName}`
-          );
-          return;
-        }
-        const vars = data.variables || {};
-        const replaced = this.dinFormService.replaceTextVariablesInObject(
-          componentData,
-          vars
-        );
-        this.processedData = replaced as FormComponentData;
-        let dataForForm = { ...this.processedData };
-        if (this.processedData['pages']) {
-          const flatElements =
-            this.findArrayInObject(
-              'elements',
-              this.processedData['pages']
-            ) ||
-            this.findArrayInObject('rows', this.processedData['pages']);
-          if (flatElements) {
-            dataForForm = {
-              ...this.processedData,
-              elements: flatElements
-            };
-          }
-        }
-        if (this.processedData['pages']) {
-          this.pageKeys = Object.keys(this.processedData['pages']);
-          if (this.pageKeys.length > 0) {
-            this.currentPage = this.pageKeys[0];
-          }
-        } else {
-          this.pageKeys = [];
-          this.currentPage = '';
-        }
-        this.form = this.dinFormService.generateFormFromJson(dataForForm);
-        //console.log('[BaseComponent] Form created:', this.form);
-        // Вывод начальных значений для отладки
-        if (this.form instanceof FormArray) {
-          for (let i = 0; i < this.form.length; i++) {
-            this.initializeCountryAndState(i);
-          }
-        }
-        this.isLoading = false;
-        this.cd.detectChanges();
-      },
-      error: (err) => {
-        this.errorMessage = 'Failed to load data.';
-        this.isLoading = false;
-        console.error('[BaseComponent] Error loading requirements:', err);
-      }
-    });
-  }*/
+
   protected loadRequirements(): void {
   const filePath = this.dinFormService.getRequirementsPath();
-
-  // Log the path being requested
-  console.log(`[BaseComponent] loading requirements from ${filePath}`);
-
   this.dinFormService.loadRequirements(filePath).subscribe({
     next: (data: RequirementsData) => {
       const componentData = this.dinFormService.getComponentData(this.componentName);
@@ -259,6 +196,7 @@ export abstract class BaseComponent implements OnInit {
         console.error(`[BaseComponent] No component data found for: ${this.componentName}`);
         return;
       }
+
       const vars = data.variables || {};
       const replaced = this.dinFormService.replaceTextVariablesInObject(componentData, vars);
       this.processedData = replaced as FormComponentData;
@@ -271,9 +209,6 @@ export abstract class BaseComponent implements OnInit {
         if (flatElements) {
           dataForForm = { ...this.processedData, elements: flatElements };
         }
-      }
-
-      if (this.processedData['pages']) {
         this.pageKeys = Object.keys(this.processedData['pages']);
         this.currentPage = this.pageKeys.length > 0 ? this.pageKeys[0] : '';
       } else {
@@ -291,6 +226,7 @@ export abstract class BaseComponent implements OnInit {
 
       this.isLoading = false;
       this.cd.detectChanges();
+      this.requirementsReady$.next();
     },
     error: (err) => {
       this.errorMessage = 'Failed to load data.';
@@ -302,6 +238,7 @@ export abstract class BaseComponent implements OnInit {
 
 
 
+
   protected initializeCountryAndState(index: number = 0): void {
   const group = this.getFormGroupAt(index);
   if (!group) return;
@@ -309,13 +246,7 @@ export abstract class BaseComponent implements OnInit {
   const prefillCountry = group.get('country')?.value;
   const prefillState = group.get('state')?.value;
 
-  //console.log(`[BaseComponent] 🧭 initializeCountryAndState index=${index}`, {
-  //  prefillCountry,
-  //  prefillState,
-  //  groupKeys: Object.keys(group.controls)
-  //});
 
-  // Если нет страны, пропускаем шаг
   if (!prefillCountry) {
     //console.log('[BaseComponent] Country is missing. Skipping state initialization.');
     this.cd.detectChanges();

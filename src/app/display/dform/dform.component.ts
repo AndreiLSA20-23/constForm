@@ -123,11 +123,9 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
 
     // 1) Загружаем JSON-схему (BaseComponent подтянет и создаст this.form)
     this.loadRequirements();
-
-    // 2) Подгружаем префилл данных — слегка откладываем, чтобы форма успела создаться
-    setTimeout(() => {
-      this.loadPrefillData();
-    }, 0);
+    this.requirementsReady$.subscribe(() => {
+    this.loadPrefillData();
+  });
   }
 
 
