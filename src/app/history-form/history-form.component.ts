@@ -20,6 +20,10 @@ import { DriverTrainingComponent } from '../polls/driver-training/driver-trainin
 import { ExpHistoryComponent } from '../polls/exp-history/exp-history.component';
 import { AddAddressComponent } from '../polls/add-address/add-address.component';
 import { FullResComponent } from '../polls/full-res/full-res.component';
+import { HAZARDOUSComponent } from '../polls/hazardous/hazardous.component';
+import { DRIVINGEXPERIENCEComponent} from '../polls/drivingexperience/drivingexperience.component';
+import {CRIMINALINFORMATIONComponent} from '../polls/criminalinformation/criminalinformation.component';
+import {IncidentDetailsComponent} from '../polls/incident-details/incident-details.component';
 import { ReportGeneratorComponent } from '../polls/report-generator/report-generator.component';
 import { HTTPFA } from '../models/start-data';
 
@@ -39,6 +43,10 @@ import { HTTPFA } from '../models/start-data';
     ExpHistoryComponent,
     AddAddressComponent,
     FullResComponent,
+    HAZARDOUSComponent,
+    DRIVINGEXPERIENCEComponent,
+    CRIMINALINFORMATIONComponent,
+    IncidentDetailsComponent,
     ReportGeneratorComponent
   ],
   styleUrls: ['./history-form.component.scss']
@@ -64,6 +72,10 @@ export class HistoryFormComponent implements OnInit, OnDestroy {
     AddAddressComponent,
     ExpHistoryComponent,
     FullResComponent,
+    HAZARDOUSComponent,
+    DRIVINGEXPERIENCEComponent,
+    CRIMINALINFORMATIONComponent,
+    IncidentDetailsComponent,
     ReportGeneratorComponent
   ];
 
@@ -207,7 +219,11 @@ export class HistoryFormComponent implements OnInit, OnDestroy {
       case 4: return 'add-address';
       case 5: return 'experience-history';
       case 6: return 'app-full-res';
-      case 7: return 'app-report-generator';
+      case 7: return 'app-hazardous';
+      case 8: return 'app-drivingexperience';
+      case 9: return 'app-criminalinformation';
+      case 10: return 'app-incident-details';
+      case 11: return 'app-report-generator';
       default: return '';
     }
   }

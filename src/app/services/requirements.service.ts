@@ -8,7 +8,7 @@ export interface IStartData {
   homeHistory: number;
   driveLicHistory: number;
   empHistory: number;
-  phone: string;
+  email: string;
   personPhoneOrg: string;
   age: number;
   felonyConvictions: number;
@@ -27,7 +27,6 @@ export class RequirementsService {
   setParam(param: string): void {
     // Меняем путь, чтобы использовать динамический параметр
     this.url = `/requirements_${param}.json`;
-    console.log(`[RequirementsService] 🔵 Установлен путь к JSON: ${this.url}`);
   }
 
   getUrl(): string {
@@ -38,7 +37,6 @@ export class RequirementsService {
    * Загружает данные из выбранного файла JSON и приводит их к IStartData
    */
   getStartData(): Observable<IStartData> {
-    console.log(`[RequirementsService] 📦 Пытаемся загрузить JSON: ${this.url}`);
     return this.http
       .get<{ variables: Record<string, any> }>(this.url)
       .pipe(
@@ -48,7 +46,7 @@ export class RequirementsService {
           homeHistory: v['homeHistoryConst'],
           driveLicHistory: v['driveLicHistoryConst'],
           empHistory: v['empHistoryConst'],
-          phone: '', // Если вам нужно, подставьте нужные данные для телефона
+          email: v['emailConst'],
           personPhoneOrg: v['personPhoneOrgConst'],
           age: v['ageConst'],
           felonyConvictions: v['felonyConvictionsConst'],

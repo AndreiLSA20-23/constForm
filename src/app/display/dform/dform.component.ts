@@ -70,6 +70,8 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   public selectedIndex: number | null = null;
   public isSurveySaved: boolean = false;
   public isSingleFormView: boolean = true;
+  public dformCurrentPage: number = 1;
+  public totalPages: number = 1;
 
   public editForm!: FormGroup; // Форма для редактирования элемента (FormArray)
   private editFormBackup: any = null;
@@ -79,6 +81,9 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   // Защита от повторной инициализации, если компонент монтируется заново
   private isInitialized = false;
   isReady = false;
+
+
+  
 
   constructor(
     @Inject(DinFormJsonWorkerService) dinFormService: DinFormJsonWorkerService,
@@ -125,6 +130,11 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
     this.loadRequirements();
     this.requirementsReady$.subscribe(() => {
     this.loadPrefillData();
+    if (this.pageKeys?.length > 0) {
+      this.totalPages = this.pageKeys.length;
+      this.dformCurrentPage = 1;
+    }
+
   });
   }
 
@@ -164,17 +174,6 @@ private loadPrefillData(): void {
       // 2. Проверяем, есть ли вообще что-то в response.data
       if (!response || !response.data) {
         console.log('[DformComponent] Empty prefill => считаем новую анкету');
-        // Можно принудительно "очистить" или оставить форму без изменений
-        // if (this.form instanceof FormGroup) {
-        //   this.form.reset();
-        // }
-        // if (this.form instanceof FormArray) {
-        //   // Очищаем массив
-        //   while (this.form.length > 0) {
-        //     this.form.removeAt(0);
-        //   }
-        // }
-        // Далее ставим флаги, что у нас новая/пустая
         this.cd.detectChanges();
         this.isReady = true;
         return;
@@ -270,6 +269,14 @@ private loadPrefillData(): void {
   // ----------------------------------------------------------------------------
   // Методы для FormArray / редактирования/удаления, без изменений
   // ----------------------------------------------------------------------------
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.dformCurrentPage = page;
+      this.cd.detectChanges();
+    }
+  }
+
+
 
   override onYesNoChange(el: ElementData, value: string): void {
     // Если у нас FormArray и выбран элемент – используем selectedIndex

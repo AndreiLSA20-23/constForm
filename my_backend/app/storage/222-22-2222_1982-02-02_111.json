@@ -1,0 +1,292 @@
+{
+    "ssn": "222-22-2222",
+    "bday": "1982-02-02",
+    "param": "111",
+    "additional_data": {
+        "app-perdates": {
+            "suffix": "Sr.",
+            "firstName": "Anre",
+            "middleName": "Alex",
+            "lastName": "Sarancha",
+            "birthday": "1981-01-01",
+            "email": "ik2k@bk.ru",
+            "driverLicense": "67995454599A122",
+            "phoneNumber": "89097893959",
+            "termsConfirmation": true,
+            "promoEmails": true
+        },
+        "app-license-details": {
+            "licenseNumber": "67995454599A122",
+            "country": "United States",
+            "licenseExpirationDate": "2021-01-01",
+            "medicalExpirationDate": "2022-01-01",
+            "currentLicense": {
+                "value": "yes",
+                "licenseType": "Class A",
+                "licenseIssuedState": "California",
+                "licenseExpirationDate1": "2050-02-10"
+            },
+            "hazmatLicense": {
+                "value": "yes",
+                "hazmatClass": "Class 1 - Explosives",
+                "effectiveDate": "2040-01-01"
+            },
+            "commercialLicense": {
+                "value": "yes"
+            },
+            "otherEndorsement": true,
+            "tankerEndorsement": true,
+            "doublesTriplesEndorsement": true,
+            "xEndorsement": true,
+            "state": "Alaska"
+        },
+        "app-driver-training": {
+            "items": [
+                {
+                    "startDate": "2020-01-01",
+                    "endDate": "2022-01-01",
+                    "province": "Zalupa",
+                    "schoolName": "Suslovo",
+                    "telephone": "890978939591",
+                    "address": "Andrei Lskdksd",
+                    "address2": "Kalagrad",
+                    "city": "sdsdsdsd",
+                    "violationCountry": "Italy",
+                    "didGraduate": {
+                        "value": "yes"
+                    },
+                    "subjectToRegulations": {
+                        "value": "yes"
+                    },
+                    "safetySensitive": {
+                        "value": "yes"
+                    },
+                    "gpa": "22",
+                    "instructionHours": "222",
+                    "skillsTrained": [
+                        "200+",
+                        "Border Crossing",
+                        "Log Books",
+                        "Federal Motor Carrier Regulations",
+                        "Hazardous Materials"
+                    ]
+                }
+            ]
+        },
+        "add-address": [
+            {
+                "country": "Germany",
+                "city": "Zalupa",
+                "addressLine1": "Kaliningrad",
+                "addressLine2": "Pereslavskoe",
+                "zipCode": "236001",
+                "startDate": "2022-05-02",
+                "endDate": "2025-05-02"
+            }
+        ],
+        "experience-history": [
+            {
+                "companyName": "IP  Sarancha A.A.",
+                "startDate": "2021-05-02",
+                "endDate": "2025-05-02",
+                "city": "Kaliningrad",
+                "state": "Texas",
+                "country": "United States",
+                "lineAddress_1": "Gorkogo st. 172 flt. 9",
+                "lineAddress_2": "herata",
+                "zipCode": "23450",
+                "telephone": "8909789395911",
+                "positionHeld": "Mozg",
+                "reasonForLeaving": "Fuck off",
+                "terminated": true,
+                "currentEmployer": true,
+                "contactEmployer": true,
+                "commercialVehicle": true,
+                "federalRegulations": true,
+                "safetyFunctions": true,
+                "areasDriven": "1212",
+                "payRange": 23,
+                "mostCommonTruck": "Class 8: International LT",
+                "mostCommonTrailer": "Pup Trailer",
+                "trailerLength": "60+ ft",
+                "motorVehicleData": {
+                    "companyName": "IP  Sarancha A.A.",
+                    "startDate": "2021-05-02",
+                    "endDate": "2025-05-02",
+                    "city": "Kaliningrad",
+                    "state": "Texas",
+                    "country": "United States",
+                    "lineAddress_1": "Gorkogo st. 172 flt. 9",
+                    "lineAddress_2": "herata",
+                    "zipCode": "23450",
+                    "telephone": "8909789395911",
+                    "positionHeld": "Mozg",
+                    "reasonForLeaving": "Fuck off",
+                    "terminated": true,
+                    "currentEmployer": true,
+                    "contactEmployer": true,
+                    "commercialVehicle": true,
+                    "federalRegulations": true,
+                    "safetyFunctions": true,
+                    "areasDriven": "1212",
+                    "payRange": 23,
+                    "mostCommonTruck": "Class 8: International LT",
+                    "mostCommonTrailer": "Pup Trailer",
+                    "trailerLength": "60+ ft"
+                },
+                "type": "employment"
+            }
+        ],
+        "app-full-res": {
+            "what_company_are_you_applying_": "Landstar Inway, Inc (Tractor/Trailer)",
+            "what_position_are_you_seeking?": "Fleet Owner",
+            "will_you_be_running_as_a_team?": {
+                "value": "yes"
+            },
+            "how_many_years_of_commercial_d": "3",
+            "do_you_currently_have_your_own": {
+                "value": "yes",
+                "div_custq_30155_5a294e": "HUO"
+            },
+            "are_you_a_fleet_owner?_*": {
+                "value": "yes",
+                "div_custq_30155_febd42": "HUI1"
+            },
+            "how_many_trucks_do_you_own?_*": {
+                "value": "yes",
+                "div_custq_30155_ca75d0": "2"
+            },
+            "does_your_truck(s)_have_active": {
+                "value": "yes",
+                "div_custq_30155_4da308": "HUI4"
+            },
+            "enter_make,_model,_and_year_of": {
+                "value": "yes",
+                "div_custq_30155_0ec72f": "Jopa konya !!!!!"
+            }
+        },
+        "app-hazardous": {
+            "have_you_ever_held_a_hazmat_en": {
+                "value": "no"
+            },
+            "have_you_ever_hauled_hazardous": {
+                "value": "no"
+            }
+        },
+        "app-drivingexperience": {
+            "van_*": {
+                "value": "no"
+            },
+            "flatbed_*": {
+                "value": "no"
+            }
+        },
+        "app-criminalinformation": {
+            "custq_30546": {
+                "value": "yes",
+                "div_custq_30547": "010203",
+                "div_custq_30548": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30549": {
+                "value": "yes",
+                "div_custq_30550": "0202020",
+                "div_custq_30551": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30552": {
+                "value": "yes",
+                "div_custq_30553": "Yes",
+                "div_custq_30554": "01.02.04",
+                "div_custq_30555": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30556": {
+                "value": "yes",
+                "div_custq_30557": "Yes",
+                "div_custq_30558": "04.05.06",
+                "div_custq_30559": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30560": {
+                "value": "yes",
+                "div_custq_30561": "040404",
+                "div_custq_30562": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30563": {
+                "value": "yes",
+                "div_custq_30564": "040404",
+                "div_custq_30565": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30566": {
+                "value": "yes",
+                "div_custq_30568": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30569": {
+                "value": "yes",
+                "div_custq_30570": "Yes",
+                "div_custq_30571": "Yes",
+                "div_custq_30572": "050545",
+                "div_custq_30573": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30574": {
+                "value": "yes",
+                "div_custq_30575": "050606",
+                "div_custq_30576": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30577": {
+                "value": "yes",
+                "div_custq_30578": "060606",
+                "div_custq_30579": "Fsass, dsdsd, dfdff,dffd"
+            },
+            "custq_30580": {
+                "value": "yes",
+                "div_custq_30581": "ekwefwfwefw weowowekwekfwm w-fw-fw-fwefw-ff-"
+            },
+            "custq_30582": {
+                "value": "yes",
+                "div_custq_30583": "050505",
+                "div_custq_30584": "Fsass, dsdsd, dfdff,dffd",
+                "div_custq_30585": "Zzzzo",
+                "div_custq_30586": "dsdkskdsk",
+                "div_custq_30587": "kfkrfkdkfdk"
+            },
+            "custq_30588": {
+                "value": "yes",
+                "div_custq_30589": "060606",
+                "div_custq_30590": "Fsass, dsdsd, dfdff,dffd",
+                "div_custq_30591": "dkfkdfkfkfk",
+                "div_custq_30592": "000sffkk"
+            },
+            "custq_30593": {
+                "value": "yes",
+                "div_custq_30594": "050505",
+                "div_custq_30595": "Fsass, dsdsd, dfdff,dffd",
+                "div_custq_30596": "sdkfkfk"
+            },
+            "custq_61943": {
+                "value": "yes",
+                "div_custq_61944": "kfkdfdkfk",
+                "div_custq_61945": "Fsass, dsdsd, dfdff,dffd"
+            }
+        },
+        "app-incident-details": {
+            "items": [
+                {
+                    "violationMonth": "2",
+                    "violationYear": "2022",
+                    "violationCharge": "Driving Without A License",
+                    "mphOverLimit": "2",
+                    "violationCountry": "Russia",
+                    "commercialVehicle": {
+                        "value": "no"
+                    },
+                    "finePenalty": true,
+                    "suspensionPenalty": true,
+                    "revocationPenalty": true,
+                    "communityServicePenalty": true,
+                    "otherPenalty": false,
+                    "fineAmount": "$300 - $399",
+                    "comments": "sddfsdsf"
+                }
+            ]
+        }
+    },
+    "created": false
+}

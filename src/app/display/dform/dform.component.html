@@ -35,12 +35,14 @@
     <form [formGroup]="mainFormGroup" (ngSubmit)="onSubmitSingleForm()">
       <div *ngIf="pageKeys && pageKeys.length > 1; else singlePageTemplate">
         <div class="pages-container">
-          <div *ngFor="let pageKey of pageKeys" class="page-column">
-            <ng-container *ngTemplateOutlet="
-                renderPage;
-                context: { rows: getRowsForPage(pageKey), form: mainFormGroup }
-              ">
-            </ng-container>
+          <div *ngFor="let pageKey of pageKeys; let idx = index">
+            <div *ngIf="idx + 1 === dformCurrentPage" class="page-column">
+              <ng-container *ngTemplateOutlet="
+                  renderPage;
+                  context: { rows: getRowsForPage(pageKey), form: mainFormGroup }
+                ">
+              </ng-container>
+            </div>
           </div>
         </div>
       </div>
@@ -53,12 +55,13 @@
       </ng-template>
       <div class="form-actions mt-3">
         <button type="submit" class="btn btn-success"  [disabled]="mainFormGroup.invalid">Save</button>
-        <div class="mt-4">
+        <div class="form-debug">
           <h5>Form Debug:</h5>
           <pre>{{ mainFormGroup.status }}</pre>
           <pre>{{ mainFormGroup.errors | json }}</pre>
           <pre>{{ mainFormGroup.value | json }}</pre>
         </div>
+
         <!--button type="button" (click)="onCancel()" class="btn btn-outline-secondary">Cancel</button-->
       </div>
     </form>
@@ -79,7 +82,6 @@
             context: { rows: getRows(), form: getActiveFormGroup() }
           ">
         </ng-container>
-        <!--div class="form-actions mt-3 d-flex justify-content-between"-->
         <div class="form-actions mt-3 d-flex flex-column align-items-start gap-2">
           <div>
             <button type="submit" class="btn btn-success" [disabled]="getActiveFormGroup().invalid">Save Changes</button>
@@ -89,11 +91,6 @@
               <pre class="mb-0">Errors: {{ getActiveFormGroup().errors | json }}</pre>
               <pre class="mb-0">Value: {{ getActiveFormGroup().value | json }}</pre>
             </div>
-
-
-            <!--app-dform type="button" (click)="onCancel()" class="btn btn-outline-secondary ms-2">
-              Cancel
-            </button>-->
           </div>
           <button type="button" (click)="onAddNewItem()" class="btn btn-primary"
             [disabled]="!isSurveySaved || formArray.controls.length >= maxItems">
@@ -145,9 +142,6 @@
 
         <div class="form-actions d-flex justify-content-end">
           <button type="submit" class="btn btn-success me-2" [disabled]="formArray.invalid">Save Changes</button>
-          <!--<button type="button" (click)="onCancel()" class="btn btn-outline-secondary">
-            CancelXXX
-          </button>-->
         </div>
       </form>
 
@@ -178,8 +172,7 @@
                   <ng-container *ngTemplateOutlet="
                       renderPage;
                       context: { rows: getRows(), form: editForm }
-                    ">
-                  </ng-container>
+                    "></ng-container>
                 </ng-template>
               </div>
               <div class="modal-footer">
@@ -195,3 +188,13 @@
     </ng-template>
   </ng-template>
 </ng-template>
+
+<!-- Пагинация -->
+<div *ngIf="totalPages > 1" class="pagination-controls d-flex justify-content-center mt-4">
+  <button *ngIf="dformCurrentPage > 1" (click)="goToPage(dformCurrentPage - 1)"
+    class="btn btn-transparent">Previous</button>
+  <span>Page {{ dformCurrentPage }} of {{ totalPages }}</span>
+  <button *ngIf="dformCurrentPage < totalPages" (click)="goToPage(dformCurrentPage + 1)"
+    class="btn btn-transparent">Next</button>
+</div>
+

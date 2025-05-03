@@ -1,15 +1,14 @@
 {
   "variables": {
-    "felonyConvictionsConst": 3,
-    "sampleCmpAddressConst": "33120 ROLYAL RD., HURGADA, RED SEE 84511",
-    "homeHistoryConst": 3,
+    "felonyConvictionsConst": 7,
+    "sampleCmpAddressConst": "13450 KING RD., LEMONT, IL 630439",
+    "homeHistoryConst": 6,
     "driveLicHistoryConst": 4,
-    "empHistoryConst": 4,
-    "emailConst": "hui@hui.com",
-    "personPhoneOrgConst": "7909-789-39-59",
-    "ageConst": 25,
-    "trafficAccidentsConst": 4,
-    "companyNameConst":"ZALUPA INK GROUP"
+    "empHistoryConst": 10,
+    "personPhoneOrgConst": "708-252-3829",
+    "ageConst": 23,
+    "trafficAccidentsConst": 6,
+    "companyNameConst": "GOOD NEWS CARRIER"
   },
   "components": {
     "app-perdates": {
@@ -65,7 +64,6 @@
                       "type": "dropdown",
                       "label": "Suffix",
                       "required": true,
-                      "validation": true,
                       "options": [
                         "Jr.",
                         "II",
@@ -113,15 +111,13 @@
                       "id": "textbox2",
                       "type": "textbox",
                       "label": "Middle Name*",
-                      "required": false,
+                      "required": true,
                       "placeholder": "Enter your middle name",
                       "validation": "^[A-Za-z]*$",
                       "cssClasses": [
                         "form-control"
                       ],
-                      "formControlName": "middleName",
-                      "validationMessage": "Middle Name must contain only letters."
-
+                      "formControlName": "middleName"
                     }
                   ]
                 },
@@ -134,7 +130,7 @@
                     {
                       "id": "textbox3",
                       "type": "textbox",
-                      "label": "Last Name*",
+                      "label": "Last Name",
                       "required": true,
                       "placeholder": "Enter your last name",
                       "validation": "^[A-Za-z]+$",
@@ -166,7 +162,6 @@
                       "type": "date",
                       "label": "Birthday",
                       "required": true,
-                      "validation": true,
                       "placeholder": "Enter your birthday",
                       "cssClasses": [
                         "form-control"
@@ -258,7 +253,6 @@
                       "type": "checkbox",
                       "label": "I confirm that I have read the terms and conditions.",
                       "required": true,
-                      "validation": true,
                       "defaultValue": false,
                       "validationMessage": "You must confirm this field.",
                       "cssClasses": [
@@ -278,7 +272,6 @@
                       "type": "checkbox",
                       "label": "Yes, I agree to receive information concerning future opportunities or promotions by email or other commercial electronic communications.",
                       "required": true,
-                      "validation": true,
                       "defaultValue": false,
                       "cssClasses": [
                         "form-check-input"
@@ -293,7 +286,7 @@
         }
       }
     },
-    "app-license-details":   {
+    "app-license-details": {
       "id": "form2",
       "type": "form",
       "formGroup": "userForm",
@@ -449,7 +442,6 @@
                         {
                           "id": "licenseType",
                           "type": "dropdown",
-                          "required": true,
                           "validation": true,
                           "label": "Select your license type",
                           "formControlName": "licenseType",
@@ -479,7 +471,6 @@
                         {
                           "id": "licenseIssuedState",
                           "type": "dropdown",
-                          "required": true,
                           "validation": true,
                           "label": "License issued state",
                           "formControlName": "licenseIssuedState",
@@ -494,7 +485,6 @@
                         {
                           "id": "licenseExpirationDate1",
                           "type": "date",
-                          "required": true,
                           "validation": true,
                           "label": "License expiration date",
                           "formControlName": "licenseExpirationDate1"
@@ -590,8 +580,6 @@
                     {
                       "id": "otherEndorsement",
                       "type": "checkbox",
-                      "required": false,
-                      "validation": false,
                       "label": "Other",
                       "formControlName": "otherEndorsement",
                       "cssClasses": [
@@ -601,8 +589,6 @@
                     {
                       "id": "tankerEndorsement",
                       "type": "checkbox",
-                      "required": false,
-                      "validation": false,
                       "label": "Tanker",
                       "formControlName": "tankerEndorsement",
                       "cssClasses": [
@@ -612,8 +598,6 @@
                     {
                       "id": "doublesTriplesEndorsement",
                       "type": "checkbox",
-                      "required": false,
-                      "validation": false,
                       "label": "Doubles/Triples",
                       "formControlName": "doublesTriplesEndorsement",
                       "cssClasses": [
@@ -623,8 +607,6 @@
                     {
                       "id": "xEndorsement",
                       "type": "checkbox",
-                      "required": false,
-                      "validation": false,
                       "label": "X Endorsement",
                       "formControlName": "xEndorsement",
                       "cssClasses": [
@@ -648,320 +630,314 @@
         }
       }
     },
-    "app-driver-training": {
-  "id": "form_driver_training",
-  "type": "form",
-  "formGroup": "userForm",
-  "submitAction": "onSubmit",
-  "multiple": true,
-  "pages": {
-    "pagen_0": {
-      "elements": [
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-4"],
-          "columns": [
-            {
-              "cssClasses": ["col-12"],
-              "elements": [
-                {
-                  "id": "heading1",
-                  "type": "heading",
-                  "content": "Driver Training Form",
-                  "cssClasses": ["h3", "text-center", "mb-3"]
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-3"],
-          "columns": [
-            {
-              "cssClasses": ["col-12", "col-md-4"],
-              "elements": [
-                {
-                  "id": "startDate",
-                  "type": "date",
-                  "label": "Start Date *",
-                  "placeholder": "MM/DD/YYYY",
-                  "required": true,
-                  "validation": true,
-                  "cssClasses": ["form-control"],
-                  "formControlName": "startDate",
-                  "validationMessage": "Start Date is required."
-                }
-              ]
-            },
-            {
-              "cssClasses": ["col-12", "col-md-4"],
-              "elements": [
-                {
-                  "id": "endDate",
-                  "type": "date",
-                  "label": "End Date *",
-                  "placeholder": "If currently in school, enter current month/year",
-                  "required": true,
-                  "validation": true,
-                  "cssClasses": ["form-control"],
-                  "formControlName": "endDate",
-                  "validationMessage": "End Date is required."
-                }
-              ]
-            },
-            {
-              "cssClasses": ["col-12", "col-md-4"],
-              "elements": [
-                {
-                  "id": "province",
-                  "type": "textbox",
-                  "label": "Province * (where school is located)",
-                  "required": true,
-                  "placeholder": "Enter state or province",
-                  "cssClasses": ["form-control"],
-                  "formControlName": "province",
-                  "validationMessage": "State/Province is required.",
-                  "validation": "^[a-zA-Z\\s]{2,}$"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-3"],
-          "columns": [
-            {
-              "cssClasses": ["col-12", "col-md-6"],
-              "elements": [
-                {
-                  "id": "schoolName",
-                  "type": "textbox",
-                  "label": "School Name *",
-                  "required": true,
-                  "validation": "^.+$",
-                  "placeholder": "Enter school name",
-                  "cssClasses": ["form-control"],
-                  "formControlName": "schoolName",
-                  "validationMessage": "School Name is required."
-                }
-              ]
-            },
-            {
-              "cssClasses": ["col-12", "col-md-6"],
-              "elements": [
-                {
-                  "id": "telephone",
-                  "type": "textbox",
-                  "label": "Telephone",
-                  "required": true,
-                  "placeholder": "Enter telephone number",
-                  "cssClasses": ["form-control"],
-                  "formControlName": "telephone",
-                  "validation": "^\\+?\\d{7,15}$"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-3"],
-          "columns": [
-            {
-              "cssClasses": ["col-12"],
-              "elements": [
-                {
-                  "id": "address",
-                  "type": "textbox",
-                  "label": "Address",
-                  "required": true,
-                  "placeholder": "Enter address",
-                  "cssClasses": ["form-control"],
-                  "formControlName": "address",
-                  "validationMessage": "Enter address.",
-                  "validation": "^[a-zA-Z\\s]{2,}$"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-3"],
-          "columns": [
-            {
-              "cssClasses": ["col-12", "col-md-6"],
-              "elements": [
-                {
-                  "id": "address2",
-                  "type": "textbox",
-                  "label": "Address 2",
-                  "placeholder": "Apartment, suite, etc. (optional)",
-                  "cssClasses": ["form-control"],
-                  "formControlName": "address2"
-                }
-              ]
-            },
-            {
-              "cssClasses": ["col-12", "col-md-6"],
-              "elements": [
-                {
-                  "id": "city",
-                  "type": "textbox",
-                  "label": "City *",
-                  "required": true,
-                  "placeholder": "Enter city",
-                  "cssClasses": ["form-control"],
-                  "formControlName": "city",
-                  "validationMessage": "City is required.",
-                  "validation": "^[a-zA-Z\\s]{2,}$"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-3"],
-          "columns": [
-            {
-              "cssClasses": ["col-12", "col-md-6"],
-              "elements": [
-                {
-                  "id": "country",
-                  "type": "countryDropdown",
-                  "label": "Country *",
-                  "required": true,
-                  "validation": true,
-                  "cssClasses": ["form-select"],
-                  "formControlName": "country",
-                  "stateControlName": "state",
-                  "validationMessage": "Country is required."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-3"],
-          "columns": [
-            {
-              "cssClasses": ["col-12", "col-md-4"],
-              "elements": [
-                {
-                  "id": "didGraduate",
-                  "type": "yesno",
-                  "label": "Did you graduate?",
-                  "required": true,
-                  "formControlName": "didGraduate",
-                  "cssClasses": ["form-check"],
-                  "options": ["Yes", "No"],
-                  "validationMessage": "This field is required."
-                }
-              ]
-            },
-            {
-              "cssClasses": ["col-12", "col-md-4"],
-              "elements": [
-                {
-                  "id": "subjectToRegulations",
-                  "type": "yesno",
-                  "label": "Were you subject to the Federal Motor Carrier or Transport Canada Safety Regulations while attending this truck school?",
-                  "required": true,
-                  "formControlName": "subjectToRegulations",
-                  "cssClasses": ["form-check"],
-                  "options": ["Yes", "No"],
-                  "validationMessage": "This field is required."
-                }
-              ]
-            },
-            {
-              "cssClasses": ["col-12", "col-md-4"],
-              "elements": [
-                {
-                  "id": "safetySensitive",
-                  "type": "yesno",
-                  "label": "Did you perform any safety sensitive functions at this truck school, regulated by DOT, and subject to drug and alcohol testing?",
-                  "required": true,
-                  "formControlName": "safetySensitive",
-                  "cssClasses": ["form-check"],
-                  "options": ["Yes", "No"],
-                  "validationMessage": "This field is required."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-3"],
-          "columns": [
-            {
-              "cssClasses": ["col-12", "col-md-6"],
-              "elements": [
-                {
-                  "id": "gpa",
-                  "type": "textbox",
-                  "label": "GPA",
-                  "placeholder": "Enter GPA",
-                  "required": true,
-                  "validation": true,
-                  "cssClasses": ["form-control"],
-                  "formControlName": "gpa",
-                  "validationMessage": "This field is required."
-                }
-              ]
-            },
-            {
-              "cssClasses": ["col-12", "col-md-6"],
-              "elements": [
-                {
-                  "id": "instructionHours",
-                  "type": "textbox",
-                  "label": "Hours of Instruction",
-                  "placeholder": "Enter total hours",
-                  "required": true,
-                  "validation": true,
-                  "cssClasses": ["form-control"],
-                  "formControlName": "instructionHours",
-                  "validationMessage": "This field is required."
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "row",
-          "cssClasses": ["row", "mb-4"],
-          "columns": [
-            {
-              "cssClasses": ["col-12"],
-              "elements": [
-                {
-                  "id": "skillsTrained",
-                  "type": "multiselect",
-                  "label": "Which of the following skills were trained in your program? (Select all that apply)",
-                  "required": true,
-                  "cssClasses": ["form-select"],
-                  "formControlName": "skillsTrained",
-                  "options": [
-                    "200+",
-                    "Border Crossing",
-                    "Log Books",
-                    "Federal Motor Carrier Regulations",
-                    "Hazardous Materials"
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+     "app-driver-training": {
+    "id": "form_driver_training",
+    "type": "form",
+    "formGroup": "userForm",
+    "submitAction": "onSubmit",
+    "multiple": true,
+    "pages": {
+      "pagen_0": {
+        "elements": [
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-4"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "heading1",
+                    "type": "heading",
+                    "content": "Driver Training Form",
+                    "cssClasses": ["h3", "text-center", "mb-3"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "startDate",
+                    "type": "date",
+                    "label": "Start Date *",
+                    "placeholder": "MM/DD/YYYY",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "startDate",
+                    "validationMessage": "Start Date is required."
+                  
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "endDate",
+                    "type": "date",
+                    "label": "End Date *",
+                    "placeholder": "If currently in school, enter current month/year",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "endDate",
+                    "validationMessage": "End Date is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "province",
+                    "type": "textbox",
+                    "label": "Province * (where school is located)",
+                    "required": true,
+                    "placeholder": "Enter state or province",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "province",
+                    "validationMessage": "State/Province is required.",
+                    "validation": "^[a-zA-Z\\s]{2,}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "schoolName",
+                    "type": "textbox",
+                    "label": "School Name *",
+                    "required": true,
+                    "validation": "^.+$",
+                    "placeholder": "Enter school name",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "schoolName",
+                    "validationMessage": "School Name is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "telephone",
+                    "type": "textbox",
+                    "label": "Telephone",
+                    "required": true,
+                    "placeholder": "Enter telephone number",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "telephone",
+                    "validation": "^\\+?\\d{7,15}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "address",
+                    "type": "textbox",
+                    "label": "Address",
+                    "required": true,
+                    "placeholder": "Enter address",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "address",
+                    "validationMessage": "Enter address.",
+                    "validation": "^[a-zA-Z\\s]{2,}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "address2",
+                    "type": "textbox",
+                    "label": "Address 2",
+                    "placeholder": "Apartment, suite, etc. (optional)",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "address2"
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "city",
+                    "type": "textbox",
+                    "label": "City *",
+                    "required": true,
+                    "placeholder": "Enter city",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "city",
+                    "validationMessage": "City is required.",
+                    "validation": "^[a-zA-Z\\s]{2,}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "country",
+                    "type": "countryDropdown",
+                    "label": "Country *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "country",
+                    "stateControlName": "state",
+                    "validationMessage": "Country is required."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "didGraduate",
+                    "type": "dropdown",
+                    "label": "Did you graduate? *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "didGraduate",
+                    "options": ["Yes", "No"],
+                    "validationMessage": "This field is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "subjectToRegulations",
+                    "type": "dropdown",
+                    "label": "Were you subject to the Federal Motor Carrier or Transport Canada Safety Regulations while attending this truck school? *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "subjectToRegulations",
+                    "options": ["Yes", "No"],
+                    "validationMessage": "This field is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "safetySensitive",
+                    "type": "dropdown",
+                    "label": "Did you perform any safety sensitive functions at this truck school, regulated by DOT, and subject to drug and alcohol testing? *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "safetySensitive",
+                    "options": ["Yes", "No"],
+                    "validationMessage": "This field is required."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "gpa",
+                    "type": "textbox",
+                    "label": "GPA",
+                    "placeholder": "Enter GPA",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "gpa"
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "instructionHours",
+                    "type": "textbox",
+                    "label": "Hours of Instruction",
+                    "placeholder": "Enter total hours",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "instructionHours"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-4"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "skillsTrained",
+                    "type": "multiselect",
+                    "label": "Which of the following skills were trained in your program? (Select all that apply)",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "skillsTrained",
+                    "options": [
+                      "200+",
+                      "Border Crossing",
+                      "Log Books",
+                      "Federal Motor Carrier Regulations",
+                      "Hazardous Materials"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     }
-  }
     },
      "app-full-res": {
     "id": "app-full-res",

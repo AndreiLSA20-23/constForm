@@ -529,6 +529,10 @@ export class SinglePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.onCountryChange(event);
     Promise.resolve().then(() => {
       this.currentStates = this.getStatesForSelectedCountry();
+        
+
+
+
       this.cd.detectChanges();
     });
   }

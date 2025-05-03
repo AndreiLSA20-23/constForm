@@ -12,6 +12,27 @@ input.form-control {
   max-width: 100%;
 }
 
+/* Прозрачная кнопка с эффектами */
+.btn-transparent {
+  background-color: transparent;
+  border: 1px solid #ddd;
+  color: #333;
+  padding: 8px 16px;
+  margin: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-transparent:hover {
+  background-color: #ddd;
+  color: #000;
+}
+
+.btn-transparent:disabled {
+  color: #ccc;
+  border: 1px solid #ccc;
+  pointer-events: none;
+}
+
 /* Контейнер для горизонтальной прокрутки */
 .pages-container {
   display: flex;
@@ -134,5 +155,30 @@ input.form-control {
   .nav-buttons button {
     padding: 8px 12px;
     font-size: 14px;
+  }
+}
+
+// -- Form‑debug block -------------------------------------------------
+$form-debug-border: 1px solid rgba(108, 117, 125, .6); // тот же оттенок, что и $gray-600 в Bootstrap
+$form-debug-radius: .375rem; // 6px
+$form-debug-padding: .75rem; // p-3
+
+.form-debug {
+  border: $form-debug-border;
+  border-radius: $form-debug-radius;
+  padding: $form-debug-padding;
+  margin-top: 1rem; // mt-4
+  background-color: #f8f9fa; // bg-light, помогает отделить блок от остального контента
+
+  h5 {
+    margin-top: 0; // убираем дублирующий верхний отступ
+    font-weight: 600;
+  }
+
+  pre {
+    margin-bottom: .5rem;
+    font-size: .875rem; // чуть меньше — экономим вертикальное пространство
+    white-space: pre-wrap; // если строки длинные — переносить
+    word-wrap: break-word;
   }
 }
