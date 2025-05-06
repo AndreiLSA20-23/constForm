@@ -437,6 +437,7 @@ export class PagenPageComponent {
   @Input() el: any;
   @Input() form: any;
   @Input() countryDropdownData: any;
+  @Input() index: number | null = null;
   // Функция для получения списка штатов передается как Input.
   @Input() getStatesForSelectedCountry!: () => any[];
   // Обработчики, передаваемые из родительского компонента.

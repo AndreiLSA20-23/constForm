@@ -80,6 +80,7 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
 
   // Защита от повторной инициализации, если компонент монтируется заново
   private isInitialized = false;
+  private originalFormRef: FormArray | FormGroup | null = null;
   isReady = false;
 
 
@@ -315,7 +316,7 @@ private loadPrefillData(): void {
   }
 
   onEditItem(index: number): void {
-    //console.log('[DformComponent] onEditItem called with index:', index);
+    console.log('[DformComponent] onEditItem called with index:', index);
     this.selectedIndex = index;
     this.isEditing = true;
 
@@ -338,7 +339,11 @@ private loadPrefillData(): void {
     // Сохраняем бэкап на случай Cancel
     this.editFormBackup = JSON.parse(JSON.stringify(currentGroup.value));
     this.editForm = regenerated;
-
+    this.originalFormRef = this.form;
+    this.form = this.editForm; 
+    this.initializeCountryAndState(); 
+    console.log('[DEBUG] After initCountryState – editForm value:', this.editForm.value);
+    console.log('[DEBUG] Controls present:', Object.keys(this.editForm.controls));
     // Подписка на изменения
     this.editFormSubscription?.unsubscribe();
     this.editFormSubscription = this.editForm.valueChanges.subscribe((newVal: any) => {
@@ -426,7 +431,17 @@ private loadPrefillData(): void {
   private exitEditing(): void {
     this.isEditing = false;
     this.selectedIndex = null;
+
     this.editFormSubscription?.unsubscribe();
+     /* --- вернули всё на место --- */
+    if (this.originalFormRef) {
+      this.form = this.originalFormRef;
+      this.originalFormRef = null;
+    }
+    /* ---------------------------- */
+
+
+
     this.cd.detectChanges();
   }
 

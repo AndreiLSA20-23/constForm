@@ -237,49 +237,61 @@ export abstract class BaseComponent implements OnInit {
 }
 
 
+/** ищет имя country‑контрола в группе */
+private _detectCountryCtrl(group: FormGroup): string | null {
+  // 1) самый частый вариант – exact "country"
+  if (group.contains('country')) { return 'country'; }
+
+  // 2) ищем что‑нибудь, заканчивающееся на "...Country"
+  const match = Object.keys(group.controls)
+                      .find(k => k.toLowerCase().endsWith('country'));
+  return match ?? null;
+}
+
+/** по имени страны формирует имя штата: usaCountry → state */
+private _deduceStateCtrl(countryCtrl: string): string {
+  // если в JSON явно есть поле "state" – используем его
+  if (countryCtrl !== 'country' && this.form instanceof FormGroup) {
+    if (this.form.contains('state')) { return 'state'; }
+  }
+  // иначе просто "state"
+  return 'state';
+}
 
 
   protected initializeCountryAndState(index: number = 0): void {
-  const group = this.getFormGroupAt(index);
-  if (!group) return;
+  const group = this.form instanceof FormGroup
+                  ? this.form
+                  : this.getFormGroupAt(index);
+  if (!group) { return; }
 
-  const prefillCountry = group.get('country')?.value;
-  const prefillState = group.get('state')?.value;
+  /* --- определяем реальные имена контролов --- */
+  const countryCtrl = this._detectCountryCtrl(group);
+  if (!countryCtrl) { return; }
+  const stateCtrl = this._deduceStateCtrl(countryCtrl);
 
+  const country = String(group.get(countryCtrl)!.value || '').trim();
+  const state   = group.get(stateCtrl)?.value;
 
-  if (!prefillCountry) {
-    //console.log('[BaseComponent] Country is missing. Skipping state initialization.');
-    this.cd.detectChanges();
-    return;
-  }
+  if (!country) { return; }
 
-  // Устанавливаем страну в форму
-  group.get('country')?.setValue(prefillCountry);
-  const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(prefillCountry);
-  //console.log(`[BaseComponent] Country "${prefillCountry}" ${hasStates ? 'HAS' : 'does NOT have'} states`);
+  group.get(countryCtrl)!.setValue(country);
 
-  // Если для страны есть штаты, обновляем/добавляем их
+  const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(country);
   if (hasStates) {
-    const stateOptions = this.countryDropdownData.stateOptions[prefillCountry];
-    //console.log(`[BaseComponent] Available states for "${prefillCountry}":`, stateOptions);
-
-    if (!group.contains('state')) {
-      group.addControl('state', new FormControl(prefillState || ''));
-      //console.log(`[BaseComponent] ➕ Added "state" control with value "${prefillState || ''}"`);
+    if (!group.contains(stateCtrl)) {
+      group.addControl(stateCtrl, new FormControl(state || ''));
     } else {
-      group.get('state')?.setValue(prefillState ?? '');
-      //console.log(`[BaseComponent] ✏️ Updated "state" value: ${prefillState}`);
+      group.get(stateCtrl)!.setValue(state ?? '');
     }
-  } else {
-    if (group.contains('state')) {
-      group.removeControl('state');
-      //console.log(`[BaseComponent] ❌ Removed "state" control because "${prefillCountry}" has no states`);
-    }
+  } else if (group.contains(stateCtrl)) {
+    group.removeControl(stateCtrl);
   }
 
-  //console.log(`[BaseComponent] 🔹 Controls after init:`, Object.keys(group.controls));
   this.cd.detectChanges();
 }
+
+
 
 
 
@@ -573,55 +585,33 @@ export abstract class BaseComponent implements OnInit {
   /**
    * Возвращает список штатов/провинций для выбранной страны.
    */
-  public getStatesForSelectedCountry = (index: number): string[] => {
-    const group = this.getFormGroupAt(index);
-    if (!group) {
-      //console.error(
-      //  `[BaseComponent] No FormGroup available in getStatesForSelectedCountry for index ${index}`
-      //);
-      return [];
-    }
-    if (!group.contains('country')) {
-      //console.error(
-      //  `[BaseComponent] No "country" control found in FormGroup at index ${index}`
-      //);
-      return [];
-    }
-    let selectedCountry = group.get('country')?.value;
-    //console.log(
-    //  `[BaseComponent] getStatesForSelectedCountry: group value for index ${index}:`,
-    //  group.value
-    //);
-    if (!selectedCountry) {
-      return [];
-    }
-    selectedCountry = selectedCountry.trim();
-    if (this.lastLoggedCountry[index] !== selectedCountry) {
-      //console.log(
-      //  `[BaseComponent] Selected country (index ${index}):`,
-      //  selectedCountry
-      //);
-      this.lastLoggedCountry[index] = selectedCountry;
-    }
-    if (
-      this.countryDropdownData.stateOptions.hasOwnProperty(
-        selectedCountry
-      )
-    ) {
-      const states =
-        this.countryDropdownData.stateOptions[selectedCountry];
-      //console.log(
-      //  `[BaseComponent] Found states for index ${index}:`,
-      //  states
-      //);
-      return states.length ? states : ['No states available'];
-    } else {
-      //console.log(
-      //  `[BaseComponent] No state options for selected country "${selectedCountry}" at index ${index}`
-      //);
-      return [];
-    }
-  };
+  // ↓ замените весь метод
+public getStatesForSelectedCountry = (index: number): string[] => {
+  /* --- 1. если вся форма – FormGroup (editForm в модалке) -------- */
+  if (this.form instanceof FormGroup) {
+    return this._statesForGroup(this.form);
+  }
+
+  /* --- 2. стандартный путь для FormArray ------------------------ */
+  const group = this.getFormGroupAt(index);
+  return this._statesForGroup(group);
+};
+
+/* приватный помощник: возвращает список штатов для конкретного FormGroup */
+private _statesForGroup(group: FormGroup | null): string[] {
+  if (!group) { return []; }
+
+  const countryCtrl = this._detectCountryCtrl(group);
+  if (!countryCtrl) { return []; }
+
+  const country = String(group.get(countryCtrl)!.value || '').trim();
+  if (!country) { return []; }
+
+  const states = this.countryDropdownData.stateOptions[country];
+  return Array.isArray(states) && states.length ? states : [];
+}
+
+
 
   /**
    * При отправке формы (submit) можно предварительно очистить payload от пустых полей,

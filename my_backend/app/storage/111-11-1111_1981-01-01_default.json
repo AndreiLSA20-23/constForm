@@ -8,7 +8,7 @@
             "firstName": "Anre",
             "middleName": "Alex",
             "lastName": "Sarancha",
-            "birthday": "2022-01-01",
+            "birthday": "1981-01-01",
             "email": "ik2k@bk.ru",
             "driverLicense": "33",
             "phoneNumber": "0232323232",
@@ -18,57 +18,32 @@
         "app-license-details": {
             "licenseNumber": "67995454599A122",
             "country": "United States",
-            "licenseExpirationDate": "2030-01-01",
-            "medicalExpirationDate": "2040-01-01",
+            "licenseExpirationDate": "1981-01-01",
+            "medicalExpirationDate": "2022-01-01",
             "currentLicense": {
                 "value": "yes",
-                "licenseType": "Class AZ",
-                "licenseIssuedState": "Kansas",
-                "licenseExpirationDate1": "2050-02-02"
+                "licenseType": "Class B",
+                "licenseIssuedState": "Iowa",
+                "licenseExpirationDate1": "1981-10-10"
             },
             "hazmatLicense": {
                 "value": "yes",
                 "hazmatClass": "Class 1 - Explosives",
-                "effectiveDate": "2040-10-10"
+                "effectiveDate": "2030-10-10"
             },
             "commercialLicense": {
                 "value": "yes"
             },
-            "otherEndorsement": true,
+            "otherEndorsement": false,
             "tankerEndorsement": true,
             "doublesTriplesEndorsement": true,
             "xEndorsement": true,
             "state": "Alaska"
         },
-        "app-driver-training": {
-            "items": [
-                {
-                    "startDate": "2022-01-01",
-                    "endDate": "2024-01-02",
-                    "province": "Zalupa",
-                    "schoolName": "Suslovo",
-                    "telephone": "890978939591",
-                    "address": "Andrei Lskdksd",
-                    "address2": "Kalagrad",
-                    "city": "sdsdsdsd",
-                    "country": "United States",
-                    "didGraduate": "Yes",
-                    "subjectToRegulations": "Yes",
-                    "safetySensitive": "Yes",
-                    "gpa": "22",
-                    "instructionHours": "222",
-                    "skillsTrained": [
-                        "200+",
-                        "Border Crossing",
-                        "Log Books"
-                    ],
-                    "state": "Arizona"
-                }
-            ]
-        },
         "add-address": [
             {
-                "country": "Mexico",
+                "country": "United States",
+                "state": "California",
                 "city": "Kaliningrad",
                 "addressLine1": "Andrei",
                 "addressLine2": "Kalana",
@@ -81,10 +56,38 @@
             {
                 "startDate": "2015-05-03",
                 "endDate": "2025-05-03",
-                "comments": "sdkdkdkdfk",
+                "comments": "csll",
                 "type": "unemployment"
             }
-        ]
+        ],
+        "app-driver-training": {
+            "items": [
+                {
+                    "startDate": "2022-01-01",
+                    "endDate": "2003-10-11",
+                    "province": "Zalupa",
+                    "schoolName": "Suslovo",
+                    "telephone": "890978939591",
+                    "address": "Andrei Lskdksd",
+                    "address2": "Kalagrad",
+                    "city": "sdsdsdsd",
+                    "country": "United States",
+                    "didGraduate": "No",
+                    "subjectToRegulations": "Yes",
+                    "safetySensitive": "No",
+                    "gpa": "22",
+                    "instructionHours": "222",
+                    "skillsTrained": [
+                        "200+",
+                        "Border Crossing",
+                        "Log Books",
+                        "Federal Motor Carrier Regulations",
+                        "Hazardous Materials"
+                    ],
+                    "state": "Alaska"
+                }
+            ]
+        }
     },
     "created": false
 }

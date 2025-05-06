@@ -58,6 +58,12 @@ import { ChangeDetectorRef } from '@angular/core';
                   {{ state }}
                 </option>
               </select>
+              <pre class="small">
+              form.contains('state'): {{ form.contains('state') }}
+              state.value: {{ form.get('state')?.value }}
+              state exists: {{ !!form.get('state') }}
+              state.status: {{ form.get('state')?.status }}
+              </pre>
             </div>
           </div>
         </ng-container>
