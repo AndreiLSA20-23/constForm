@@ -2,44 +2,6 @@
     "ssn": "111-11-1111",
     "bday": "1981-01-01",
     "param": "111",
-    "additional_data": {
-        "app-perdates": {
-            "suffix": "II",
-            "firstName": "Andrei",
-            "middleName": "Alex",
-            "lastName": "Sarancha",
-            "birthday": "1981-01-01",
-            "email": "ik2k@bk.ru",
-            "driverLicense": "3456232323",
-            "phoneNumber": "89097893959",
-            "termsConfirmation": true,
-            "promoEmails": true
-        },
-        "app-license-details": {
-            "licenseNumber": "67995454599A122",
-            "country": "United States",
-            "licenseExpirationDate": "1981-01-01",
-            "medicalExpirationDate": "1982-02-02",
-            "currentLicense": {
-                "value": "yes",
-                "licenseType": "Class A Permit",
-                "licenseIssuedState": "Kentucky",
-                "licenseExpirationDate1": "1982-02-02"
-            },
-            "hazmatLicense": {
-                "value": "yes",
-                "hazmatClass": "Class 2 - Gases",
-                "effectiveDate": "1981-01-01"
-            },
-            "commercialLicense": {
-                "value": "yes"
-            },
-            "otherEndorsement": false,
-            "tankerEndorsement": true,
-            "doublesTriplesEndorsement": true,
-            "xEndorsement": true,
-            "state": "Alabama"
-        }
-    },
-    "created": false
+    "additional_data": {},
+    "created": true
 }

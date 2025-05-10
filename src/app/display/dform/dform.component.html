@@ -144,9 +144,8 @@
           <button type="submit" class="btn btn-success me-2" [disabled]="formArray.invalid">Save Changes</button>
         </div>
       </form>
-
       <div class="modal fade" tabindex="-1" role="dialog" [ngClass]="{ show: isEditing }"
-        [ngStyle]="{ display: isEditing ? 'block' : 'none' }">
+        [ngStyle]="{ display: isEditing ? 'block' : 'none', 'z-index': 1050 }">
         <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -156,33 +155,17 @@
               </button>
             </div>
             <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
-              <div class="modal-body">
-                <ng-container *ngIf="pageKeys && pageKeys.length > 1; else singlePageEditTemplate">
-                  <div class="pages-container">
-                    <div *ngFor="let pageKey of pageKeys" class="page-column">
-                      <ng-container *ngTemplateOutlet="
-                          renderPage;
-                          context: { rows: getRowsForPage(pageKey), form: editForm }
-                        ">
-                      </ng-container>
-                    </div>
-                  </div>
+              <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <ng-container *ngTemplateOutlet="renderPage; context: { rows: getRows(), form: editForm }">
                 </ng-container>
-                <ng-template #singlePageEditTemplate>
-                  <ng-container *ngTemplateOutlet="
-                      renderPage;
-                      context: { rows: getRows(), form: editForm }
-                    "></ng-container>
-                </ng-template>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-success" [disabled]="editForm.invalid">Update Survey</button>
-                <button type="button" class="btn btn-secondary" (click)="onCancel()">
-                  Cancel
-                </button>
+                <button type="submit" class="btn btn-success" [disabled]="editForm.invalid">Update</button>
+                <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
               </div>
             </form>
           </div>
+          <pre class="bg-light text-dark p-2">Debug: isEditing = {{ isEditing }}</pre>
         </div>
       </div>
     </ng-template>
