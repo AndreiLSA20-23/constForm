@@ -9,7 +9,8 @@
     "personPhoneOrgConst": "7909-789-39-59",
     "ageConst": 25,
     "trafficAccidentsConst": 4,
-    "companyNameConst":"ROGA&KOPITA INK GROUP"
+    "companyNameConst":"ROGA&KOPITA INK GROUP",
+    "dbg": true
   },
   "components": {
     "app-perdates": {
@@ -298,7 +299,7 @@
       "type": "form",
       "formGroup": "userForm",
       "submitAction": "onSubmit",
-      "multiple": false,
+      "multiple": true,
       "pages": {
         "pagen_0": {
           "elements": [
@@ -829,14 +830,14 @@
               "cssClasses": ["col-12", "col-md-6"],
               "elements": [
                 {
-                  "id": "violationCountry",
+                  "id": "country",
                   "type": "countryDropdown",
                   "label": "Country **",
                   "required": true,
                   "validation": true,
                   "cssClasses": ["form-select"],
-                  "formControlName": "violationCountry",
-                  "stateControlName": "violationState",
+                  "formControlName": "country",
+                  "stateControlName": "state",
                   "validationMessage": "Country is required."
                 }
               ]
@@ -2436,15 +2437,14 @@
                     "cssClasses": ["col-12", "col-md-6"],
                     "elements": [
                       {
-                        "id": "violationCountry",
+                        "id": "country",
                         "type": "countryDropdown",
                         "label": "Country **",
                         "required": true,
                         "validation": true,
                         "cssClasses": ["form-select"],
-                        "formControlName": "violationCountry",
-                        "stateControlName": "violationState",
-                        "validationMessage": "Country is required."
+                        "formControlName": "country",
+                        "stateControlName": "state"
                       }
                     ]
                   }

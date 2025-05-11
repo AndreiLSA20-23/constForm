@@ -23,6 +23,7 @@ import {
 } from '../../services/din-form-json-worker.service';
 import { FormDataService } from '../../services/formdata.service';
 import { HttpClient } from '@angular/common/http';
+import { RequirementsService, IStartData } from '../../services/requirements.service';
 import {
   ReactiveFormsModule,
   FormGroup,
@@ -61,6 +62,7 @@ import { CommonModule } from '@angular/common';
 })
 export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   @Input() override componentName!: string;
+  @Input() debugMode: boolean = true;
 
   public ssn: string = '';
   public bday: string = '';
@@ -82,9 +84,10 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   private isInitialized = false;
   private originalFormRef: FormArray | FormGroup | null = null;
   isReady = false;
-
-
-  
+  storage!: IStartData;
+  ready = false;
+  loading = true;  
+  error: string | null = null;
 
   constructor(
     @Inject(DinFormJsonWorkerService) dinFormService: DinFormJsonWorkerService,
@@ -93,6 +96,7 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private fb: FormBuilder,   
     private toastr: ToastrService,
+    private reqSvc: RequirementsService,
     @Optional() @Inject('ssn') ssnToken: string,
     @Optional() @Inject('bday') bdayToken: string,
     @Inject(PLATFORM_ID) private platformId: Object
@@ -116,18 +120,29 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   override ngOnInit(): void {
+    this.reqSvc.getStartData().subscribe({
+      next: (data) => {
+        this.storage = data;
+        this.ready = true;
+        this.loading = false; 
+      },
+      error: (error) => {
+        this.error = 'Error loading data';
+        this.loading = false; 
+        console.error('[ReqComponent] Loads ERRORS');
+      }
+    });
+
     if (!this.componentName) {
       console.error('[DformComponent] Component name is not provided.');
       return;
     }
 
-    // Если уже инициализировали этот компонент (при повторном создании), не повторяем
     if (this.isInitialized) {
       return;
     }
     this.isInitialized = true;
 
-    // 1) Загружаем JSON-схему (BaseComponent подтянет и создаст this.form)
     this.loadRequirements();
     this.requirementsReady$.subscribe(() => {
     this.loadPrefillData();
@@ -160,11 +175,8 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
         clearTimeout(this.fallbackTimer);
   
         if (!response || !response.data) {
-          console.log('[DformComponent] Empty prefill => считаем новую анкету');
-          this.isSingleFormView = true;
-          this.selectedIndex = null;
-          this.isReady = true;
           this.cd.detectChanges();
+          this.isReady = true;
           return;
         }
   
@@ -180,21 +192,19 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               this.initializeCountryAndState();
               setTimeout(() => {
+                const stateControl = this.form.get('state');
                 this.cd.detectChanges();
               }, 0);
             }, 0);
           }, 0);
-  
-          this.isSingleFormView = true;
-          this.selectedIndex = null;
         }
   
         else if (this.form instanceof FormArray) {
           const arrayData = response.data.items;
   
           if (Array.isArray(arrayData) && arrayData.length > 0) {
-            while (this.form.length > 0) {
-              this.form.removeAt(0);
+            while ((this.form as FormArray).length > 0) {
+              (this.form as FormArray).removeAt(0);
             }
   
             arrayData.forEach((item: any, i: number) => {
@@ -202,32 +212,27 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
                 skipDefaults: false,
                 initialValues: item
               });
+  
               (this.form as FormArray).push(newFg);
-              this.initializeCountryAndState(i);
+              this.initializeCountryAndState(newFg);
             });
   
+            this.cd.detectChanges();
             this.isSingleFormView = false;
             this.isSurveySaved = true;
-            this.selectedIndex = null;
-          } else {
-            this.isSingleFormView = true;
-            this.selectedIndex = null;
           }
         }
   
-        this.isReady = true;
         this.cd.detectChanges();
+        this.isReady = true;
       },
-  
       error: (error: any) => {
         clearTimeout(this.fallbackTimer);
-        console.error('[DformComponent] Prefill error:', error);
         this.isReady = true;
         this.cd.detectChanges();
       }
     });
   }
-  
   
 
 
@@ -252,8 +257,10 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   onAddNewItem(): void {
-    if (!(this.form instanceof FormArray)) {
-      console.warn('[DformComponent] onAddNewItem called but form is not a FormArray.');
+    if (!(this.form instanceof FormArray)) return;
+  
+    if (this.form.length >= this.maxItems) {
+      this.toastr.warning('Maximum number of surveys reached.');
       return;
     }
   
@@ -262,91 +269,83 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
       return;
     }
   
-    if (this.form.length >= this.maxItems) {
-      this.toastr.warning('Maximum number of surveys reached.');
-      return;
-    }
-  
-    // 1. Создаём новую пустую запись
     const newGroup = this.dinFormService.generateSingleFormGroup(this.processedData, {
       skipDefaults: false,
       initialValues: {}
     });
   
-    // 2. Добавляем в основной FormArray
+    newGroup.get('country')?.valueChanges.subscribe((newCountry) => {
+      this.initializeCountryAndState(newGroup);
+    });
+  
     (this.form as FormArray).push(newGroup);
+  
     this.selectedIndex = this.form.length - 1;
-  
-    // 3. Копируем для editForm — для работы модалки
-    const regenerated = this.dinFormService.generateSingleFormGroup(this.processedData, {
-      skipDefaults: false,
-      initialValues: newGroup.value
-    });
-  
-    this.editForm = regenerated;
-    this.editFormBackup = JSON.parse(JSON.stringify(newGroup.value));
-    this.isEditing = true;
     this.isSurveySaved = false;
-  
-    // 4. Инициализация страны/штата
-    this.initializeCountryAndState(this.selectedIndex);
-  
-    // 5. Лог и подписка
-    console.log('[onAddNewItem] Модалка: selectedIndex =', this.selectedIndex);
-    this.editFormSubscription?.unsubscribe();
-    this.editFormSubscription = this.editForm.valueChanges.subscribe((val) => {
-      console.log('[editForm] changes:', val);
-    });
-  
+    this.toastr.success('New survey added successfully.');
     this.cd.detectChanges();
   }
   
-    
 
   onEditItem(index: number): void {
-    console.log('[DformComponent] onEditItem called with index:', index);
     this.selectedIndex = index;
     this.isEditing = true;
   
     if (!(this.form instanceof FormArray)) {
-      console.warn('[DformComponent] onEditItem called but form is not a FormArray.');
+      console.warn('[DformComponent] ❌ onEditItem called but form is not a FormArray.');
       return;
     }
   
     const formArray = this.form as FormArray;
     const currentGroup = formArray.at(index) as FormGroup;
+    const initialValues = currentGroup.value;
   
-    // Генерируем новую группу с учётом возможных полей
-    const regenerated = this.dinFormService.generateSingleFormGroup(this.processedData, {
+    this.editFormBackup = JSON.parse(JSON.stringify(initialValues));
+  
+    this.editForm = this.dinFormService.generateSingleFormGroup(this.processedData, {
       skipDefaults: false,
-      initialValues: currentGroup.value
+      initialValues
     });
   
-    // Заменяем текущий элемент
-    formArray.setControl(index, regenerated);
+    const rawCountry = initialValues?.country?.trim?.() || '';
+    const rawState = initialValues?.state?.trim?.() || '';
   
-    // Подготовка данных для модалки
-    this.editForm = regenerated;
-    this.editFormBackup = JSON.parse(JSON.stringify(currentGroup.value));
-    this.originalFormRef = this.form; // сохраняем основную форму, если понадобится восстановить
+    if (rawCountry) {
+      this.editForm.get('country')?.setValue(rawCountry);
   
-    // Инициализация страны/штата
-    this.initializeCountryAndState(index);
+      const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
+      if (hasStates && !this.editForm.contains('state')) {
+        this.editForm.addControl('state', new FormControl(rawState));
+      }
+    } else {
+      console.warn('[DformComponent] ⚠️ No country in initialValues, skipping state init.');
+    }
   
-    // Логирование
-    console.log('[onEditItem] editForm value:', this.editForm.value);
-    console.log('[onEditItem] editForm controls:', Object.keys(this.editForm.controls));
+    // Инициализация
+    this.initializeCountryAndState(this.editForm);
   
-    // Подписка на изменения формы
+    // 🧩 Принудительно устанавливаем state значение, если есть
+    const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
+    if (hasStates && rawState && this.editForm.get('state')) {
+      this.editForm.get('state')!.setValue(rawState);
+    }
+  
+    // Подписка на изменения страны
+    this.editForm.get('country')?.valueChanges.subscribe((newCountry) => {
+      this.initializeCountryAndState(this.editForm);
+    });
+  
+    const stateCtrl = this.editForm.get('state');
     this.editFormSubscription?.unsubscribe();
     this.editFormSubscription = this.editForm.valueChanges.subscribe((newVal: any) => {
-      console.warn('[DformComponent] Edit form changes - Index:', index, ', New value:', newVal);
     });
   
     this.cd.detectChanges();
   }
   
-
+  
+  
+  
   onDeleteItem(index: number): void {
   // …ваша текущая проверка индексов…
   const formArray = this.form as FormArray;
@@ -379,39 +378,42 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
 onEditSubmit(): void {
-  if (this.selectedIndex === null || this.editForm.invalid) {
+  if (this.selectedIndex === null || this.editForm.invalid || !(this.form instanceof FormArray)) {
     this.toastr.error('Form is invalid or no survey selected.');
     return;
   }
 
-  const formArray = this.originalFormRef as FormArray;
-  if (!formArray || !(formArray instanceof FormArray)) {
-    this.toastr.error('Cannot access original form array.');
-    return;
+  const formArray = this.form as FormArray;
+
+  const rawCountry = this.editForm.get('country')?.value?.trim?.();
+  const hasStates = rawCountry && this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
+
+  // Если страна требует штаты, а state отсутствует — добавим его вручную
+  if (hasStates && !this.editForm.contains('state')) {
+    const rawState = '';
+    this.editForm.addControl('state', new FormControl(rawState));
   }
 
-  const targetGroup = formArray.at(this.selectedIndex) as FormGroup;
-  if (!targetGroup) {
-    this.toastr.error('Target form group not found.');
-    return;
-  }
+  //  Обновляем FormArray значением из editForm
+  formArray.at(this.selectedIndex).patchValue(this.editForm.value);
 
-  targetGroup.patchValue(this.editForm.value);
   this.editForm.markAsPristine();
   this.editFormBackup = null;
-  this.exitEditing(); // не трогаем this.form внутри
 
   const payload = {
     ssn: this.ssn,
     bday: this.bday,
     param: this.param,
-    items: formArray.value
-  };
+    items: formArray.value};
+
+
+  console.log('[DformComponent]  Final payload to be sent:', JSON.stringify(payload, null, 2));
 
   this.formDataService.createFormData(this.componentName, payload).subscribe({
     next: () => {
       this.toastr.success('Survey updated successfully.');
       this.isSurveySaved = true;
+      this.exitEditing();
       this.cd.detectChanges();
     },
     error: (error: any) => {
@@ -419,8 +421,7 @@ onEditSubmit(): void {
       this.toastr.error('Failed to update survey.');
     }
   });
- }
-
+}
 
   override onCancel(): void {
     if (!this.isSurveySaved && this.editForm.dirty && this.editFormBackup) {
@@ -436,19 +437,11 @@ onEditSubmit(): void {
     this.isEditing = false;
     this.selectedIndex = null;
   
-    // Отписываемся от изменений editForm
     this.editFormSubscription?.unsubscribe();
-    this.editFormSubscription = null;
-  
-    // Возвращаем ссылку на основную форму, если была временно заменена (например, при редактировании)
-    if (this.originalFormRef) {
-      this.form = this.originalFormRef;
-      this.originalFormRef = null;
-    }
+    this.editForm = this.fb.group({}); // Очищаем editForm
   
     this.cd.detectChanges();
   }
-  
   
 
   override onSubmitFormArray(): void {
@@ -478,6 +471,10 @@ onEditSubmit(): void {
     next: () => {
       this.toastr.success('All surveys submitted successfully.');
       this.isSurveySaved = true;
+      if (this.isSingleFormView && (this.form as FormArray).length === 1) {
+        this.isSingleFormView = false;
+        this.cd.detectChanges();
+      }
     },
     error: (error: any) => {
       console.error('[DformComponent] onSubmitFormArray error:', error);

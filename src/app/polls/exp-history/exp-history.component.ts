@@ -115,9 +115,6 @@ export class ExpHistoryComponent implements OnInit {
     this.http.get<{ data: any[] }>(url).subscribe({
       next: resp => {
         this.processedHistories = Array.isArray(resp.data) ? resp.data : [];
-        if (!Array.isArray(resp.data)) {
-          console.warn('[ExpHistory] prefill data is not array');
-        }
         this.sortHistories();
         this.calculateGaps();
         this.isDirty = true;

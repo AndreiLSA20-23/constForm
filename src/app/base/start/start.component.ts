@@ -24,7 +24,6 @@ export class StartComponent implements OnInit {
         this.storage = data;    // Сохраняем данные в переменную
         this.ready = true;      // Устанавливаем флаг готовности
         this.loading = false;   // Закрываем индикатор загрузки
-        console.log('[StartComponent] ✅ Данные успешно загружены', this.storage);
       },
       error: (error) => {
         this.error = 'Ошибка загрузки данных: ' + error.message;  // Обрабатываем ошибку

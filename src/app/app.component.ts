@@ -47,7 +47,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const param = this.getParamFromUrl();
     localStorage.setItem('param', param);
-    console.log(`[AppComponent] URL param = ${param}`);
     this.requirementsService.setParam(param);
     this.dinFormService.setRequirementsPath(`/requirements_${param}.json`);
     this.updateComponent();
@@ -64,7 +63,7 @@ export class AppComponent implements OnInit {
       this.currentComponent = this.components[this.index] || null;
       this.ready = true;
       this.cdr.detectChanges();
-      console.log(`[AppComponent] Showing component index=${this.index}`);
+      //console.log(`[AppComponent] Showing component index=${this.index}`);
     }, 0);
   }
 

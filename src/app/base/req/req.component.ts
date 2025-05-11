@@ -12,8 +12,8 @@ import { RequirementsService, IStartData } from '../../services/requirements.ser
 export class ReqComponent implements OnInit {
   storage!: IStartData;
   ready = false;
-  loading = true;  // Флаг загрузки
-  error: string | null = null; // Флаг ошибки
+  loading = true;  
+  error: string | null = null;
 
   constructor(private reqSvc: RequirementsService) {}
 
@@ -22,13 +22,12 @@ export class ReqComponent implements OnInit {
       next: (data) => {
         this.storage = data;
         this.ready = true;
-        this.loading = false; // Загрузка завершена
-        console.log('[ReqComponent] ✅ Данные успешно загружены', this.storage);
+        this.loading = false; 
       },
       error: (error) => {
-        this.error = 'Error loading data'; // Сообщение об ошибке
-        this.loading = false; // Загрузка завершена с ошибкой
-        console.error('[ReqComponent] ❌ Ошибка загрузки данных', error);
+        this.error = 'Error loading data';
+        this.loading = false; 
+        console.error('[ReqComponent] Loads ERRORS');
       }
     });
   }

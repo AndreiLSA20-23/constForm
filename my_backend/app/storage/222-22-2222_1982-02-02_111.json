@@ -5,73 +5,42 @@
     "additional_data": {
         "app-perdates": {
             "suffix": "Jr.",
-            "firstName": "Andrei",
+            "firstName": "Andre",
             "middleName": "Alex",
-            "lastName": "Sarancha",
-            "birthday": "2000-10-01",
+            "lastName": "Sa",
+            "birthday": "1980-10-16",
             "email": "ik2k@bk.ru",
-            "driverLicense": "33",
-            "phoneNumber": "89097893959",
+            "driverLicense": "3456232323",
+            "phoneNumber": "79097893959",
             "termsConfirmation": true,
             "promoEmails": true
         },
         "app-license-details": {
-            "licenseNumber": "111111",
-            "country": "Canada",
-            "licenseExpirationDate": "2002-01-01",
-            "medicalExpirationDate": "2003-01-02",
-            "currentLicense": {
-                "value": "yes",
-                "licenseType": "Class A Permit",
-                "licenseIssuedState": "Kansas",
-                "licenseExpirationDate1": "2002-01-01"
-            },
-            "hazmatLicense": {
-                "value": "yes",
-                "hazmatClass": "Class 7 - Radioactive Materials",
-                "effectiveDate": "2002-01-01"
-            },
-            "commercialLicense": {
-                "value": "yes"
-            },
-            "otherEndorsement": true,
-            "tankerEndorsement": true,
-            "doublesTriplesEndorsement": true,
-            "xEndorsement": false,
-            "violationState": "Ontario",
-            "state": "Ontario"
-        },
-        "app-driver-training": {
             "items": [
                 {
-                    "startDate": "2002-01-01",
-                    "endDate": "3003-02-02",
-                    "province": "SSsasas",
-                    "schoolName": "Suslovo",
-                    "telephone": "89097893959",
-                    "address": "Andrei",
-                    "address2": "Kalana",
-                    "city": "Kaliningrad",
-                    "violationCountry": "United States",
-                    "didGraduate": {
-                        "value": "no"
+                    "licenseNumber": "67995454599A122",
+                    "country": "United States",
+                    "state": "Indiana",
+                    "licenseExpirationDate": "2002-02-02",
+                    "medicalExpirationDate": "2222-10-22",
+                    "currentLicense": {
+                        "value": "yes",
+                        "licenseType": "Class G2",
+                        "licenseIssuedState": "Louisiana",
+                        "licenseExpirationDate1": "111111-11-11"
                     },
-                    "subjectToRegulations": {
-                        "value": "no"
+                    "hazmatLicense": {
+                        "value": "yes",
+                        "hazmatClass": "Class 1 - Explosives",
+                        "effectiveDate": "222222-02-22"
                     },
-                    "safetySensitive": {
-                        "value": "no"
+                    "commercialLicense": {
+                        "value": "yes"
                     },
-                    "gpa": "111",
-                    "instructionHours": "11",
-                    "skillsTrained": [
-                        "200+",
-                        "Border Crossing",
-                        "Log Books",
-                        "Federal Motor Carrier Regulations",
-                        "Hazardous Materials"
-                    ],
-                    "state": "Colorado"
+                    "otherEndorsement": true,
+                    "tankerEndorsement": true,
+                    "doublesTriplesEndorsement": true,
+                    "xEndorsement": true
                 }
             ]
         }

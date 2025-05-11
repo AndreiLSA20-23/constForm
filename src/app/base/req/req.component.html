@@ -87,7 +87,7 @@
   <p class="text-danger">Error loading data: {{ error }}</p>
 </ng-container>
 
-<div class="mt-4 p-3 bg-light border rounded small text-muted" *ngIf="ready">
+<div *ngIf="storage?.dbg" class="mt-4 p-3 bg-light border rounded small text-muted">
   <h6>Debug Output (Raw JSON):</h6>
   <pre>{{ storage | json }}</pre>
 </div>

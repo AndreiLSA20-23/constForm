@@ -80,9 +80,6 @@ export class AddAddressComponent implements OnInit, AfterViewChecked {
         next: (resp) => {
           const raw = resp?.data ?? [];
           this.storage = Array.isArray(raw) ? raw : [];
-          if (!Array.isArray(raw)) {
-            console.warn('[AddAddress] ⚠️ add-address не найден или не является массивом');
-          }
 
           this.timeSrv.storage = this.storage
             .filter(a => a && a.startDate && a.endDate)

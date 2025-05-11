@@ -8,7 +8,7 @@ import {
   NgForOf,
   NgClass
 } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -482,10 +482,10 @@ export class SinglePageComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     const ctrlName = this.el?.formControlName || this.el?.id;
     if (!ctrlName || !this.form) return;
-
+  
     const ctrl = this.form.get(ctrlName);
     if (!ctrl) return;
-
+  
     const rawVal = ctrl.value;
     let normalizedVal = '';
     if (typeof rawVal === 'object' && rawVal !== null && 'value' in rawVal) {
@@ -493,18 +493,11 @@ export class SinglePageComponent implements OnInit, OnDestroy, AfterViewInit {
     } else if (typeof rawVal === 'string') {
       normalizedVal = rawVal.toLowerCase();
     }
-
-    if (this.el?.type === 'countryDropdown') {
-      Promise.resolve().then(() => {
-        this.currentStates = this.getStatesForSelectedCountry();
-        this.cd.detectChanges();
-      });
-    }
-
+  
     if (normalizedVal === 'yes' || normalizedVal === 'no') {
       this.yesNoStates[ctrlName] = normalizedVal;
     }
-
+  
     this.yesnoSub = ctrl.valueChanges.subscribe((value: any) => {
       let newVal = '';
       if (typeof value === 'object' && value !== null && 'value' in value) {
@@ -517,6 +510,7 @@ export class SinglePageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     });
   }
+  
 
   ngAfterViewInit(): void {
     if (this.el?.type === 'countryDropdown') {

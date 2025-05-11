@@ -31,6 +31,8 @@ export abstract class BaseComponent implements OnInit {
 
   // Для работы с dropdown страны – запоминаем последнее выбранное значение по индексу
   private lastLoggedCountry: { [key: number]: string } = {};
+  private countryLogCount=0;
+  protected _logCount = 0;
 
   // Пагинация: текущая страница и список ключей страниц
   currentPage: string = 'pagen_0';
@@ -220,7 +222,7 @@ export abstract class BaseComponent implements OnInit {
 
       if (this.form instanceof FormArray) {
         for (let i = 0; i < this.form.length; i++) {
-          this.initializeCountryAndState(i);
+          this.initializeCountryAndState(undefined,i);
         }
       }
 
@@ -239,58 +241,92 @@ export abstract class BaseComponent implements OnInit {
 
 /** ищет имя country‑контрола в группе */
 private _detectCountryCtrl(group: FormGroup): string | null {
-  // 1) самый частый вариант – exact "country"
-  if (group.contains('country')) { return 'country'; }
+  if (!group) {
+    console.warn('[BaseComponent] ⚠️ _detectCountryCtrl: group is null or undefined');
+    return null;
+  }
+ 
+  // 1) Самый частый и правильный вариант — exact match 'country'
+  if (group.contains('country')) {
+    return 'country';
+  }
 
-  // 2) ищем что‑нибудь, заканчивающееся на "...Country"
-  const match = Object.keys(group.controls)
-                      .find(k => k.toLowerCase().endsWith('country'));
-  return match ?? null;
+  // 2) Пытаемся найти по шаблону — что-то, оканчивающееся на "country" (например, 'birthCountry')
+  const fallback = Object.keys(group.controls).find(key =>
+    key.toLowerCase().endsWith('country')
+  );
+
+
+  // 3) Не найдено
+  //console.error('[BaseComponent] 🚫 No country control found in group:', group);
+  return null;
 }
+
 
 /** по имени страны формирует имя штата: usaCountry → state */
 private _deduceStateCtrl(countryCtrl: string): string {
-  // если в JSON явно есть поле "state" – используем его
-  if (countryCtrl !== 'country' && this.form instanceof FormGroup) {
-    if (this.form.contains('state')) { return 'state'; }
+  // 1) Если countryCtrl — не "country", но форма содержит "state", возвращаем её
+  if (countryCtrl !== 'country') {
+    if (this.form instanceof FormGroup && this.form.contains('state')) {
+      console.warn(`[BaseComponent] ⚠️ Using fallback state control: "state" (detected for "${countryCtrl}")`);
+      return 'state';
+    }
   }
-  // иначе просто "state"
   return 'state';
 }
 
+protected initializeCountryAndState(form?: FormGroup, index: number = 0): void {
+  const group = form ?? (this.form instanceof FormGroup
+    ? this.form
+    : this.getFormGroupAt(index));
 
-  protected initializeCountryAndState(index: number = 0): void {
-  const group = this.form instanceof FormGroup
-                  ? this.form
-                  : this.getFormGroupAt(index);
-  if (!group) { return; }
+  if (!group) return;
 
-  /* --- определяем реальные имена контролов --- */
-  const countryCtrl = this._detectCountryCtrl(group);
-  if (!countryCtrl) { return; }
-  const stateCtrl = this._deduceStateCtrl(countryCtrl);
+  const countryCtrlName = this._detectCountryCtrl(group);
+  if (!countryCtrlName) return;
 
-  const country = String(group.get(countryCtrl)!.value || '').trim();
-  const state   = group.get(stateCtrl)?.value;
+  const stateCtrlName = this._deduceStateCtrl(countryCtrlName);
+  const countryRaw = group.get(countryCtrlName)?.value;
+  const country = typeof countryRaw === 'string' ? countryRaw.trim() : '';
+  const stateRaw = group.get(stateCtrlName)?.value;
 
-  if (!country) { return; }
+  if (!country) {
+    if (group.contains(stateCtrlName)) {
+      group.removeControl(stateCtrlName);
+      if (this._logCount++ < 30) console.log(`[BaseComponent] ❌ Removed "state" control due to empty country`);
+    }
+    return;
+  }
 
-  group.get(countryCtrl)!.setValue(country);
+  // Обновим значение страны (только если отличается)
+  const countryCtrl = group.get(countryCtrlName);
+  if (countryCtrl?.value !== country) {
+    countryCtrl?.setValue(country, { emitEvent: false });
+  }
 
   const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(country);
   if (hasStates) {
-    if (!group.contains(stateCtrl)) {
-      group.addControl(stateCtrl, new FormControl(state || ''));
-    } else {
-      group.get(stateCtrl)!.setValue(state ?? '');
+    const stateList = this.countryDropdownData.stateOptions[country];
+    const currentVal = group.get(stateCtrlName)?.value;
+
+    if (!group.contains(stateCtrlName)) {
+      group.addControl(stateCtrlName, new FormControl(stateRaw || ''));
+      if (this._logCount++ < 30) console.log(`[BaseComponent] ➕ Added state control "${stateCtrlName}" with value:`, stateRaw);
+    } else if (!currentVal) {
+      if (group.get(stateCtrlName)?.value !== stateRaw) {
+        group.get(stateCtrlName)?.setValue(stateRaw || '', { emitEvent: false });
+        if (this._logCount++ < 30) console.log(`[BaseComponent] 🔁 Patched empty state "${stateCtrlName}" with value:`, stateRaw);
+      }
     }
-  } else if (group.contains(stateCtrl)) {
-    group.removeControl(stateCtrl);
+  } else {
+    if (group.contains(stateCtrlName)) {
+      group.removeControl(stateCtrlName);
+      if (this._logCount++ < 30) console.log(`[BaseComponent] ❌ Removed unused state control for country: ${country}`);
+    }
   }
 
   this.cd.detectChanges();
 }
-
 
 
 

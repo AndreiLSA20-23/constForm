@@ -13,6 +13,7 @@ export interface IStartData {
   age: number;
   felonyConvictions: number;
   trafficAccidents: number;
+  dbg: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -50,7 +51,9 @@ export class RequirementsService {
           personPhoneOrg: v['personPhoneOrgConst'],
           age: v['ageConst'],
           felonyConvictions: v['felonyConvictionsConst'],
-          trafficAccidents: v['trafficAccidentsConst']
+          trafficAccidents: v['trafficAccidentsConst'],
+          dbg: v['dbg']
+
         }))
       );
   }
