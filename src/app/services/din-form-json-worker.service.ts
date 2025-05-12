@@ -400,11 +400,17 @@ export class DinFormJsonWorkerService {
       controls[controlName] = new FormControl(countryValue ?? '', validators);
       if (this.countryDropdownData.stateOptions.hasOwnProperty(countryValue)) {
         controls[stateName] = new FormControl(stateValue ?? '', validators);
+        console.log(`[generateSingleFormGroup] ADDED state for country="${countryValue}" → value="${stateValue}"`);
+      } else {
+        console.warn(`[generateSingleFormGroup] No state options for country="${countryValue}", skipping state control.`);
       }
       break;
+    //////
+
     case 'yesno':
       const yesNoGroup = this.fb.group({});
       let normalizedValue = startValue;
+
       if (typeof normalizedValue === 'object' && normalizedValue !== null && 'value' in normalizedValue) {
         normalizedValue = normalizedValue.value;
       }
@@ -416,21 +422,26 @@ export class DinFormJsonWorkerService {
       if (!normalizedValue) {
         normalizedValue = 'no';
       }
+
       const valueValidators = el.required ? [Validators.required] : [];
       yesNoGroup.addControl('value', new FormControl(normalizedValue, valueValidators));
-      if (el.subElements) {
+
+      if (el.subElements && typeof startValue === 'object') {
         el.subElements.forEach(subEl => {
           const subName = subEl.formControlName || subEl.id;
-          let subValue = clonedValues[subName];
-          if (subValue === null || subValue === undefined) {
-            subValue = subEl.defaultValue ?? '';
-          }
+          const subValue =
+            startValue?.[subName] ??
+            subEl.defaultValue ??
+            '';
           const subValidators = this.buildValidators(subEl);
-          yesNoGroup.addControl(subName, new FormControl(subValue ?? '', subValidators));
+          yesNoGroup.addControl(subName, new FormControl(subValue, subValidators));
         });
       }
+
       controls[ctrlName] = yesNoGroup;
       break;
+
+    //////
     default:
       if (el.type === 'checkbox') {
         startValue = (startValue === null || startValue === undefined) ? false : startValue;
@@ -442,6 +453,9 @@ export class DinFormJsonWorkerService {
   }
 });
 
+    if (controls['state']) {
+      console.log('[generateSingleFormGroup] FINAL state.value =', (controls['state'] as FormControl).value);
+    }
 
 
     return this.fb.group(controls);

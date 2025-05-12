@@ -2352,13 +2352,13 @@
                     "cssClasses": ["col-12", "col-md-4"],
                     "elements": [
                       {
-                        "id": "violationMonth",
+                        "id": "Month",
                         "type": "dropdown",
-                        "label": "Violation Month **",
+                        "label": "Month **",
                         "required": true,
                         "validation": true,
                         "cssClasses": ["form-select"],
-                        "formControlName": "violationMonth",
+                        "formControlName": "Month",
                         "options": ["1","2","3","4","5","6","7","8","9","10","11","12"],
                         "validationMessage": "Month is required."
                       }
@@ -2368,14 +2368,14 @@
                     "cssClasses": ["col-12", "col-md-4"],
                     "elements": [
                       {
-                        "id": "violationYear",
+                        "id": "Year",
                         "type": "textbox",
-                        "label": "Violation Year **",
+                        "label": "Year **",
                         "placeholder": "YYYY",
                         "required": true,
                         "validation": "^\\d{4}$",
                         "cssClasses": ["form-control"],
-                        "formControlName": "violationYear",
+                        "formControlName": "Year",
                         "validationMessage": "Enter a 4‑digit year."
                       }
                     ]
@@ -2390,13 +2390,13 @@
                     "cssClasses": ["col-12", "col-md-6"],
                     "elements": [
                       {
-                        "id": "violationCharge",
+                        "id": "Charge",
                         "type": "dropdown",
                         "label": "Charge / Description **",
                         "required": true,
                         "validation": true,
                         "cssClasses": ["form-select"],
-                        "formControlName": "violationCharge",
+                        "formControlName": "Charge",
                         "options": [
                           "Careless/Reckless Driving","Driving Without A License","DUI/OWI",
                           "Failure to Obey Signal","Following Too Closely","Improper Lane Change",
@@ -2458,12 +2458,12 @@
                     "cssClasses": ["col-12", "col-md-6"],
                     "elements": [
                       {
-                        "id": "commercialVehicle",
+                        "id": "cVehicle",
                         "type": "yesno",
                         "label": "Were you in a Commercial Vehicle? **",
                         "required": true,
                         "cssClasses": ["form-check"],
-                        "formControlName": "commercialVehicle",
+                        "formControlName": "cVehicle",
                         "options": ["Yes", "No"],
                         "validationMessage": "This field is required."
                       }

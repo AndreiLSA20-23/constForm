@@ -212,9 +212,22 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
                 skipDefaults: false,
                 initialValues: item
               });
-  
               (this.form as FormArray).push(newFg);
               this.initializeCountryAndState(newFg);
+               // 🩹 ДОБАВЬ ЭТО:
+              const rawCountry = item?.country?.trim?.() || '';
+              const rawState = item?.state?.trim?.() || '';
+              if (
+                rawCountry &&
+                rawState &&
+                this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry)
+              ){
+                if(
+                !newFg.contains('state')){newFg.addControl('state', new FormControl(rawState));
+              } else {
+                  newFg.get('state')!.setValue(rawState);
+                }
+              }
             });
   
             this.cd.detectChanges();
@@ -274,9 +287,14 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
       initialValues: {}
     });
   
-    newGroup.get('country')?.valueChanges.subscribe((newCountry) => {
+    ///Тут убеанская правка
+    newGroup.get('country')?.valueChanges.subscribe((newCountry: string | null) => {
       this.initializeCountryAndState(newGroup);
     });
+    //
+
+
+
   
     (this.form as FormArray).push(newGroup);
   
@@ -292,7 +310,7 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
     this.isEditing = true;
   
     if (!(this.form instanceof FormArray)) {
-      console.warn('[DformComponent] ❌ onEditItem called but form is not a FormArray.');
+      console.warn('[DformComponent]  onEditItem called but form is not a FormArray.');
       return;
     }
   
@@ -310,39 +328,54 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
     const rawCountry = initialValues?.country?.trim?.() || '';
     const rawState = initialValues?.state?.trim?.() || '';
   
+    //console.log('[DformComponent] EditItem → rawCountry:', rawCountry);
+    //console.log('[DformComponent] EditItem → rawState:', rawState);
+  
     if (rawCountry) {
       this.editForm.get('country')?.setValue(rawCountry);
   
       const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
-      if (hasStates && !this.editForm.contains('state')) {
-        this.editForm.addControl('state', new FormControl(rawState));
+      if (hasStates) {
+        const stateExists = this.editForm.contains('state');
+  
+        //console.log('[DformComponent] EditItem → hasStates:', hasStates);
+        //console.log('[DformComponent] EditItem → editForm.contains("state"):', stateExists);
+  
+        if (!stateExists) {
+          this.editForm.addControl('state', new FormControl(rawState));
+          //console.log('[DformComponent] EditItem → state control added manually with value:', rawState);
+        } else {
+          this.editForm.get('state')?.setValue(rawState);
+          //console.log('[DformComponent] EditItem → state control updated with value:', rawState);
+        }
       }
     } else {
-      console.warn('[DformComponent] ⚠️ No country in initialValues, skipping state init.');
+      console.warn('[DformComponent]  No country in initialValues, skipping state init.');
     }
   
-    // Инициализация
+    // Инициализация логики country/state
     this.initializeCountryAndState(this.editForm);
   
-    // 🧩 Принудительно устанавливаем state значение, если есть
-    const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
-    if (hasStates && rawState && this.editForm.get('state')) {
-      this.editForm.get('state')!.setValue(rawState);
-    }
-  
-    // Подписка на изменения страны
+    // Подписка на изменение страны
     this.editForm.get('country')?.valueChanges.subscribe((newCountry) => {
+      console.log('[DformComponent] Country changed to:', newCountry);
       this.initializeCountryAndState(this.editForm);
     });
   
     const stateCtrl = this.editForm.get('state');
+    console.log('[DformComponent] Final state control:', {
+      exists: !!stateCtrl,
+      value: stateCtrl?.value,
+      status: stateCtrl?.status
+    });
+  
     this.editFormSubscription?.unsubscribe();
-    this.editFormSubscription = this.editForm.valueChanges.subscribe((newVal: any) => {
+    this.editFormSubscription = this.editForm.valueChanges.subscribe(() => {
+      // Future extension
     });
   
     this.cd.detectChanges();
   }
-  
   
   
   
@@ -407,7 +440,7 @@ onEditSubmit(): void {
     items: formArray.value};
 
 
-  console.log('[DformComponent]  Final payload to be sent:', JSON.stringify(payload, null, 2));
+  //console.log('[DformComponent]  Final payload to be sent:', JSON.stringify(payload, null, 2));
 
   this.formDataService.createFormData(this.componentName, payload).subscribe({
     next: () => {
@@ -559,5 +592,11 @@ onEditSubmit(): void {
       return this.form.at(idx) as FormGroup;
     }
     return this.mainFormGroup;
+  }
+  get componentTitle(): string {
+    return this.componentName
+      ?.replace('app-', '')
+      ?.replace(/-/g, ' ')
+      ?.replace(/\b\w/g, l => l.toUpperCase()) || 'Survey Manager';
   }
 }

@@ -8,30 +8,29 @@
             "firstName": "Andre",
             "middleName": "Alex",
             "lastName": "Sa",
-            "birthday": "1980-10-16",
+            "birthday": "2001-10-10",
             "email": "ik2k@bk.ru",
-            "driverLicense": "3456232323",
-            "phoneNumber": "79097893959",
+            "driverLicense": "67995454599122",
+            "phoneNumber": "890978939591",
             "termsConfirmation": true,
             "promoEmails": true
         },
         "app-license-details": {
             "items": [
                 {
-                    "licenseNumber": "67995454599A122",
-                    "country": "United States",
-                    "state": "Indiana",
-                    "licenseExpirationDate": "2002-02-02",
-                    "medicalExpirationDate": "2222-10-22",
+                    "licenseNumber": "67995454599122",
+                    "country": "Canada",
+                    "licenseExpirationDate": "2002-01-01",
+                    "medicalExpirationDate": "12222-12-12",
                     "currentLicense": {
                         "value": "yes",
-                        "licenseType": "Class G2",
-                        "licenseIssuedState": "Louisiana",
-                        "licenseExpirationDate1": "111111-11-11"
+                        "licenseType": "Class A Permit",
+                        "licenseIssuedState": "Kentucky",
+                        "licenseExpirationDate1": "122222-01-01"
                     },
                     "hazmatLicense": {
                         "value": "yes",
-                        "hazmatClass": "Class 1 - Explosives",
+                        "hazmatClass": "Class 5 - Oxidizers and Organic Peroxides",
                         "effectiveDate": "222222-02-22"
                     },
                     "commercialLicense": {
@@ -40,7 +39,250 @@
                     "otherEndorsement": true,
                     "tankerEndorsement": true,
                     "doublesTriplesEndorsement": true,
-                    "xEndorsement": true
+                    "xEndorsement": true,
+                    "state": "Ontario"
+                }
+            ]
+        },
+        "app-driver-training": {
+            "items": [
+                {
+                    "startDate": "2002-01-01",
+                    "endDate": "2022-10-11",
+                    "province": "Zalupa",
+                    "schoolName": "Suslovo",
+                    "telephone": "890978939591",
+                    "address": "Andrei Lskdksd",
+                    "address2": "Kalagrad",
+                    "city": "Kaliningrad",
+                    "country": "United States",
+                    "state": "Kentucky",
+                    "didGraduate": {
+                        "value": "yes"
+                    },
+                    "subjectToRegulations": {
+                        "value": "yes"
+                    },
+                    "safetySensitive": {
+                        "value": "yes"
+                    },
+                    "gpa": "1000",
+                    "instructionHours": "200",
+                    "skillsTrained": [
+                        "200+",
+                        "Border Crossing",
+                        "Log Books",
+                        "Federal Motor Carrier Regulations",
+                        "Hazardous Materials"
+                    ]
+                },
+                {
+                    "startDate": "111111-11-11",
+                    "endDate": "222222-02-22",
+                    "province": "Pennsylvania",
+                    "schoolName": "Susl",
+                    "telephone": "89097893959",
+                    "address": "Gorkogo",
+                    "address2": "Hurgda",
+                    "city": "Kaliningrad",
+                    "country": "United States",
+                    "state": "Ohio",
+                    "didGraduate": {
+                        "value": "yes"
+                    },
+                    "subjectToRegulations": {
+                        "value": "yes"
+                    },
+                    "safetySensitive": {
+                        "value": "yes"
+                    },
+                    "gpa": "10",
+                    "instructionHours": "1000",
+                    "skillsTrained": [
+                        "200+",
+                        "Border Crossing",
+                        "Log Books",
+                        "Federal Motor Carrier Regulations",
+                        "Hazardous Materials"
+                    ]
+                }
+            ]
+        },
+        "add-address": [
+            {
+                "country": "Mexico",
+                "city": "Kaliningrad",
+                "addressLine1": "Andrei",
+                "addressLine2": "Kalana",
+                "zipCode": "23450",
+                "startDate": "2022-05-12",
+                "endDate": "2025-05-12"
+            }
+        ],
+        "experience-history": [
+            {
+                "companyName": "IP Sarancha",
+                "startDate": "2021-05-12",
+                "endDate": "2022-05-10",
+                "city": "Kaliningrad",
+                "state": "Texas",
+                "country": "United States",
+                "lineAddress_1": "Andrei",
+                "lineAddress_2": "Kalana",
+                "zipCode": "23450",
+                "telephone": "89097893959",
+                "positionHeld": "Boss",
+                "reasonForLeaving": "hi wa",
+                "terminated": true,
+                "currentEmployer": true,
+                "contactEmployer": true,
+                "commercialVehicle": true,
+                "federalRegulations": true,
+                "safetyFunctions": true,
+                "areasDriven": "1212",
+                "payRange": 22,
+                "mostCommonTruck": "Reefer Truck: Carrier Reefer Truck",
+                "mostCommonTrailer": "Grain Hopper",
+                "trailerLength": "28 ft",
+                "motorVehicleData": {
+                    "companyName": "IP Sarancha",
+                    "startDate": "2021-05-12",
+                    "endDate": "2022-05-10",
+                    "city": "Kaliningrad",
+                    "state": "Texas",
+                    "country": "United States",
+                    "lineAddress_1": "Andrei",
+                    "lineAddress_2": "Kalana",
+                    "zipCode": "23450",
+                    "telephone": "89097893959",
+                    "positionHeld": "Boss",
+                    "reasonForLeaving": "hi wa",
+                    "terminated": true,
+                    "currentEmployer": true,
+                    "contactEmployer": true,
+                    "commercialVehicle": true,
+                    "federalRegulations": true,
+                    "safetyFunctions": true,
+                    "areasDriven": "1212",
+                    "payRange": 22,
+                    "mostCommonTruck": "Reefer Truck: Carrier Reefer Truck",
+                    "mostCommonTrailer": "Grain Hopper",
+                    "trailerLength": "28 ft"
+                },
+                "type": "employment"
+            },
+            {
+                "startDate": "2022-05-11",
+                "endDate": "2025-05-12",
+                "comments": "fkfkfkfk",
+                "type": "unemployment"
+            }
+        ],
+        "app-full-res": {
+            "what_company_are_you_applying_": "Landstar Express, Inc (Straight Truck)",
+            "what_position_are_you_seeking?": "Owner Operator",
+            "will_you_be_running_as_a_team?": {
+                "value": "no"
+            },
+            "how_many_years_of_commercial_d": "3",
+            "do_you_currently_have_your_own": {
+                "value": "no"
+            },
+            "are_you_a_fleet_owner?_*": {
+                "value": "no"
+            },
+            "how_many_trucks_do_you_own?_*": {
+                "value": "no"
+            },
+            "does_your_truck(s)_have_active": {
+                "value": "no"
+            },
+            "enter_make,_model,_and_year_of": {
+                "value": "no"
+            }
+        },
+        "app-hazardous": {
+            "have_you_ever_held_a_hazmat_en": {
+                "value": "no"
+            },
+            "have_you_ever_hauled_hazardous": {
+                "value": "no"
+            }
+        },
+        "app-drivingexperience": {
+            "van_*": {
+                "value": "no"
+            },
+            "flatbed_*": {
+                "value": "no"
+            }
+        },
+        "app-criminalinformation": {
+            "custq_30546": {
+                "value": "no"
+            },
+            "custq_30549": {
+                "value": "no"
+            },
+            "custq_30552": {
+                "value": "no"
+            },
+            "custq_30556": {
+                "value": "no"
+            },
+            "custq_30560": {
+                "value": "no"
+            },
+            "custq_30563": {
+                "value": "no"
+            },
+            "custq_30566": {
+                "value": "no"
+            },
+            "custq_30569": {
+                "value": "no"
+            },
+            "custq_30574": {
+                "value": "no"
+            },
+            "custq_30577": {
+                "value": "no"
+            },
+            "custq_30580": {
+                "value": "no"
+            },
+            "custq_30582": {
+                "value": "no"
+            },
+            "custq_30588": {
+                "value": "no"
+            },
+            "custq_30593": {
+                "value": "no"
+            },
+            "custq_61943": {
+                "value": "no"
+            }
+        },
+        "app-incident-details": {
+            "items": [
+                {
+                    "Month": "1",
+                    "Year": "2010",
+                    "Charge": "No Insurance / Proof of Insurance",
+                    "mphOverLimit": "16",
+                    "country": "United States",
+                    "cVehicle": {
+                        "value": "yes"
+                    },
+                    "finePenalty": true,
+                    "suspensionPenalty": true,
+                    "revocationPenalty": true,
+                    "communityServicePenalty": true,
+                    "otherPenalty": true,
+                    "fineAmount": "$100 - $199",
+                    "comments": "HUI",
+                    "state": "Louisiana"
                 }
             ]
         }
