@@ -186,6 +186,27 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
           }
   
           this.form.patchValue(response.data);
+
+          (this.processedData.elements || []).forEach((el) => {
+            if (el.type === 'yesno' && el.subElements) {
+              const name = el.formControlName || el.id;
+              const val = this.form.get(name)?.value;
+              if (val !== 'yes') {
+                el.subElements.forEach((sub) => {
+                  const subName = sub.formControlName || sub.formGroup;
+                  if (
+                    typeof subName === 'string' &&
+                    this.form instanceof FormGroup &&
+                    this.form.get(subName)
+                  ) {
+                    this.form.removeControl(subName);
+                  }
+                  
+                });
+              }
+            }
+          });
+            
   
           setTimeout(() => {
             this.cd.detectChanges();
@@ -209,26 +230,80 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   
             arrayData.forEach((item: any, i: number) => {
               const newFg = this.dinFormService.generateSingleFormGroup(this.processedData, {
-                skipDefaults: false,
-                initialValues: item
+                skipDefaults: false
               });
+              newFg.patchValue(item);  
               (this.form as FormArray).push(newFg);
-              this.initializeCountryAndState(newFg);
-               // 🩹 ДОБАВЬ ЭТО:
+              
+              this.cd.detectChanges(); 
+              
+              this.initializeCountryAndState(newFg); 
+              
               const rawCountry = item?.country?.trim?.() || '';
               const rawState = item?.state?.trim?.() || '';
+              
+              if (rawCountry && rawState && this.countryDropdownData.stateOptions?.[rawCountry]) {
+                if (!newFg.get('state')) {
+                  newFg.addControl('state', new FormControl(rawState));
+                } else {
+                  newFg.get('state')?.setValue(rawState);
+                }
+              }
+      
+              (this.processedData.elements || []).forEach((el) => {
+                if (el.type === 'yesno' && el.subElements) {
+                  const name = el.formControlName || el.id;
+                  const val = newFg.get(name)?.value;
+              
+                  console.log(`[Dform] FA[${i}] → ${name} = ${val}`);
+              
+                  if (val !== 'yes') {
+                    el.subElements.forEach((sub) => {
+                      const subName = sub.formControlName || sub.formGroup;
+                      if (typeof subName === 'string' && newFg.get(subName)) {
+                        newFg.removeControl(subName);
+                        console.warn(`[Dform] FA[${i}] removed ${subName} after ${name}=no`);
+                      }
+                    });
+                  }
+                }
+              });
+              
+              (this.form as FormArray).push(newFg);
+              this.initializeCountryAndState(newFg);
               if (
                 rawCountry &&
                 rawState &&
                 this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry)
-              ){
-                if(
-                !newFg.contains('state')){newFg.addControl('state', new FormControl(rawState));
-              } else {
+              ) {
+                if (!newFg.get('state')) {
+                  newFg.addControl('state', new FormControl(rawState));
+                } else {
                   newFg.get('state')!.setValue(rawState);
                 }
               }
+            
+              (this.processedData.elements || []).forEach((el) => {
+                if (el.type === 'yesno' && el.subElements) {
+                  const name = el.formControlName || el.id;
+                  const val = newFg.get(name)?.value;
+                  if (val !== 'yes') {
+                    el.subElements.forEach((sub) => {
+                      const subName = sub.formControlName || sub.formGroup;
+                      if (
+                        typeof subName === 'string' &&
+                        newFg instanceof FormGroup &&
+                        newFg.get(subName)
+                      ) {
+                        newFg.removeControl(subName);
+                        console.warn(`[Dform] FA: removed ${subName} after value=no`);
+                      }
+                    });
+                  }
+                }
+              });
             });
+            
   
             this.cd.detectChanges();
             this.isSingleFormView = false;

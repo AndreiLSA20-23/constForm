@@ -39,6 +39,25 @@
                     "otherEndorsement": true,
                     "tankerEndorsement": true,
                     "doublesTriplesEndorsement": true,
+                    "xEndorsement": true
+                },
+                {
+                    "licenseNumber": "333333333333333333",
+                    "country": "Canada",
+                    "licenseExpirationDate": "275760-05-05",
+                    "medicalExpirationDate": "275760-07-07",
+                    "currentLicense": {
+                        "value": "yes"
+                    },
+                    "hazmatLicense": {
+                        "value": "yes"
+                    },
+                    "commercialLicense": {
+                        "value": "yes"
+                    },
+                    "otherEndorsement": true,
+                    "tankerEndorsement": true,
+                    "doublesTriplesEndorsement": true,
                     "xEndorsement": true,
                     "state": "Ontario"
                 }

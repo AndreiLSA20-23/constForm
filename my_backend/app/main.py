@@ -185,35 +185,64 @@ async def get_history(
 
 @app.get("/api/history/{ssn}/pdf")
 async def history_pdf(
-    ssn:   str,
-    bday:  str           = Query(...),
-    param: str           = Query("default"),
+    ssn: str,
+    bday: str = Query(...),
+    param: str = Query("default"),
     email: EmailStr | None = Query(None)
 ):
+    logger.info(f"PDF-запрос: ssn={ssn}, bday={bday}, param={param}, email={email}")
+
     try:
         fp = resolve_file(ssn, bday, param)
+        logger.info(f"Файл найден: {fp}")
     except FileNotFoundError:
+        logger.error("Файл не найден")
         raise HTTPException(404, "history not found")
 
-    data = load_json(fp)
-    html = jinja_env.get_template("application.html").render(
-        data=data["additional_data"], ssn=ssn
-    )
-    pdf = pdfkit.from_string(html, False)
+    try:
+        data = load_json(fp)
+        html = jinja_env.get_template("application.html").render(
+            data=data["additional_data"], ssn=ssn
+        )
+    except Exception as e:
+        logger.error(f"Ошибка при рендеринге HTML: {e}")
+        raise HTTPException(500, "Template error")
+
+    try:
+        # 🔧 Укажи свой путь к wkhtmltopdf, особенно на Windows
+        config = pdfkit.configuration(wkhtmltopdf="/usr/local/bin/wkhtmltopdf")
+        pdf = pdfkit.from_string(html, False, configuration=config)
+    except Exception as e:
+        logger.error(f"Ошибка при генерации PDF: {e}")
+        raise HTTPException(500, "PDF generation failed")
 
     if email:
-        tmp = STORAGE_DIR / f"{fp.stem}.pdf"
-        tmp.write_bytes(pdf)
-        _send_pdf(tmp, email, ssn)
-        tmp.unlink(missing_ok=True)
-        logger.info(f"PDF для {ssn} отправлен на {email}")
-        return {"status": "sent", "to": email}
+        try:
+            tmp = STORAGE_DIR / f"{fp.stem}.pdf"
+            tmp.write_bytes(pdf)
+            _send_pdf(tmp, email, ssn)
+            tmp.unlink(missing_ok=True)
+            logger.info(f"PDF для {ssn} отправлен на {email}")
+            return {"status": "sent", "to": email}
+        except Exception as e:
+            logger.error(f"Ошибка при отправке email: {e}")
+            raise HTTPException(500, "Email sending failed")
 
     return StreamingResponse(
         BytesIO(pdf),
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename={fp.stem}.pdf"}
     )
+
+
+
+
+
+
+
+
+
+
 
 def _send_pdf(path: Path, to: str, ssn: str):
     msg = EmailMessage()

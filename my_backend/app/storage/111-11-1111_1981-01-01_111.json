@@ -1,0 +1,49 @@
+{
+    "ssn": "111-11-1111",
+    "bday": "1981-01-01",
+    "param": "111",
+    "additional_data": {
+        "app-perdates": {
+            "suffix": "Jr.",
+            "firstName": "Andre",
+            "middleName": "Alex",
+            "lastName": "Sa",
+            "birthday": "111111-11-11",
+            "email": "ik2k@bk.ru",
+            "driverLicense": "3456232323",
+            "phoneNumber": "89097893959",
+            "termsConfirmation": true,
+            "promoEmails": true
+        },
+        "app-license-details": {
+            "items": [
+                {
+                    "licenseNumber": "2222222",
+                    "country": "United States",
+                    "state": "Alabama",
+                    "licenseExpirationDate": "2002-01-01",
+                    "medicalExpirationDate": "111111-11-11",
+                    "currentLicense": {
+                        "value": "no",
+                        "licenseType": "Class G2",
+                        "licenseIssuedState": "Maryland",
+                        "licenseExpirationDate1": "2002-02-22"
+                    },
+                    "hazmatLicense": {
+                        "value": "no",
+                        "hazmatClass": "Class 1 - Explosives",
+                        "effectiveDate": "275760-03-04"
+                    },
+                    "commercialLicense": {
+                        "value": "no"
+                    },
+                    "otherEndorsement": true,
+                    "tankerEndorsement": true,
+                    "doublesTriplesEndorsement": true,
+                    "xEndorsement": true
+                }
+            ]
+        }
+    },
+    "created": false
+}
