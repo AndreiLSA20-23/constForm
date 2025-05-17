@@ -425,18 +425,34 @@ export class DinFormJsonWorkerService {
 
       const valueValidators = el.required ? [Validators.required] : [];
       yesNoGroup.addControl('value', new FormControl(normalizedValue, valueValidators));
-
-      if (el.subElements && typeof startValue === 'object') {
+      
+      ////////
+     /* if (el.subElements) {
         el.subElements.forEach(subEl => {
           const subName = subEl.formControlName || subEl.id;
+          // Если в startValue есть поле — подхватим его, если нет — пусто/дефолт
           const subValue =
-            startValue?.[subName] ??
-            subEl.defaultValue ??
-            '';
+            (typeof startValue === 'object' && startValue?.[subName] !== undefined)
+              ? startValue[subName]
+              : subEl.defaultValue ?? '';
           const subValidators = this.buildValidators(subEl);
           yesNoGroup.addControl(subName, new FormControl(subValue, subValidators));
         });
       }
+      */
+      if (el.subElements) {
+        el.subElements.forEach(subEl => {
+          const subName = subEl.formControlName || subEl.id;
+          if (!subName) return; // Safety
+          const subValue =
+            (typeof startValue === 'object' && startValue?.[subName] !== undefined)
+              ? startValue[subName]
+              : (subEl.defaultValue ?? '');
+          const subValidators = this.buildValidators(subEl);
+          yesNoGroup.addControl(subName, new FormControl(subValue, subValidators));
+        });
+      }
+      
 
       controls[ctrlName] = yesNoGroup;
       break;

@@ -275,6 +275,28 @@ import { ChangeDetectorRef } from '@angular/core';
                 <label class="form-check-label" [for]="el['id'] + '_no'">No</label>
               </div>
               <div *ngIf="yesnoGroup.get('value')?.value === 'yes'" class="vertical-radio-group" #yesSubElements>
+                 <!-- DEBUG BLOCK START -->
+                <div *ngIf="debugMode"
+                  style="background:#222;color:#81f2ff;font-size:13px;padding:8px 15px;border-radius:6px;margin-bottom:14px">
+                  <b>DEBUG YESNO</b><br>
+                  <b>yesnoGroup.value:</b>
+                  <pre style="margin-bottom:0;">{{ yesnoGroup.value | json }}</pre>
+                  <b>yesnoGroup.controls:</b>
+                  <ul style="margin-bottom:0;">
+                  <li *ngFor="let key of getObjectKeys(yesnoGroup?.controls)">
+                     <code>{{key}}</code> | value: <b>{{ yesnoGroup.get(key)?.value | json }}</b>
+                  </li>
+                  </ul>
+                  <b>subElements:</b>
+                  <ul style="margin-bottom:0;">
+                    <li *ngFor="let subEl of el['subElements']">
+                      <code>{{ subEl['formControlName'] || subEl['id'] }}</code>
+                      — exists: <b>{{ !!yesnoGroup.get(subEl['formControlName'] || subEl['id']) }}</b>
+                      | value: <b>{{ yesnoGroup.get(subEl['formControlName'] || subEl['id'])?.value | json }}</b>
+                    </li>
+                  </ul>
+                </div>
+                <!-- DEBUG BLOCK END -->
                 <ng-container *ngFor="let subEl of el['subElements']">
                   <ng-container [ngSwitch]="subEl.type">
                     <ng-container *ngSwitchCase="'textbox'">
@@ -472,6 +494,7 @@ export class SinglePageComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() onCountryChange!: (event: Event) => void;
   @Input() onCancel!: () => void;
   @Input() onEdit!: () => void;
+  @Input() debugMode = true;
 
   yesNoStates: { [key: string]: string } = {};
   currentStates: string[] = [];
@@ -541,4 +564,11 @@ export class SinglePageComponent implements OnInit, OnDestroy, AfterViewInit {
     const ctrlName = el?.formControlName || el?.id;
     this.yesNoStates[ctrlName] = value;
   }
+
+  getObjectKeys(obj: any): string[] {
+    return obj ? Object.keys(obj) : [];
+  }
+
+
+
 }

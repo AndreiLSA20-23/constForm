@@ -364,19 +364,16 @@
                   ],
                   "elements": [
                     {
-                      "id": "dropdown1",
+                      "id": "country",
                       "type": "countryDropdown",
-                      "label": "Country",
+                      "label": "Country **",
                       "required": true,
                       "validation": true,
-                      "cssClasses": [
-                        "form-select",
-                        "form-select-sm"
-                      ],
-                      "formControlName": "country"
+                      "cssClasses": ["form-select"],
+                      "formControlName": "country",
+                      "stateControlName": "state",
+                      "validationMessage": "Country is required."
                     }
-
-
                   ]
                 },
                 {

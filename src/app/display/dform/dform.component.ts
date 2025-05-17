@@ -154,6 +154,31 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   });
   }
 
+  private initializeYesNoFromPrefill(formGroup: FormGroup): void {
+    const controls = formGroup.controls;
+  
+    Object.keys(controls).forEach(key => {
+      const ctrl = controls[key];
+  
+      if (
+        ctrl instanceof FormGroup &&
+        ctrl.contains('value') &&
+        typeof ctrl.get('value')?.value === 'string'
+      ) {
+        const val = ctrl.get('value')?.value;
+        if (val === 'yes') {
+          // всё уже добавлено сервисом — просто оставляем как есть
+        } else if (val === 'no') {
+          // Можно здесь очистить вложенные поля, если требуется
+          // Object.keys(ctrl.controls).forEach(subKey => {
+          //   if (subKey !== 'value') ctrl.removeControl(subKey);
+          // });
+        }
+      }
+    });
+  }
+  
+
 
 
   private loadPrefillData(): void {
@@ -186,27 +211,6 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
           }
   
           this.form.patchValue(response.data);
-
-          (this.processedData.elements || []).forEach((el) => {
-            if (el.type === 'yesno' && el.subElements) {
-              const name = el.formControlName || el.id;
-              const val = this.form.get(name)?.value;
-              if (val !== 'yes') {
-                el.subElements.forEach((sub) => {
-                  const subName = sub.formControlName || sub.formGroup;
-                  if (
-                    typeof subName === 'string' &&
-                    this.form instanceof FormGroup &&
-                    this.form.get(subName)
-                  ) {
-                    this.form.removeControl(subName);
-                  }
-                  
-                });
-              }
-            }
-          });
-            
   
           setTimeout(() => {
             this.cd.detectChanges();
@@ -222,6 +226,7 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   
         else if (this.form instanceof FormArray) {
           const arrayData = response.data.items;
+          console.log('[DformComponent] 🧩 Received FormArray data:', JSON.stringify(arrayData, null, 2));
   
           if (Array.isArray(arrayData) && arrayData.length > 0) {
             while ((this.form as FormArray).length > 0) {
@@ -230,79 +235,34 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
   
             arrayData.forEach((item: any, i: number) => {
               const newFg = this.dinFormService.generateSingleFormGroup(this.processedData, {
-                skipDefaults: false
+                skipDefaults: false,
+                initialValues: item
               });
-              newFg.patchValue(item);  
-              (this.form as FormArray).push(newFg);
-              
-              this.cd.detectChanges(); 
-              
-              this.initializeCountryAndState(newFg); 
-              
-              const rawCountry = item?.country?.trim?.() || '';
-              const rawState = item?.state?.trim?.() || '';
-              
-              if (rawCountry && rawState && this.countryDropdownData.stateOptions?.[rawCountry]) {
-                if (!newFg.get('state')) {
-                  newFg.addControl('state', new FormControl(rawState));
-                } else {
-                  newFg.get('state')?.setValue(rawState);
-                }
-              }
-      
-              (this.processedData.elements || []).forEach((el) => {
-                if (el.type === 'yesno' && el.subElements) {
-                  const name = el.formControlName || el.id;
-                  const val = newFg.get(name)?.value;
-              
-                  console.log(`[Dform] FA[${i}] → ${name} = ${val}`);
-              
-                  if (val !== 'yes') {
-                    el.subElements.forEach((sub) => {
-                      const subName = sub.formControlName || sub.formGroup;
-                      if (typeof subName === 'string' && newFg.get(subName)) {
-                        newFg.removeControl(subName);
-                        console.warn(`[Dform] FA[${i}] removed ${subName} after ${name}=no`);
-                      }
-                    });
-                  }
-                }
-              });
-              
-              (this.form as FormArray).push(newFg);
-              this.initializeCountryAndState(newFg);
-              if (
-                rawCountry &&
-                rawState &&
-                this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry)
-              ) {
-                if (!newFg.get('state')) {
-                  newFg.addControl('state', new FormControl(rawState));
-                } else {
-                  newFg.get('state')!.setValue(rawState);
-                }
+            
+              const countryVal = item?.country;
+              const stateVal = item?.state ?? '';
+              const hasStates = countryVal && this.countryDropdownData.stateOptions.hasOwnProperty(countryVal);
+              if (hasStates && stateVal && !newFg.contains('state')) {
+                newFg.addControl('state', new FormControl(stateVal));
+              } else if (!hasStates && !newFg.contains('state')) {
+                newFg.addControl('state', new FormControl(''));
               }
             
-              (this.processedData.elements || []).forEach((el) => {
-                if (el.type === 'yesno' && el.subElements) {
-                  const name = el.formControlName || el.id;
-                  const val = newFg.get(name)?.value;
-                  if (val !== 'yes') {
-                    el.subElements.forEach((sub) => {
-                      const subName = sub.formControlName || sub.formGroup;
-                      if (
-                        typeof subName === 'string' &&
-                        newFg instanceof FormGroup &&
-                        newFg.get(subName)
-                      ) {
-                        newFg.removeControl(subName);
-                        console.warn(`[Dform] FA: removed ${subName} after value=no`);
-                      }
-                    });
-                  }
-                }
-              });
+              // Устанавливаем значение
+              if (newFg.get('state')) {
+                newFg.get('state')!.setValue(stateVal);
+              }
+            
+              //  Лог после установки state
+              console.log(`[FA Prefill] #${i}: country=${countryVal}, state=${stateVal}, hasStates=${!!hasStates}`);
+              console.log(`[FA Prefill] #${i}: form.contains('state')=${newFg.contains('state')}, value="${newFg.get('state')?.value}"`);
+            
+              (this.form as FormArray).push(newFg);
+            
+              this.initializeCountryAndState(newFg);
+              this.initializeYesNoFromPrefill(newFg);
             });
+            
             
   
             this.cd.detectChanges();
@@ -361,15 +321,16 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
       skipDefaults: false,
       initialValues: {}
     });
-  
-    ///Тут убеанская правка
+	
+    /*
+    newGroup.get('country')?.valueChanges.subscribe((newCountry) => {
+     this.initializeCountryAndState(newGroup);
+    });
+    */
+
     newGroup.get('country')?.valueChanges.subscribe((newCountry: string | null) => {
       this.initializeCountryAndState(newGroup);
     });
-    //
-
-
-
   
     (this.form as FormArray).push(newGroup);
   
@@ -379,19 +340,19 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
   
-
   onEditItem(index: number): void {
     this.selectedIndex = index;
     this.isEditing = true;
   
     if (!(this.form instanceof FormArray)) {
-      console.warn('[DformComponent]  onEditItem called but form is not a FormArray.');
+      console.warn('[DformComponent] ❌ onEditItem called but form is not a FormArray.');
       return;
     }
   
     const formArray = this.form as FormArray;
     const currentGroup = formArray.at(index) as FormGroup;
-    const initialValues = currentGroup.value;
+    const initialValues = currentGroup.getRawValue();
+
   
     this.editFormBackup = JSON.parse(JSON.stringify(initialValues));
   
@@ -403,56 +364,51 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
     const rawCountry = initialValues?.country?.trim?.() || '';
     const rawState = initialValues?.state?.trim?.() || '';
   
-    //console.log('[DformComponent] EditItem → rawCountry:', rawCountry);
-    //console.log('[DformComponent] EditItem → rawState:', rawState);
-  
     if (rawCountry) {
       this.editForm.get('country')?.setValue(rawCountry);
   
       const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
-      if (hasStates) {
-        const stateExists = this.editForm.contains('state');
-  
-        //console.log('[DformComponent] EditItem → hasStates:', hasStates);
-        //console.log('[DformComponent] EditItem → editForm.contains("state"):', stateExists);
-  
-        if (!stateExists) {
-          this.editForm.addControl('state', new FormControl(rawState));
-          //console.log('[DformComponent] EditItem → state control added manually with value:', rawState);
-        } else {
-          this.editForm.get('state')?.setValue(rawState);
-          //console.log('[DformComponent] EditItem → state control updated with value:', rawState);
-        }
+      if (hasStates && !this.editForm.contains('state')) {
+        this.editForm.addControl('state', new FormControl(rawState));
       }
     } else {
-      console.warn('[DformComponent]  No country in initialValues, skipping state init.');
+      console.warn('[DformComponent] ⚠️ No country in initialValues, skipping state init.');
     }
   
-    // Инициализация логики country/state
+    // Инициализация
     this.initializeCountryAndState(this.editForm);
   
-    // Подписка на изменение страны
+    // 🧩 Принудительно устанавливаем state значение, если есть
+    const hasStates = this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
+    if (hasStates && rawState && this.editForm.get('state')) {
+      this.editForm.get('state')!.setValue(rawState);
+    }
+  
+    // Подписка на изменения страны
     this.editForm.get('country')?.valueChanges.subscribe((newCountry) => {
-      console.log('[DformComponent] Country changed to:', newCountry);
       this.initializeCountryAndState(this.editForm);
     });
   
     const stateCtrl = this.editForm.get('state');
-    console.log('[DformComponent] Final state control:', {
-      exists: !!stateCtrl,
-      value: stateCtrl?.value,
-      status: stateCtrl?.status
-    });
-  
     this.editFormSubscription?.unsubscribe();
-    this.editFormSubscription = this.editForm.valueChanges.subscribe(() => {
-      // Future extension
+    this.editFormSubscription = this.editForm.valueChanges.subscribe((newVal: any) => {
     });
+
+    Object.entries(this.editForm.controls).forEach(([key, ctrl]) => {
+      if (ctrl instanceof FormGroup && ctrl.get('value')) {
+        console.log(`[EditItem] YESNO "${key}":`, ctrl.value);
+        const subKeys = Object.keys(ctrl.controls).filter(k => k !== 'value');
+        console.log(` ↳ Sub-controls (${subKeys.length}) for "${key}":`, subKeys);
+        subKeys.forEach(subKey => {
+          console.log(`   • ${subKey}:`, ctrl.get(subKey)?.value);
+        });
+      }
+    });
+
+    this.initializeYesNoFromPrefill(this.editForm); 
   
     this.cd.detectChanges();
   }
-  
-  
   
   onDeleteItem(index: number): void {
   // …ваша текущая проверка индексов…
@@ -461,13 +417,14 @@ export class DformComponent extends BaseComponent implements OnInit, OnDestroy {
 
   // сразу сбрасываем selectedIndex и выходим из режима редактирования
   this.exitEditing();
-
-  // собираем payload
+  const items = (formArray.controls as FormGroup[]).map(ctrl =>
+    this.flattenYesnoGroups(ctrl.getRawValue(), this.processedData)
+  );
   const payload = {
     ssn: this.ssn,
     bday: this.bday,
     param: this.param,
-    items: formArray.value
+    items
   };
 
   // отправляем на сервер
@@ -496,26 +453,42 @@ onEditSubmit(): void {
   const rawCountry = this.editForm.get('country')?.value?.trim?.();
   const hasStates = rawCountry && this.countryDropdownData.stateOptions.hasOwnProperty(rawCountry);
 
-  // Если страна требует штаты, а state отсутствует — добавим его вручную
   if (hasStates && !this.editForm.contains('state')) {
     const rawState = '';
     this.editForm.addControl('state', new FormControl(rawState));
   }
 
-  //  Обновляем FormArray значением из editForm
-  formArray.at(this.selectedIndex).patchValue(this.editForm.value);
+  // *** СЮДА: flat ***
+  const flatEditForm = this.flattenYesnoGroups(this.editForm.getRawValue(), this.processedData);
+  console.log('[onEditSubmit][DEBUG] flatEditForm:', JSON.stringify(flatEditForm, null, 2));
+
+  // Важно: глубокая копия!
+  const safeFlat = typeof structuredClone === 'function'
+    ? structuredClone(flatEditForm)
+    : JSON.parse(JSON.stringify(flatEditForm));
+
+  //....formArray.at(this.selectedIndex).setValue(safeFlat);
+  formArray.at(this.selectedIndex).patchValue(flatEditForm)
+
 
   this.editForm.markAsPristine();
   this.editFormBackup = null;
+
+  // ⚡ Твой общий payload
+  const items = (formArray.controls as FormGroup[]).map((ctrl, i) => {
+    const flat = this.flattenYesnoGroups(ctrl.getRawValue(), this.processedData);
+    console.log(`[onEditSubmit][DEBUG] flat[${i}]:`, JSON.stringify(flat, null, 2));
+    return flat;
+  });
 
   const payload = {
     ssn: this.ssn,
     bday: this.bday,
     param: this.param,
-    items: formArray.value};
+    items
+  };
 
-
-  //console.log('[DformComponent]  Final payload to be sent:', JSON.stringify(payload, null, 2));
+  console.log('[DformComponent][onEditSubmit] Final payload to be sent:', JSON.stringify(payload, null, 2));
 
   this.formDataService.createFormData(this.componentName, payload).subscribe({
     next: () => {
@@ -530,6 +503,9 @@ onEditSubmit(): void {
     }
   });
 }
+
+
+
 
   override onCancel(): void {
     if (!this.isSurveySaved && this.editForm.dirty && this.editFormBackup) {
@@ -553,43 +529,53 @@ onEditSubmit(): void {
   
 
   override onSubmitFormArray(): void {
-  if (!(this.form instanceof FormArray)) {
-    console.error('[DformComponent] Form is not a FormArray.');
-    return;
-  }
-
-  const formArray = this.form as FormArray;
-
-  formArray.controls.forEach(ctrl => ctrl.updateValueAndValidity());
-
-  if (formArray.invalid || formArray.length === 0) {
-    this.markFormGroupTouched(formArray);
-    this.toastr.error('Please complete all surveys before submitting.');
-    return;
-  }
-
-  const payload = {
-    ssn: this.ssn,
-    bday: this.bday,
-    param: this.param,
-    items: formArray.value
-  };
-
-  this.formDataService.createFormData(this.componentName, payload).subscribe({
-    next: () => {
-      this.toastr.success('All surveys submitted successfully.');
-      this.isSurveySaved = true;
-      if (this.isSingleFormView && (this.form as FormArray).length === 1) {
-        this.isSingleFormView = false;
-        this.cd.detectChanges();
-      }
-    },
-    error: (error: any) => {
-      console.error('[DformComponent] onSubmitFormArray error:', error);
-      this.toastr.error('Failed to submit surveys.');
+    if (!(this.form instanceof FormArray)) {
+      console.error('[DformComponent] Form is not a FormArray.');
+      return;
     }
-  });
-}
+  
+    const formArray = this.form as FormArray;
+  
+    formArray.controls.forEach(ctrl => ctrl.updateValueAndValidity());
+  
+    if (formArray.invalid || formArray.length === 0) {
+      this.markFormGroupTouched(formArray);
+      this.toastr.error('Please complete all surveys before submitting.');
+      return;
+    }
+  
+    // 🚩 flattenYesnoGroups для каждого item!
+    const items = (formArray.controls as FormGroup[]).map((ctrl, i) => {
+      const flat = this.flattenYesnoGroups(ctrl.getRawValue(), this.processedData);
+      console.log(`[onSubmitFormArray][DEBUG] flat[${i}]:`, JSON.stringify(flat, null, 2));
+      return flat;
+    });
+  
+    const payload = {
+      ssn: this.ssn,
+      bday: this.bday,
+      param: this.param,
+      items
+    };
+  
+    console.log('[DformComponent][onSubmitFormArray] Final payload to be sent:', JSON.stringify(payload, null, 2));
+  
+    this.formDataService.createFormData(this.componentName, payload).subscribe({
+      next: () => {
+        this.toastr.success('All surveys submitted successfully.');
+        this.isSurveySaved = true;
+        if (this.isSingleFormView && (this.form as FormArray).length === 1) {
+          this.isSingleFormView = false;
+          this.cd.detectChanges();
+        }
+      },
+      error: (error: any) => {
+        console.error('[DformComponent] onSubmitFormArray error:', error);
+        this.toastr.error('Failed to submit surveys.');
+      }
+    });
+  }
+  
 
 
   override onSubmitSingleForm(): void {
@@ -619,12 +605,13 @@ onEditSubmit(): void {
   if (!('state' in payloadCore)) {
     payloadCore.state = '';
   }
-
+  const flat = this.flattenYesnoGroups(group.getRawValue(), this.processedData);
   const payload = {
     ssn: this.ssn,
     bday: this.bday,
     param: this.param,
-    ...payloadCore
+    ...payloadCore,
+    ...flat
   };
 
   this.formDataService.createFormData(this.componentName, payload).subscribe({
@@ -638,9 +625,6 @@ onEditSubmit(): void {
     }
   });
 }
-
-
-
   private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
     Object.values(formGroup.controls).forEach((control: AbstractControl) => {
       control.markAsTouched();
@@ -649,6 +633,31 @@ onEditSubmit(): void {
       }
     });
   }
+
+  public flattenYesnoGroups(formValue: any, processedData: any): any {
+    let result = { ...formValue };
+    (processedData.elements || []).forEach((el: ElementData) => {
+      if (el.type === 'yesno' && el.subElements?.length) {
+        const yesnoName = el.formControlName || el.id;
+        const yesnoGroup = formValue[yesnoName];
+        if (yesnoGroup && typeof yesnoGroup === 'object') {
+          result[yesnoName] = { value: yesnoGroup.value };
+          el.subElements.forEach((sub: ElementData) => {
+            const subName = sub.formControlName || sub.id;
+            if (!subName) return;
+            if (sub.type === 'yesno' && yesnoGroup.hasOwnProperty(subName)) {
+              // Рекурсия по вложенному yesno
+              result[yesnoName][subName] = this.flattenYesnoGroups(yesnoGroup[subName], sub);
+            } else if (yesnoGroup.hasOwnProperty(subName)) {
+              result[yesnoName][subName] = yesnoGroup[subName];
+            }
+          });
+        }
+      }
+    });
+    return result;
+  }
+  
 
   ngOnDestroy(): void {
     this.editFormSubscription?.unsubscribe();
@@ -673,5 +682,6 @@ onEditSubmit(): void {
       ?.replace('app-', '')
       ?.replace(/-/g, ' ')
       ?.replace(/\b\w/g, l => l.toUpperCase()) || 'Survey Manager';
-  }
+}
+
 }
