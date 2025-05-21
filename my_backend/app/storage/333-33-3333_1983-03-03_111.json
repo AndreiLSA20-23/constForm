@@ -1,0 +1,49 @@
+{
+    "ssn": "333-33-3333",
+    "bday": "1983-03-03",
+    "param": "111",
+    "additional_data": {
+        "app-perdates": {
+            "suffix": "Jr.",
+            "firstName": "Andrei",
+            "middleName": "Alex",
+            "lastName": "Sarancha",
+            "birthday": "1982-03-03",
+            "email": "ik2k@bk.ru",
+            "driverLicense": "333333333333333333333333333",
+            "phoneNumber": "89097893959",
+            "termsConfirmation": true,
+            "promoEmails": true
+        },
+        "app-license-details": {
+            "items": [
+                {
+                    "licenseNumber": "222",
+                    "country": "United States",
+                    "state": "Alaska",
+                    "licenseExpirationDate": "2002-01-01",
+                    "medicalExpirationDate": "2033-01-01",
+                    "currentLicense": {
+                        "value": "yes",
+                        "licenseType": "Class AZ",
+                        "licenseIssuedState": "Iowa",
+                        "licenseExpirationDate1": "12002-10-10"
+                    },
+                    "hazmatLicense": {
+                        "value": "yes",
+                        "hazmatClass": "Class 1 - Explosives",
+                        "effectiveDate": "2002-01-01"
+                    },
+                    "commercialLicense": {
+                        "value": "yes"
+                    },
+                    "otherEndorsement": true,
+                    "tankerEndorsement": true,
+                    "doublesTriplesEndorsement": true,
+                    "xEndorsement": true
+                }
+            ]
+        }
+    },
+    "created": false
+}

@@ -1,0 +1,204 @@
+<div class="container">
+    <h5>Experience History</h5>
+
+    <!-- Instruction block -->
+    <div class="my-3 text-justify">
+        <p>
+            💼 <strong>Employment:</strong> Enter your employer’s name and your position.<br />
+            🎓 <strong>Education:</strong> Enter your school or university name, field of study, and (if applicable)
+            graduation date.<br />
+            🎖️ <strong>Military Service:</strong> Enter your branch of service, rank, and primary duties.<br />
+            📄 <strong>Unemployment:</strong> Enter the period and optionally a brief reason or comments.<br />
+            📅 <strong>Start / End Dates:</strong> Provide the dates you began and ended each role or period. Each must
+            last at least 1 month and must not overlap with others.<br />
+            ⚠️ <strong>You cannot save your experience history until all time gaps are filled!</strong>
+        </p>
+    </div>
+
+    <!-- Выбор типа истории -->
+    <label for="historyType" class="form-label">Select History Type:</label>
+    <select id="historyType" [disabled]="gaps.length===0" [(ngModel)]="selectedHistoryType"
+        (change)="onHistoryTypeChange()" class="form-select">
+        <option value="">-- Select --</option>
+        <option value="employment">Employment</option>
+        <option value="unemployment">Unemployment</option>
+        <option value="school">School</option>
+        <option value="militaryService">Military Service</option>
+    </select>
+
+    <!-- Промежутки времени без записей -->
+    <div *ngIf="gaps.length > 0" class="gaps-list mt-4">
+        <h6>Gaps in Coverage</h6>
+        <ul class="list-group">
+            <li *ngFor="let gap of gaps" class="list-group-item">
+                <strong>Gap:</strong>
+                {{ gap.startDate | date:'dd/MM/yyyy' }} – {{ gap.endDate | date:'dd/MM/yyyy' }}
+                <button (click)="fillGapWithHistory(gap)" class="btn btn-link">Use Gap</button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Модальное окно с динамической формой -->
+    <div class="modal fade" tabindex="-1" [ngClass]="{ show: isModalOpen }"
+        [ngStyle]="{ display: isModalOpen ? 'block' : 'none' }">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        {{ editingIndex === null ? 'Add' : 'Edit' }} {{ selectedHistoryType | titlecase }}
+                    </h5>
+                    <button type="button" class="btn-close" (click)="closeModal()"></button>
+                </div>
+                <div class="modal-body">
+                    <div [ngSwitch]="selectedHistoryType">
+                        <app-employment-form *ngSwitchCase="'employment'"
+                            [formData]="editingIndex !== null ? processedHistories[editingIndex] : null"
+                            [countries]="countries" [states]="states" [gapData]="gapData" (save)="saveHistory($event)"
+                            (countryChange)="onCountryChangeForm($event)" (cancel)="closeModal()">
+                        </app-employment-form>
+
+                        <app-unemployment-form *ngSwitchCase="'unemployment'"
+                            [formData]="editingIndex !== null ? processedHistories[editingIndex] : null"
+                            [gapData]="gapData" (save)="saveHistory($event)" (cancel)="closeModal()">
+                        </app-unemployment-form>
+
+                        <app-school-form *ngSwitchCase="'school'"
+                            [formData]="editingIndex !== null ? processedHistories[editingIndex] : null"
+                            [countries]="countries" [states]="states" [gapData]="gapData" (save)="saveHistory($event)"
+                            (countryChange)="onCountryChangeForm($event)" (cancel)="closeModal()">
+                        </app-school-form>
+
+                        <app-military-service-form *ngSwitchCase="'militaryService'"
+                            [formData]="editingIndex !== null ? processedHistories[editingIndex] : null"
+                            [countries]="countries" [states]="states" [gapData]="gapData" (save)="saveHistory($event)"
+                            (countryChange)="onCountryChangeForm($event)" (cancel)="closeModal()">
+                        </app-military-service-form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список обработанных записей -->
+    <div *ngIf="processedHistories.length > 0" class="history-list mt-4">
+        <h5>Processed Histories</h5>
+        <ul class="list-group">
+            <li *ngFor="let history of processedHistories; let i = index" class="list-group-item"
+                style="margin-bottom: 20px; padding: 20px;">
+                <div class="mb-2">
+                    <strong>{{ history.type | titlecase }}:</strong>
+                    {{ history.startDate | date:'dd/MM/yyyy' }} – {{ history.endDate | date:'dd/MM/yyyy' }}
+                    <br>    
+                    <span *ngIf="history.type === 'employment' && history.companyName"> — {{ history.companyName }}</span>
+                    <span *ngIf="history.type === 'school' && history.schoolName"> — {{ history.schoolName }}</span>
+                    <span *ngIf="history.type === 'militaryService' && history.branch"> — {{ history.branch }}</span>
+                    <span *ngIf="history.type === 'unemployment' && history.comments"> — {{ history.comments }}</span>
+                </div>
+    
+                <!-- Employment Details -->
+                <div *ngIf="history.type === 'employment'" class="small text-muted">
+                    <div><strong>Position:</strong> {{ history.positionHeld }}</div>
+                    <div><strong>Company:</strong> {{ history.companyName }}</div>
+                    <div><strong>Location:</strong> {{ history.city }}, {{ history.state }}, {{ history.country }} {{
+                        history.zip }}</div>
+                    <div>
+                        <strong>Address:</strong> {{ history.lineAddress_1}}
+                        <span *ngIf="history.lineAddress_2">, {{ history.lineAddress_2 }}</span>
+                    
+                    </div>
+                    <div *ngIf="history.telephone"><strong>Phone:</strong> {{ history.telephone }}</div>
+                    <div *ngIf="history.reasonForLeaving"><strong>Reason for Leaving:</strong> {{ history.reasonForLeaving
+                        }}</div>
+    
+                    <div class="mt-2">
+                        <strong>Terminated/Laid Off:</strong> {{ history.terminated ? 'Yes' : 'No' }}<br />
+                        <strong>Current Employer:</strong> {{ history.currentEmployer ? 'Yes' : 'No' }}<br />
+                        <strong>May We Contact:</strong> {{ history.contactEmployer ? 'Yes' : 'No' }}<br />
+                        <strong>Did you operate a commercial motor vehicle:</strong> {{ history.commercialVehicle ? 'Yes' : 'No' }}
+                        <div *ngIf="history.commercialVehicle" class="mt-2">
+                            <strong>Federal Regulations:</strong> {{ history.federalRegulations ? 'Yes' : 'No' }}<br />
+                            <strong>Performed Safety Functions:</strong> {{ history.safetyFunctions ? 'Yes' : 'No' }}<br />
+                            <div *ngIf="history.areasDriven"><strong>Areas Driven:</strong> {{ history.areasDriven }}</div>
+                            <div *ngIf="history.payRange"><strong>Pay Range:</strong> {{ history.payRange }}</div>
+                            <div *ngIf="history.mostCommonTruck"><strong>Most Common Truck:</strong> {{ history.mostCommonTruck }}</div>
+                            <div *ngIf="history.mostCommonTrailer"><strong>Most Common Trailer:</strong> {{ history.mostCommonTrailer }}</div>
+                            <div *ngIf="history.trailerLength"><strong>Trailer Length:</strong> {{ history.trailerLength }}</div>
+                        </div>
+                    </div>
+    
+                    <div *ngIf="history.droveCMV" class="mt-2">
+                        <strong>CMV Details:</strong><br />
+                        <strong>Subject to FMCSA/Transport Canada:</strong> {{ history.wasSubjectToRegulation ? 'Yes' : 'No'
+                        }}<br />
+                        <strong>Performed Safety Functions:</strong> {{ history.performedSafetyFunctions ? 'Yes' : 'No'
+                        }}<br />
+                        <div *ngIf="history.areasDriven"><strong>Areas Driven:</strong> {{ history.areasDriven }}</div>
+                        <div *ngIf="history.payRange"><strong>Pay Range (¢/mile):</strong> {{ history.payRange }}</div>
+                        <div *ngIf="history.mostCommonTruck"><strong>Most Common Truck:</strong> {{ history.mostCommonTruck
+                            }}</div>
+                        <div *ngIf="history.mostCommonTrailer"><strong>Most Common Trailer:</strong> {{
+                            history.mostCommonTrailer }}</div>
+                        <div *ngIf="history.trailerLength"><strong>Trailer Length:</strong> {{ history.trailerLength }}
+                        </div>
+                    </div>
+                </div>
+    
+                <!-- School Details -->
+                <div *ngIf="history.type === 'school'" class="small text-muted">
+                    <div><strong>School:</strong> {{ history.schoolName }}</div>
+                    <div><strong>Field of Study:</strong> {{ history.fieldOfStudy }}</div>
+                    <div><strong>Graduation Date:</strong> {{ history.graduationDate | date:'dd/MM/yyyy' }}</div>
+                    <div><strong>Location:</strong> {{ history.city }}, {{ history.stateSchool }}, {{ history.countrySchool }}</div>
+                    <div *ngIf="history.phoneSchool"><strong>Phone:</strong> {{ history.phoneSchool }}</div>
+                </div>
+                
+    
+                <!-- Military Service Details -->
+                <div *ngIf="history.type === 'militaryService'" class="small text-muted">
+                    <div><strong>Branch:</strong> {{ history.branch }}</div>
+                    <div><strong>Rank:</strong> {{ history.rank }}</div>
+                    <div><strong>DD-214 Provided:</strong> {{ history.dd214 | titlecase }}</div>
+                    <div><strong>Location:</strong> {{ history.countryMilit }}<span *ngIf="history.stateMilit">, {{ history.stateMilit
+                            }}</span></div>
+                </div>
+                <!-- Unemployment -->
+                <div *ngIf="history.type === 'unemployment'" class="small text-muted">
+                    <div><strong>Comments:</strong> {{ history.comments }}</div>
+                </div>
+               
+                <div class="d-flex justify-content-end mt-2">
+                    <button (click)="editHistory(i)" class="btn btn-warning me-2">Edit</button>
+                    <button (click)="removeHistory(i)" class="btn btn-danger">Delete</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+
+
+    <!-- Add / Save Changes внизу -->
+    <div class="position-relative mt-4">
+        <ng-container *ngIf="gaps.length > 0; else allFilled">
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-primary" [disabled]="!selectedHistoryType" (click)="openModal()">
+                    Add {{ selectedHistoryType | titlecase }}
+                </button>
+            </div>
+        </ng-container>
+    
+        <ng-template #allFilled>
+            <div class="text-center text-muted mb-2">
+                All dates are filled. Please click Save Changes.
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button class="btn btn-success" (click)="saveAllChanges()" [disabled]="gaps.length > 0 || !isDirty"
+                    [title]="gaps.length > 0 ? 'Fill all gaps before saving' : (!isDirty ? 'No changes to save' : 'Save changes')">
+                    Save Changes
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</div>

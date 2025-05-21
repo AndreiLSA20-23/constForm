@@ -1,0 +1,20 @@
+{
+    "ssn": "444-44-4444",
+    "bday": "1983-03-03",
+    "param": "111",
+    "additional_data": {
+        "app-perdates": {
+            "suffix": "Jr.",
+            "firstName": "Andrei",
+            "middleName": "Alex",
+            "lastName": "Sarancha",
+            "birthday": "1983-03-03",
+            "email": "ik2k@bk.ru",
+            "driverLicense": "33",
+            "phoneNumber": "89097893959",
+            "termsConfirmation": true,
+            "promoEmails": true
+        }
+    },
+    "created": false
+}

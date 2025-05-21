@@ -1,0 +1,299 @@
+{
+    "ssn": "444-44-4444",
+    "bday": "1984-04-04",
+    "param": "111",
+    "additional_data": {
+        "app-perdates": {
+            "suffix": "Sr.",
+            "firstName": "Andrei",
+            "middleName": "Alex",
+            "lastName": "Sarancha",
+            "birthday": "1983-03-03",
+            "email": "ik2k@bk.ru",
+            "driverLicense": "33",
+            "phoneNumber": "89097893959",
+            "termsConfirmation": true,
+            "promoEmails": true
+        },
+        "app-license-details": {
+            "items": [
+                {
+                    "licenseNumber": "1",
+                    "country": "Japan",
+                    "licenseExpirationDate": "2023-01-01",
+                    "medicalExpirationDate": "2034-12-12",
+                    "currentLicense": {
+                        "value": "yes",
+                        "licenseType": "Class A",
+                        "licenseIssuedState": "Kentucky",
+                        "licenseExpirationDate1": "2035-12-12"
+                    },
+                    "hazmatLicense": {
+                        "value": "yes",
+                        "hazmatClass": "Class 1 - Explosives",
+                        "effectiveDate": "2040-10-10"
+                    },
+                    "commercialLicense": {
+                        "value": "yes"
+                    },
+                    "otherEndorsement": true,
+                    "tankerEndorsement": true,
+                    "doublesTriplesEndorsement": true,
+                    "xEndorsement": true
+                },
+                {
+                    "licenseNumber": "2",
+                    "country": "United States",
+                    "state": "California",
+                    "licenseExpirationDate": "2030-10-10",
+                    "medicalExpirationDate": "2034-02-02",
+                    "currentLicense": {
+                        "value": "yes",
+                        "licenseType": "Class 1",
+                        "licenseIssuedState": "Kansas",
+                        "licenseExpirationDate1": "2023-12-12"
+                    },
+                    "hazmatLicense": {
+                        "value": "yes",
+                        "hazmatClass": "Class 8 - Corrosives",
+                        "effectiveDate": "2050-03-31"
+                    },
+                    "commercialLicense": {
+                        "value": "yes"
+                    },
+                    "otherEndorsement": true,
+                    "tankerEndorsement": true,
+                    "doublesTriplesEndorsement": true,
+                    "xEndorsement": true
+                }
+            ]
+        },
+        "app-driver-training": {
+            "items": [
+                {
+                    "startDate": "2040-12-12",
+                    "endDate": "2045-12-03",
+                    "province": "Zalupa",
+                    "schoolName": "Huiiii",
+                    "telephone": "890978939591",
+                    "address": "Andrei Lskdksd",
+                    "address2": "Kalagrad",
+                    "city": "Kaliningrad",
+                    "country": "United States",
+                    "state": "Alabama",
+                    "didGraduate": {
+                        "value": "yes"
+                    },
+                    "subjectToRegulations": {
+                        "value": "yes"
+                    },
+                    "safetySensitive": {
+                        "value": "yes"
+                    },
+                    "gpa": "222",
+                    "instructionHours": "44",
+                    "skillsTrained": [
+                        "200+",
+                        "Border Crossing",
+                        "Log Books",
+                        "Federal Motor Carrier Regulations",
+                        "Hazardous Materials"
+                    ]
+                }
+            ]
+        },
+        "add-address": [
+            {
+                "country": "United States",
+                "state": "California",
+                "city": "Kaliningrad",
+                "addressLine1": "Gorkogo",
+                "addressLine2": "Hurgda",
+                "zipCode": "23450",
+                "startDate": "2022-05-20",
+                "endDate": "2025-05-20"
+            }
+        ],
+        "experience-history": [
+            {
+                "companyName": "IP Sarancha",
+                "startDate": "2021-05-20",
+                "endDate": "2025-05-20",
+                "city": "Kaliningrad",
+                "state": "Texas",
+                "country": "United States",
+                "lineAddress_1": "Andrei",
+                "lineAddress_2": "Kalana",
+                "zipCode": "23450",
+                "telephone": "89097893959",
+                "positionHeld": "224555",
+                "reasonForLeaving": "Fdfidfi",
+                "terminated": true,
+                "currentEmployer": true,
+                "contactEmployer": true,
+                "commercialVehicle": true,
+                "federalRegulations": true,
+                "safetyFunctions": true,
+                "areasDriven": "222",
+                "payRange": 33,
+                "mostCommonTruck": "Flatbed Truck: Extendable Flatbed",
+                "mostCommonTrailer": "Logging Trailer",
+                "trailerLength": "75+ ft",
+                "motorVehicleData": {
+                    "companyName": "IP Sarancha",
+                    "startDate": "2021-05-20",
+                    "endDate": "2025-05-20",
+                    "city": "Kaliningrad",
+                    "state": "Texas",
+                    "country": "United States",
+                    "lineAddress_1": "Andrei",
+                    "lineAddress_2": "Kalana",
+                    "zipCode": "23450",
+                    "telephone": "89097893959",
+                    "positionHeld": "224555",
+                    "reasonForLeaving": "Fdfidfi",
+                    "terminated": true,
+                    "currentEmployer": true,
+                    "contactEmployer": true,
+                    "commercialVehicle": true,
+                    "federalRegulations": true,
+                    "safetyFunctions": true,
+                    "areasDriven": "222",
+                    "payRange": 33,
+                    "mostCommonTruck": "Flatbed Truck: Extendable Flatbed",
+                    "mostCommonTrailer": "Logging Trailer",
+                    "trailerLength": "75+ ft"
+                },
+                "type": "employment"
+            }
+        ],
+        "app-full-res": {
+            "what_company_are_you_applying_": "Landstar Express, Inc (Straight Truck)",
+            "what_position_are_you_seeking?": "Fleet Owner",
+            "will_you_be_running_as_a_team?": {
+                "value": "yes"
+            },
+            "how_many_years_of_commercial_d": "1",
+            "do_you_currently_have_your_own": {
+                "value": "yes",
+                "div_custq_30155_5a294e": "HUO"
+            },
+            "are_you_a_fleet_owner?_*": {
+                "value": "yes",
+                "div_custq_30155_febd42": "ddsdsd"
+            },
+            "how_many_trucks_do_you_own?_*": {
+                "value": "yes",
+                "div_custq_30155_ca75d0": "10"
+            },
+            "does_your_truck(s)_have_active": {
+                "value": "yes",
+                "div_custq_30155_4da308": "2002"
+            },
+            "enter_make,_model,_and_year_of": {
+                "value": "yes",
+                "div_custq_30155_0ec72f": "dskdskdkqd  dasdkskdskdskdskdskdksd "
+            }
+        },
+        "app-hazardous": {
+            "have_you_ever_held_a_hazmat_en": {
+                "value": "yes",
+                "div_custq_30155_51735d": "2222",
+                "div_custq_1172894_fba775": "Flat",
+                "div_custq_30160_64d232": "wwww",
+                "div_custq_30163_a4f54a": "xalsxlasl",
+                "div_custq_30165_9ce78e": "xs;;ass;",
+                "div_custq_30168_0fd312": "s;d;sd;sd;"
+            },
+            "have_you_ever_hauled_hazardous": {
+                "value": "yes",
+                "div_custq_30155_654f98": "Sisja",
+                "div_custq_1172894_754902": "Sprinter",
+                "div_custq_30160_74372f": "Suka",
+                "div_custq_30163_e9818a": "dldlsdlsdlsdqwdmqwdlqwd;",
+                "div_custq_30165_4f78ca": "2011",
+                "div_custq_30168_2ed8dd": "Andre"
+            }
+        },
+        "app-drivingexperience": {
+            "van_*": {
+                "value": "no"
+            },
+            "flatbed_*": {
+                "value": "no"
+            }
+        },
+        "app-criminalinformation": {
+            "custq_30546": {
+                "value": "no"
+            },
+            "custq_30549": {
+                "value": "no"
+            },
+            "custq_30552": {
+                "value": "no"
+            },
+            "custq_30556": {
+                "value": "no"
+            },
+            "custq_30560": {
+                "value": "no"
+            },
+            "custq_30563": {
+                "value": "no"
+            },
+            "custq_30566": {
+                "value": "no"
+            },
+            "custq_30569": {
+                "value": "no"
+            },
+            "custq_30574": {
+                "value": "no"
+            },
+            "custq_30577": {
+                "value": "no"
+            },
+            "custq_30580": {
+                "value": "no"
+            },
+            "custq_30582": {
+                "value": "no"
+            },
+            "custq_30588": {
+                "value": "no"
+            },
+            "custq_30593": {
+                "value": "no"
+            },
+            "custq_61943": {
+                "value": "yes",
+                "div_custq_61944": "2120010212",
+                "div_custq_61945": "Fsass, dsdsd, dfdff,dffd"
+            }
+        },
+        "app-incident-details": {
+            "items": [
+                {
+                    "Month": "1",
+                    "Year": "2030",
+                    "Charge": "Careless/Reckless Driving",
+                    "mphOverLimit": "2",
+                    "country": "United States",
+                    "state": "Alaska",
+                    "cVehicle": {
+                        "value": "yes"
+                    },
+                    "finePenalty": true,
+                    "suspensionPenalty": true,
+                    "revocationPenalty": true,
+                    "communityServicePenalty": true,
+                    "otherPenalty": true,
+                    "fineAmount": "$400 - $499",
+                    "comments": "skaskaks sadkadkadkasdkasdkam asdaksdkasdkasdkasdk"
+                }
+            ]
+        }
+    },
+    "created": false
+}

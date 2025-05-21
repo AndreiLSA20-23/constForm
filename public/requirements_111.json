@@ -1,0 +1,2584 @@
+{
+  "variables": {
+    "felonyConvictionsConst": 3,
+    "sampleCmpAddressConst": "44444 ROYAL RD., HURGADA, RED SEE 84511",
+    "homeHistoryConst": 13,
+    "driveLicHistoryConst": 4,
+    "empHistoryConst": 4,
+    "emailConst": "info@info.ai",
+    "personPhoneOrgConst": "7909-789-39-59",
+    "ageConst": 25,
+    "trafficAccidentsConst": 4,
+    "companyNameConst":"ROGA&KOPITA INK GROUP",
+    "dbg": true
+  },
+  "components": {
+    "app-perdates": {
+      "id": "form1",
+      "type": "form",
+      "formGroup": "userForm",
+      "submitAction": "onSubmit",
+      "multiple": false,
+      "pages": {
+        "pagen_0": {
+          "elements": [
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-4"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12"
+                  ],
+                  "elements": [
+                    {
+                      "id": "heading1",
+                      "type": "heading",
+                      "content": "User Information Form",
+                      "cssClasses": [
+                        "h6",
+                        "text-center",
+                        "mb-3"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "dropdown1",
+                      "type": "dropdown",
+                      "label": "Suffix",
+                      "required": true,
+                      "validation": true,
+                      "options": [
+                        "Jr.",
+                        "II",
+                        "Sr.",
+                        "III",
+                        "IV",
+                        "V"
+                      ],
+                      "cssClasses": [
+                        "form-select",
+                        "form-select-sm"
+                      ],
+                      "formControlName": "suffix"
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox1",
+                      "type": "textbox",
+                      "label": "First Name*",
+                      "required": true,
+                      "placeholder": "Enter your first name",
+                      "validation": "^[A-Za-z]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "firstName",
+                      "validationMessage": "First Name must contain only letters."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox2",
+                      "type": "textbox",
+                      "label": "Middle Name*",
+                      "required": false,
+                      "placeholder": "Enter your middle name",
+                      "validation": "^[A-Za-z]*$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "middleName",
+                      "validationMessage": "Middle Name must contain only letters."
+
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox3",
+                      "type": "textbox",
+                      "label": "Last Name*",
+                      "required": true,
+                      "placeholder": "Enter your last name",
+                      "validation": "^[A-Za-z]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "lastName",
+                      "validationMessage": "Last Name must contain only letters."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "birthday",
+                      "type": "date",
+                      "label": "Birthday",
+                      "required": true,
+                      "validation": true,
+                      "placeholder": "Enter your birthday",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "birthday",
+                      "validationMessage": "Please select a valid date."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "email",
+                      "type": "textbox",
+                      "label": "Email",
+                      "required": true,
+                      "placeholder": "Enter your email",
+                      "validation": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "email",
+                      "validationMessage": "Please enter a valid email address."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "driverLicense",
+                      "type": "textbox",
+                      "label": "Driver License Number",
+                      "required": true,
+                      "placeholder": "Enter your driver license number",
+                      "validation": "^[A-Za-z0-9]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "driverLicense",
+                      "validationMessage": "Driver License Number is required."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "phoneNumber",
+                      "type": "textbox",
+                      "label": "Phone Number",
+                      "required": true,
+                      "placeholder": "Enter your phone number",
+                      "validation": "^\\d+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "phoneNumber",
+                      "validationMessage": "Phone Number must contain only digits."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-md-6"
+                  ],
+                  "elements": [
+                    {
+                      "id": "checkbox2",
+                      "type": "checkbox",
+                      "label": "I confirm that I have read the terms and conditions.",
+                      "required": true,
+                      "validation": true,
+                      "defaultValue": false,
+                      "validationMessage": "You must confirm this field.",
+                      "cssClasses": [
+                        "form-check-input"
+                      ],
+                      "formControlName": "termsConfirmation"
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-6"
+                  ],
+                  "elements": [
+                    {
+                      "id": "checkboxPromoEmails",
+                      "type": "checkbox",
+                      "label": "Yes, I agree to receive information concerning future opportunities or promotions by email or other commercial electronic communications.",
+                      "required": true,
+                      "validation": true,
+                      "defaultValue": false,
+                      "cssClasses": [
+                        "form-check-input"
+                      ],
+                      "formControlName": "promoEmails"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "app-license-details": {
+      "id": "form2",
+      "type": "form",
+      "formGroup": "userForm",
+      "submitAction": "onSubmit",
+      "multiple": true,
+      "pages": {
+        "pagen_0": {
+          "elements": [
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-4"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12"
+                  ],
+                  "elements": [
+                    {
+                      "id": "heading1",
+                      "type": "heading",
+                      "content": "Add license Information Form",
+                      "cssClasses": [
+                        "h6",
+                        "text-center",
+                        "mb-3"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox1",
+                      "type": "textbox",
+                      "label": "License Number ",
+                      "required": true,
+                      "placeholder": "Enter your License Number",
+                      "validation": "^[A-Za-z0-9]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "licenseNumber",
+                      "validationMessage": "License Number is required and must be alphanumeric."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "country",
+                      "type": "countryDropdown",
+                      "label": "Country **",
+                      "required": true,
+                      "validation": true,
+                      "cssClasses": ["form-select"],
+                      "formControlName": "country",
+                      "stateControlName": "state",
+                      "validationMessage": "Country is required."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "licenseExpirationDate",
+                      "type": "date",
+                      "label": "LicenseExpirationDate",
+                      "required": true,
+                      "validation": true,
+                      "placeholder": "Expiration Date is required.",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "licenseExpirationDate",
+                      "validationMessage": "Please select a valid date."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "medicalExpirationDate",
+                      "type": "date",
+                      "label": "MedicalExpirationDate",
+                      "required": true,
+                      "validation": true,
+                      "placeholder": "Expiration Date is required.",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "medicalExpirationDate",
+                      "validationMessage": "Please select a valid date."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "currentLicense",
+                      "type": "yesno",
+                      "label": "Current license?",
+                      "required": true,
+                      "validation": true,
+                      "defaultValue": null,
+                      "cssClasses": ["form-check"],
+                      "formControlName": "currentLicense",
+                      "options": ["Yes", "No"],
+                      "validationMessage": "Please select an option.",
+                      "subElements": [
+                        {
+                          "id": "licenseType",
+                          "type": "dropdown",
+                          "required": true,
+                          "validation": true,
+                          "label": "Select your license type",
+                          "formControlName": "licenseType",
+                          "options": [
+                            "Class AZ",
+                            "Class B",
+                            "Class A",
+                            "Class C",
+                            "Class D",
+                            "Class E",
+                            "Class F",
+                            "Class O",
+                            "Class R",
+                            "Class 1",
+                            "Class 2",
+                            "Class 3",
+                            "Class 4",
+                            "Class 5",
+                            "Class A Permit",
+                            "Class B Permit",
+                            "Class G",
+                            "Class G1",
+                            "Class G2",
+                            "Other"
+                          ]
+                        },
+                        {
+                          "id": "licenseIssuedState",
+                          "type": "dropdown",
+                          "required": true,
+                          "validation": true,
+                          "label": "License issued state",
+                          "formControlName": "licenseIssuedState",
+                          "options":  [
+                            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+                            "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+                            "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+                            "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+                            "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+                          ]
+                        },
+                        {
+                          "id": "licenseExpirationDate1",
+                          "type": "date",
+                          "required": true,
+                          "validation": true,
+                          "label": "License expiration date",
+                          "formControlName": "licenseExpirationDate1"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "hazmatLicense",
+                      "type": "yesno",
+                      "label": "Hazmat License ?",
+                      "required": true,
+                      "validation": true,
+                      "options": [
+                        "Yes",
+                        "No"
+                      ],
+                      "cssClasses": [
+                        "form-check"
+                      ],
+                      "formControlName": "hazmatLicense",
+                      "subElements": [
+                        {
+                          "id": "hazmatClass",
+                          "type": "dropdown",
+                          "label": "Select Hazmat Class",
+                          "required": true,
+                          "validation": true,
+                          "cssClasses": [
+                            "form-select"
+                          ],
+                          "formControlName": "hazmatClass",
+                          "options": [
+                            "Class 1 - Explosives",
+                            "Class 2 - Gases",
+                            "Class 3 - Flammable Liquids",
+                            "Class 4 - Flammable Solids",
+                            "Class 5 - Oxidizers and Organic Peroxides",
+                            "Class 6 - Toxic and Infectious Substances",
+                            "Class 7 - Radioactive Materials",
+                            "Class 8 - Corrosives",
+                            "Class 9 - Miscellaneous"
+                          ]
+                        },
+                        {
+                          "id": "effectiveDate",
+                          "type": "date",
+                          "label": "Effective Date",
+                          "required": true,
+                          "validation": true,
+                          "cssClasses": [
+                            "form-control"
+                          ],
+                          "formControlName": "effectiveDate"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "commercialLicense",
+                      "type": "yesno",
+                      "label": "Commercial License ?",
+                      "required": true,
+                      "validation": true,
+                      "options": [
+                        "Yes",
+                        "No"
+                      ],
+                      "cssClasses": [
+                        "form-check"
+                      ],
+                      "formControlName": "commercialLicense"
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "otherEndorsement",
+                      "type": "checkbox",
+                      "required": false,
+                      "validation": false,
+                      "label": "Other",
+                      "formControlName": "otherEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    },
+                    {
+                      "id": "tankerEndorsement",
+                      "type": "checkbox",
+                      "required": false,
+                      "validation": false,
+                      "label": "Tanker",
+                      "formControlName": "tankerEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    },
+                    {
+                      "id": "doublesTriplesEndorsement",
+                      "type": "checkbox",
+                      "required": false,
+                      "validation": false,
+                      "label": "Doubles/Triples",
+                      "formControlName": "doublesTriplesEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    },
+                    {
+                      "id": "xEndorsement",
+                      "type": "checkbox",
+                      "required": false,
+                      "validation": false,
+                      "label": "X Endorsement",
+                      "formControlName": "xEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    }
+                  ]
+                }
+
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "d-flex",
+                "align-items-center",
+                "mb-3"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "app-driver-training": {
+  "id": "form_driver_training",
+  "type": "form",
+  "formGroup": "userForm",
+  "submitAction": "onSubmit",
+  "multiple": true,
+  "pages": {
+    "pagen_0": {
+      "elements": [
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-4"],
+          "columns": [
+            {
+              "cssClasses": ["col-12"],
+              "elements": [
+                {
+                  "id": "heading1",
+                  "type": "heading",
+                  "content": "Driver Training Form",
+                  "cssClasses": ["h3", "text-center", "mb-3"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12", "col-md-4"],
+              "elements": [
+                {
+                  "id": "startDate",
+                  "type": "date",
+                  "label": "Start Date *",
+                  "placeholder": "MM/DD/YYYY",
+                  "required": true,
+                  "validation": true,
+                  "cssClasses": ["form-control"],
+                  "formControlName": "startDate",
+                  "validationMessage": "Start Date is required."
+                }
+              ]
+            },
+            {
+              "cssClasses": ["col-12", "col-md-4"],
+              "elements": [
+                {
+                  "id": "endDate",
+                  "type": "date",
+                  "label": "End Date *",
+                  "placeholder": "If currently in school, enter current month/year",
+                  "required": true,
+                  "validation": true,
+                  "cssClasses": ["form-control"],
+                  "formControlName": "endDate",
+                  "validationMessage": "End Date is required."
+                }
+              ]
+            },
+            {
+              "cssClasses": ["col-12", "col-md-4"],
+              "elements": [
+                {
+                  "id": "province",
+                  "type": "textbox",
+                  "label": "Province * (where school is located)",
+                  "required": true,
+                  "placeholder": "Enter state or province",
+                  "cssClasses": ["form-control"],
+                  "formControlName": "province",
+                  "validationMessage": "State/Province is required.",
+                  "validation": "^[a-zA-Z\\s]{2,}$"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12", "col-md-6"],
+              "elements": [
+                {
+                  "id": "schoolName",
+                  "type": "textbox",
+                  "label": "School Name *",
+                  "required": true,
+                  "validation": "^.+$",
+                  "placeholder": "Enter school name",
+                  "cssClasses": ["form-control"],
+                  "formControlName": "schoolName",
+                  "validationMessage": "School Name is required."
+                }
+              ]
+            },
+            {
+              "cssClasses": ["col-12", "col-md-6"],
+              "elements": [
+                {
+                  "id": "telephone",
+                  "type": "textbox",
+                  "label": "Telephone",
+                  "required": true,
+                  "placeholder": "Enter telephone number",
+                  "cssClasses": ["form-control"],
+                  "formControlName": "telephone",
+                  "validation": "^\\+?\\d{7,15}$"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12"],
+              "elements": [
+                {
+                  "id": "address",
+                  "type": "textbox",
+                  "label": "Address",
+                  "required": true,
+                  "placeholder": "Enter address",
+                  "cssClasses": ["form-control"],
+                  "formControlName": "address",
+                  "validationMessage": "Enter address.",
+                  "validation": "^[a-zA-Z\\s]{2,}$"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12", "col-md-6"],
+              "elements": [
+                {
+                  "id": "address2",
+                  "type": "textbox",
+                  "label": "Address 2",
+                  "placeholder": "Apartment, suite, etc. (optional)",
+                  "cssClasses": ["form-control"],
+                  "formControlName": "address2"
+                }
+              ]
+            },
+            {
+              "cssClasses": ["col-12", "col-md-6"],
+              "elements": [
+                {
+                  "id": "city",
+                  "type": "textbox",
+                  "label": "City *",
+                  "required": true,
+                  "placeholder": "Enter city",
+                  "cssClasses": ["form-control"],
+                  "formControlName": "city",
+                  "validationMessage": "City is required.",
+                  "validation": "^[a-zA-Z\\s]{2,}$"
+                }
+              ]
+            }
+          ]
+        },{
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12", "col-md-6"],
+              "elements": [
+                {
+                  "id": "country",
+                  "type": "countryDropdown",
+                  "label": "Country **",
+                  "required": true,
+                  "validation": true,
+                  "cssClasses": ["form-select"],
+                  "formControlName": "country",
+                  "stateControlName": "state",
+                  "validationMessage": "Country is required."
+                }
+              ]
+            }
+          ]
+        },        
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12", "col-md-4"],
+              "elements": [
+                {
+                  "id": "didGraduate",
+                  "type": "yesno",
+                  "label": "Did you graduate?",
+                  "required": true,
+                  "formControlName": "didGraduate",
+                  "cssClasses": ["form-check"],
+                  "options": ["Yes", "No"],
+                  "validationMessage": "This field is required."
+                }
+              ]
+            },
+            {
+              "cssClasses": ["col-12", "col-md-4"],
+              "elements": [
+                {
+                  "id": "subjectToRegulations",
+                  "type": "yesno",
+                  "label": "Were you subject to the Federal Motor Carrier or Transport Canada Safety Regulations while attending this truck school?",
+                  "required": true,
+                  "formControlName": "subjectToRegulations",
+                  "cssClasses": ["form-check"],
+                  "options": ["Yes", "No"],
+                  "validationMessage": "This field is required."
+                }
+              ]
+            },
+            {
+              "cssClasses": ["col-12", "col-md-4"],
+              "elements": [
+                {
+                  "id": "safetySensitive",
+                  "type": "yesno",
+                  "label": "Did you perform any safety sensitive functions at this truck school, regulated by DOT, and subject to drug and alcohol testing?",
+                  "required": true,
+                  "formControlName": "safetySensitive",
+                  "cssClasses": ["form-check"],
+                  "options": ["Yes", "No"],
+                  "validationMessage": "This field is required."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12", "col-md-6"],
+              "elements": [
+                {
+                  "id": "gpa",
+                  "type": "textbox",
+                  "label": "GPA",
+                  "placeholder": "Enter GPA",
+                  "required": true,
+                  "validation": true,
+                  "cssClasses": ["form-control"],
+                  "formControlName": "gpa",
+                  "validationMessage": "This field is required."
+                }
+              ]
+            },
+            {
+              "cssClasses": ["col-12", "col-md-6"],
+              "elements": [
+                {
+                  "id": "instructionHours",
+                  "type": "textbox",
+                  "label": "Hours of Instruction",
+                  "placeholder": "Enter total hours",
+                  "required": true,
+                  "validation": true,
+                  "cssClasses": ["form-control"],
+                  "formControlName": "instructionHours",
+                  "validationMessage": "This field is required."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-4"],
+          "columns": [
+            {
+              "cssClasses": ["col-12"],
+              "elements": [
+                {
+                  "id": "skillsTrained",
+                  "type": "multiselect",
+                  "label": "Which of the following skills were trained in your program? (Select all that apply)",
+                  "required": true,
+                  "cssClasses": ["form-select"],
+                  "formControlName": "skillsTrained",
+                  "options": [
+                    "200+",
+                    "Border Crossing",
+                    "Log Books",
+                    "Federal Motor Carrier Regulations",
+                    "Hazardous Materials"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+    },
+     "app-full-res": {
+    "id": "app-full-res",
+    "type": "form",
+    "formGroup": "userForm",
+    "submitAction": "onSubmit",
+    "multiple": false,
+    "pages": {
+      "pagen_0": {
+        "elements": [
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "heading_general_information",
+                    "type": "heading",
+                    "content": "GENERAL INFORMATION",
+                    "cssClasses": ["h6", "text-center", "mb-3"],
+                    "formControlName": "heading_general_information"
+                  },
+                  {
+                    "id": "what_company_are_you_applying_",
+                    "type": "dropdown",
+                    "label": "What company are you applying to?",
+                    "formControlName": "what_company_are_you_applying_",
+                    "options": [
+                      "Landstar Express, Inc (Straight Truck)",
+                      "Landstar Inway, Inc (Tractor/Trailer)",
+                      "Landstar Ranger, Inc (Hot Shot)",
+                      "Landstar Ligon Inc."
+                    ],
+                    "required": true,
+                    "validationMessage": "What company are you applying to? is required."
+                  },
+                  {
+                    "id": "what_position_are_you_seeking?",
+                    "type": "dropdown",
+                    "label": "What position are you seeking?",
+                    "formControlName": "what_position_are_you_seeking?",
+                    "options": ["Owner Operator", "Fleet Owner", "Driver for Fleet Owner"],
+                    "required": true,
+                    "validationMessage": "What position are you seeking? is required."
+                  },
+                  {
+                    "id": "will_you_be_running_as_a_team?",
+                    "type": "yesno",
+                    "label": "Will you be running as a team?",
+                    "formControlName": "will_you_be_running_as_a_team?",
+                    "options": ["Yes", "No"],
+                    "cssClasses": ["form-check"],
+                    "required": true,
+                    "validationMessage": "Please select an option."
+                  },
+                  {
+                    "id": "how_many_years_of_commercial_d",
+                    "type": "dropdown",
+                    "label": "How many years of commercial driving experience do you have?",
+                    "formControlName": "how_many_years_of_commercial_d",
+                    "options": ["0", "1", "2", "3", "4", "5", "6"],
+                    "required": true,
+                    "validationMessage": "How many years of commercial driving experience do you have? is required."
+                  },
+                  {
+                    "id": "do_you_currently_have_your_own",
+                    "type": "yesno",
+                    "label": "Do you currently have your own authority?",
+                    "formControlName": "do_you_currently_have_your_own",
+                    "options": ["Yes", "No"],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_5a294e",
+                        "type": "textbox",
+                        "label": "Specify MC or DOT number",
+                        "formControlName": "div_custq_30155_5a294e",
+                        "placeholder": "Enter MC/DOT *",
+                        "cssClasses": ["form-control"],
+                        "required": true,
+                        "validationMessage": "MC/DOT number is required."
+                      }
+                    ],
+                    "required": true,
+                    "validationMessage": "Please select an option."
+                  },
+                  {
+                    "id": "are_you_a_fleet_owner?_*",
+                    "type": "yesno",
+                    "label": "Are you a Fleet Owner?",
+                    "formControlName": "are_you_a_fleet_owner?_*",
+                    "options": ["Yes", "No"],
+                    "cssClasses": ["form-check"],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_febd42",
+                        "type": "textbox",
+                        "label": "Fleet name or DBA",
+                        "formControlName": "div_custq_30155_febd42",
+                        "placeholder": "Fleet name *",
+                        "cssClasses": ["form-control"],
+                        "required": true,
+                        "validationMessage": "Fleet name is required."
+                      }
+                    ],
+                    "required": true,
+                    "validationMessage": "Please select an option."
+                  },
+                  {
+                    "id": "how_many_trucks_do_you_own?_*",
+                    "type": "yesno",
+                    "label": "Do you own any trucks?",
+                    "formControlName": "how_many_trucks_do_you_own?_*",
+                    "options": ["Yes", "No"],
+                    "cssClasses": ["form-check"],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_ca75d0",
+                        "type": "dropdown",
+                        "label": "How many trucks do you own?",
+                        "formControlName": "div_custq_30155_ca75d0",
+                        "options": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+                        "required": true,
+                        "validationMessage": "Please select a number of trucks (1–10)."
+                      }
+                    ],
+                    "required": true,
+                    "validationMessage": "Please select Yes or No."
+                  },
+                  {
+                    "id": "does_your_truck(s)_have_active",
+                    "type": "yesno",
+                    "label": "Does your truck(s) have Active Brake Assist?",
+                    "formControlName": "does_your_truck(s)_have_active",
+                    "options": ["Yes", "No"],
+                    "cssClasses": ["form-check"],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_4da308",
+                        "type": "textbox",
+                        "label": "Truck year / model with ABA",
+                        "formControlName": "div_custq_30155_4da308",
+                        "placeholder": "Year / Model *",
+                        "cssClasses": ["form-control"],
+                        "required": true,
+                        "validationMessage": "This field is required."
+                      }
+                    ],
+                    "required": true,
+                    "validationMessage": "Please select an option."
+                  },
+                  {
+                    "id": "enter_make,_model,_and_year_of",
+                    "type": "yesno",
+                    "label": "Do you want to list tractor make/model/year now?",
+                    "formControlName": "enter_make,_model,_and_year_of",
+                    "options": ["Yes", "No"],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_0ec72f",
+                        "type": "textarea",
+                        "label": "Enter make, model, and year of each tractor you own. If you don't own any, enter \"None\"",
+                        "formControlName": "div_custq_30155_0ec72f",
+                        "placeholder": "Make / Model / Year *",
+                        "cssClasses": ["form-control"],
+                        "required": true,
+                        "validationMessage": "This field is required."
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+    },
+     "app-hazardous": {
+    "id": "app-hazardous",
+    "type": "form",
+    "formGroup": "userForm",
+    "submitAction": "onSubmit",
+    "multiple": false,
+    "pages": {
+      "pagen_0": {
+        "elements": [
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "heading_hazardous_materials_experience",
+                    "type": "heading",
+                    "content": "HAZARDOUS MATERIALS EXPERIENCE",
+                    "cssClasses": ["h6", "text-center", "mb-3"],
+                    "formControlName": "heading_hazardous_materials_experience"
+                  },
+                  {
+                    "id": "have_you_ever_held_a_hazmat_en",
+                    "type": "yesno",
+                    "label": "Have you ever held a hazmat endorsement?",
+                    "formControlName": "have_you_ever_held_a_hazmat_en",
+                    "options": ["Yes", "No"],
+                    "cssClasses": ["form-check"],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_51735d",
+                        "type": "textbox",
+                        "label": "What is your team member's name",
+                        "formControlName": "div_custq_30155_51735d",
+                        "placeholder": "What is your team member's name *",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_1172894_fba775",
+                        "type": "dropdown",
+                        "label": "What Type?",
+                        "formControlName": "div_custq_1172894_fba775",
+                        "options": [
+                          "Van",
+                          "Flat",
+                          "Step Deck",
+                          "Heavy Specialized",
+                          "Straight Truck",
+                          "Reefer",
+                          "Hot Shot",
+                          "Sprinter",
+                          "Cargo Van"
+                        ]
+                      },
+                      {
+                        "id": "div_custq_30160_64d232",
+                        "type": "textbox",
+                        "label": "What date did your last employment end?",
+                        "formControlName": "div_custq_30160_64d232",
+                        "placeholder": "What date did your last employment end? *",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_30163_a4f54a",
+                        "type": "textarea",
+                        "label": "Enter start and end dates, location, position, and reason for leaving:",
+                        "formControlName": "div_custq_30163_a4f54a",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_30165_9ce78e",
+                        "type": "textbox",
+                        "label": "Expiration date:",
+                        "formControlName": "div_custq_30165_9ce78e",
+                        "placeholder": "Expiration date: *",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_30168_0fd312",
+                        "type": "textbox",
+                        "label": "Enter name:",
+                        "formControlName": "div_custq_30168_0fd312",
+                        "placeholder": "Enter name: *",
+                        "cssClasses": ["form-control"]
+                      }
+                    ],
+                    "required": true,
+                    "validationMessage": "Please select an option."
+                  },
+                  {
+                    "id": "have_you_ever_hauled_hazardous",
+                    "type": "yesno",
+                    "label": "Have you ever hauled hazardous materials?",
+                    "formControlName": "have_you_ever_hauled_hazardous",
+                    "options": ["Yes", "No"],
+                    "cssClasses": ["form-check"],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_654f98",
+                        "type": "textbox",
+                        "label": "What is your team member's name",
+                        "formControlName": "div_custq_30155_654f98",
+                        "placeholder": "What is your team member's name *",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_1172894_754902",
+                        "type": "dropdown",
+                        "label": "What Type?",
+                        "formControlName": "div_custq_1172894_754902",
+                        "options": [
+                          "Van",
+                          "Flat",
+                          "Step Deck",
+                          "Heavy Specialized",
+                          "Straight Truck",
+                          "Reefer",
+                          "Hot Shot",
+                          "Sprinter",
+                          "Cargo Van"
+                        ]
+                      },
+                      {
+                        "id": "div_custq_30160_74372f",
+                        "type": "textbox",
+                        "label": "What date did your last employment end?",
+                        "formControlName": "div_custq_30160_74372f",
+                        "placeholder": "What date did your last employment end? *",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_30163_e9818a",
+                        "type": "textarea",
+                        "label": "Enter start and end dates, location, position, and reason for leaving:",
+                        "formControlName": "div_custq_30163_e9818a",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_30165_4f78ca",
+                        "type": "textbox",
+                        "label": "Expiration date:",
+                        "formControlName": "div_custq_30165_4f78ca",
+                        "placeholder": "Expiration date: *",
+                        "cssClasses": ["form-control"]
+                      },
+                      {
+                        "id": "div_custq_30168_2ed8dd",
+                        "type": "textbox",
+                        "label": "Enter name:",
+                        "formControlName": "div_custq_30168_2ed8dd",
+                        "placeholder": "Enter name: *",
+                        "cssClasses": ["form-control"]
+                      }
+                    ],
+                    "required": true,
+                    "validationMessage": "Please select an option."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+    },
+     "app-drivingexperience": {
+    "id": "app-drivingexperience",
+    "type": "form",
+    "formGroup": "userForm",
+    "submitAction": "onSubmit",
+    "multiple": false,
+    "pages": {
+      "pagen_0": {
+        "elements": [
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements":  [
+                    {
+                    "id": "heading_driving_experience",
+                    "type": "heading",
+                    "content": "DRIVING EXPERIENCE",
+                    "cssClasses": [
+                      "h6",
+                      "text-center",
+                      "mb-3"
+                    ],
+                    "formControlName": "heading_driving_experience"
+                  },
+                  {
+                    "id": "van_*",
+                    "type": "yesno",
+                    "label": "VAN",
+                    "formControlName": "van_*",
+                    "options": [
+                      "Yes",
+                      "No"
+                    ],
+                    "cssClasses": [
+                      "form-check"
+                    ],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_93d86f",
+                        "type": "textbox",
+                        "label": "What is your team member's name",
+                        "formControlName": "div_custq_30155_93d86f",
+                        "placeholder": "What is your team member's name *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What is your team member's name is required."
+                      },
+                      {
+                        "id": "div_custq_1172894_d41488",
+                        "type": "dropdown",
+                        "label": "What Type?",
+                        "formControlName": "div_custq_1172894_d41488",
+                        "options": [
+                          "Van",
+                          "Flat",
+                          "Step Deck",
+                          "Heavy Specialized",
+                          "Straight Truck",
+                          "Reefer",
+                          "Hot Shot",
+                          "Sprinter",
+                          "Cargo Van"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What Type? is required."
+                      },
+                      {
+                        "id": "div_custq_30160_0e9673",
+                        "type": "textbox",
+                        "label": "What date did your last employment end?",
+                        "formControlName": "div_custq_30160_0e9673",
+                        "placeholder": "What date did your last employment end? *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What date did your last employment end? is required."
+                      },
+                      {
+                        "id": "div_custq_30163_c052d7",
+                        "type": "textarea",
+                        "label": "Enter start and end dates, location, position, and reason for leaving:",
+                        "formControlName": "div_custq_30163_c052d7",
+                        "cssClasses": [
+                          "form-control"
+                        ]
+                      },
+                      {
+                        "id": "div_custq_30165_3330e2",
+                        "type": "textbox",
+                        "label": "Expiration date:",
+                        "formControlName": "div_custq_30165_3330e2",
+                        "placeholder": "Expiration date: *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Expiration date: is required."
+                      },
+                      {
+                        "id": "div_custq_30168_adfab2",
+                        "type": "textbox",
+                        "label": "Enter name:",
+                        "formControlName": "div_custq_30168_adfab2",
+                        "placeholder": "Enter name: *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Enter name: is required."
+                      },
+                      {
+                        "id": "div_custq_30193",
+                        "type": "textbox",
+                        "label": "What kind of Hazmat?",
+                        "formControlName": "div_custq_30193",
+                        "placeholder": "What kind of Hazmat? *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What kind of Hazmat? is required."
+                      },
+                      {
+                        "id": "div_custq_30194",
+                        "type": "textbox",
+                        "label": "How many years of experience?",
+                        "formControlName": "div_custq_30194",
+                        "placeholder": "How many years of experience? *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "How many years of experience? is required."
+                      }
+                    ],
+                    "required": false,
+                    "validation": false,
+                    "validationMessage": "Please select an option.",
+                    "defaultValue": null
+                  },
+                  {
+                    "id": "flatbed_*",
+                    "type": "yesno",
+                    "label": "FLATBED",
+                    "formControlName": "flatbed_*",
+                    "options": [
+                      "Yes",
+                      "No"
+                    ],
+                    "cssClasses": [
+                      "form-check"
+                    ],
+                    "subElements": [
+                      {
+                        "id": "div_custq_30155_9f78d2",
+                        "type": "textbox",
+                        "label": "What is your team member's name",
+                        "formControlName": "div_custq_30155_9f78d2",
+                        "placeholder": "What is your team member's name *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What is your team member's name is required."
+                      },
+                      {
+                        "id": "div_custq_1172894_e4022d",
+                        "type": "dropdown",
+                        "label": "What Type?",
+                        "formControlName": "div_custq_1172894_e4022d",
+                        "options": [
+                          "Van",
+                          "Flat",
+                          "Step Deck",
+                          "Heavy Specialized",
+                          "Straight Truck",
+                          "Reefer",
+                          "Hot Shot",
+                          "Sprinter",
+                          "Cargo Van"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What Type? is required."
+                      },
+                      {
+                        "id": "div_custq_30160_035c61",
+                        "type": "textbox",
+                        "label": "What date did your last employment end?",
+                        "formControlName": "div_custq_30160_035c61",
+                        "placeholder": "What date did your last employment end? *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What date did your last employment end? is required."
+                      },
+                      {
+                        "id": "div_custq_30163_4d37a8",
+                        "type": "textarea",
+                        "label": "Enter start and end dates, location, position, and reason for leaving:",
+                        "formControlName": "div_custq_30163_4d37a8",
+                        "cssClasses": [
+                          "form-control"
+                        ]
+                      },
+                      {
+                        "id": "div_custq_30165_097580",
+                        "type": "textbox",
+                        "label": "Expiration date:",
+                        "formControlName": "div_custq_30165_097580",
+                        "placeholder": "Expiration date: *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Expiration date: is required."
+                      },
+                      {
+                        "id": "div_custq_30168_0fa6c9",
+                        "type": "textbox",
+                        "label": "Enter name:",
+                        "formControlName": "div_custq_30168_0fa6c9",
+                        "placeholder": "Enter name: *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Enter name: is required."
+                      },
+                      {
+                        "id": "div_custq_30193_861f3b",
+                        "type": "textbox",
+                        "label": "What kind of Hazmat?",
+                        "formControlName": "div_custq_30193_861f3b",
+                        "placeholder": "What kind of Hazmat? *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "What kind of Hazmat? is required."
+                      },
+                      {
+                        "id": "div_custq_30194_4175fb",
+                        "type": "textbox",
+                        "label": "How many years of experience?",
+                        "formControlName": "div_custq_30194_4175fb",
+                        "placeholder": "How many years of experience? *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "How many years of experience? is required."
+                      },
+                      {
+                        "id": "div_custq_62045",
+                        "type": "textbox",
+                        "label": "Years of experience",
+                        "formControlName": "div_custq_62045",
+                        "placeholder": "Years of experience *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Years of experience is required."
+                      },
+                      {
+                        "id": "div_custq_62046",
+                        "type": "textbox",
+                        "label": "Total Miles",
+                        "formControlName": "div_custq_62046",
+                        "placeholder": "Total Miles *",
+                        "cssClasses": [
+                          "form-control"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Total Miles is required."
+                      },
+                      {
+                        "id": "div_custq_62048",
+                        "type": "dropdown",
+                        "label": "Hi-Value Products",
+                        "formControlName": "div_custq_62048",
+                        "options": [
+                          "Yes",
+                          "No"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMesge": "Hi-Value Products is required."
+                      },
+                      {
+                        "id": "div_custq_62049",
+                        "type": "dropdown",
+                        "label": "Ammunition / Explosives",
+                        "formControlName": "div_custq_62049",
+                        "options": [
+                          "Yes",
+                          "No"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Ammunition / Explosives is required."
+                      },
+                      {
+                        "id": "div_custq_62050",
+                        "type": "dropdown",
+                        "label": "Beer",
+                        "formControlName": "div_custq_62050",
+                        "options": [
+                          "Yes",
+                          "No"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Beer is required."
+                      },
+                      {
+                        "id": "div_custq_62051",
+                        "type": "dropdown",
+                        "label": "Steel Coils in Vans",
+                        "formControlName": "div_custq_62051",
+                        "options": [
+                          "Yes",
+                          "No"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Steel Coils in Vans is required."
+                      },
+                      {
+                        "id": "div_custq_62053",
+                        "type": "dropdown",
+                        "label": "Blanket Wrap / Decking",
+                        "formControlName": "div_custq_62053",
+                        "options": [
+                          "Yes",
+                          "No"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Blanket Wrap / Decking is required."
+                      },
+                      {
+                        "id": "div_custq_62054",
+                        "type": "dropdown",
+                        "label": "Blocking and Bracing",
+                        "formControlName": "div_custq_62054",
+                        "options": [
+                          "Yes",
+                          "No"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "Blocking and Bracing is required."
+                      },
+                      {
+                        "id": "div_custq_62055",
+                        "type": "dropdown",
+                        "label": "J.I.T. / Automotive Shipments",
+                        "formControlName": "div_custq_62055",
+                        "options": [
+                          "Yes",
+                          "No"
+                        ],
+                        "required": false,
+                        "validation": false,
+                        "validationMessage": "J.I.T. / Automotive Shipments is required."
+                      },
+                      {
+                        "id": "div_custq_62056",
+                        "type": "textarea",
+                        "label": "Other (list)",
+                        "formControlName": "div_custq_62056",
+                        "cssClasses": [
+                          "form-control"
+                        ]
+                      }
+                    ],
+                    "required": false,
+                    "validation": false,
+                    "validationMessage": "Please select an option.",
+                    "defaultValue": null
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+    },
+      "app-criminalinformation": {
+  "id": "app-criminalinformation",
+  "type": "form",
+  "formGroup": "userForm",
+  "submitAction": "onSubmit",
+  "multiple": false,
+  "pages": {
+    "pagen_0": {
+      "elements": [
+        {
+          "type": "row",
+          "cssClasses": ["row", "mb-3"],
+          "columns": [
+            {
+              "cssClasses": ["col-12"],
+              "elements": [
+                {
+                  "id": "heading_criminal",
+                  "type": "heading",
+                  "content": "CRIMINAL INFORMATION",
+                  "cssClasses": ["h6", "text-center", "mb-3"],
+                  "formControlName": "heading_criminal"
+                },
+                {
+                  "id": "custq_30546",
+                  "type": "yesno",
+                  "label": "1. Driving under the influence of alcohol or any drug or controlled substance under either federal or state law?",
+                  "formControlName": "custq_30546",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30547",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30547",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30548",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30548",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30549",
+                  "type": "yesno",
+                  "label": "2. Transportation, possession or unlawful use of any drug or controlled substance while on duty as a driver of a commercial motor vehicle?",
+                  "formControlName": "custq_30549",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30550",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30550",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30551",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30551",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30552",
+                  "type": "yesno",
+                  "label": "3. Leaving the scene of an accident?",
+                  "formControlName": "custq_30552",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30553",
+                      "type": "dropdown",
+                      "label": "Were you in a commercial vehicle?",
+                      "formControlName": "div_custq_30553",
+                      "options": ["Yes", "No"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30554",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30554",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30555",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30555",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30556",
+                  "type": "yesno",
+                  "label": "4. A felony involving the use of a motor vehicle?",
+                  "formControlName": "custq_30556",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30557",
+                      "type": "dropdown",
+                      "label": "Were you in a commercial vehicle?",
+                      "formControlName": "div_custq_30557",
+                      "options": ["Yes", "No"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30558",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30558",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30559",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30559",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30560",
+                  "type": "yesno",
+                  "label": "5. Causing a fatality through the negligent operation of a commercial motor vehicle?",
+                  "formControlName": "custq_30560",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30561",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30561",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30562",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30562",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30563",
+                  "type": "yesno",
+                  "label": "6. Driving a commercial motor vehicle without obtaining a CDL / proper class / endorsements?",
+                  "formControlName": "custq_30563",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30564",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30564",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30565",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30565",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30566",
+                  "type": "yesno",
+                  "label": "7. Violating any federal, state or local law governing railroad‑highway grade crossings while operating a commercial motor vehicle?",
+                  "formControlName": "custq_30566",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30567",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30567",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30568",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30568",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30569",
+                  "type": "yesno",
+                  "label": "8. Violating a driver or vehicle out‑of‑service order?",
+                  "formControlName": "custq_30569",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30570",
+                      "type": "dropdown",
+                      "label": "Were hazardous materials involved?",
+                      "formControlName": "div_custq_30570",
+                      "options": ["Yes", "No"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30571",
+                      "type": "dropdown",
+                      "label": "Was a >15‑passenger vehicle involved?",
+                      "formControlName": "div_custq_30571",
+                      "options": ["Yes", "No"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30572",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30572",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30573",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30573",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30574",
+                  "type": "yesno",
+                  "label": "Have you ever tested positive or refused to test on any pre‑employment drug or alcohol test during the past 3 years?",
+                  "formControlName": "custq_30574",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30575",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30575",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30576",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30576",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30577",
+                  "type": "yesno",
+                  "label": "Have you ever tested positive or refused a test required by any state or jurisdiction under its implied‑consent law?",
+                  "formControlName": "custq_30577",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30578",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30578",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30579",
+                      "type": "textbox",
+                      "label": "Jurisdiction",
+                      "formControlName": "div_custq_30579",
+                      "placeholder": "Jurisdiction",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30580",
+                  "type": "yesno",
+                  "label": "Have you ever been convicted of a felony or released from prison in the past?",
+                  "formControlName": "custq_30580",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30581",
+                      "type": "textarea",
+                      "label": "Explain fully",
+                      "formControlName": "div_custq_30581",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30582",
+                  "type": "yesno",
+                  "label": "Have you ever plead 'no contest', nolo contendere, or guilty to a crime, or been convicted of a crime?",
+                  "formControlName": "custq_30582",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30583",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30583",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30584",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30584",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30585",
+                      "type": "textbox",
+                      "label": "Crime",
+                      "formControlName": "div_custq_30585",
+                      "placeholder": "Crime",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30586",
+                      "type": "textbox",
+                      "label": "Misdemeanor",
+                      "formControlName": "div_custq_30586",
+                      "placeholder": "Misdemeanor",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30587",
+                      "type": "textbox",
+                      "label": "Felony",
+                      "formControlName": "div_custq_30587",
+                      "placeholder": "Felony",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30588",
+                  "type": "yesno",
+                  "label": "Are any charges pending against you?",
+                  "formControlName": "custq_30588",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30589",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30589",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30590",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30590",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30591",
+                      "type": "textbox",
+                      "label": "Misdemeanor",
+                      "formControlName": "div_custq_30591",
+                      "placeholder": "Misdemeanor",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30592",
+                      "type": "textbox",
+                      "label": "Felony",
+                      "formControlName": "div_custq_30592",
+                      "placeholder": "Felony",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_30593",
+                  "type": "yesno",
+                  "label": "Has any adjudication of any of the above charges ever been postponed, deferred or withheld?",
+                  "formControlName": "custq_30593",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_30594",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_30594",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30595",
+                      "type": "textbox",
+                      "label": "Court, County, City, State",
+                      "formControlName": "div_custq_30595",
+                      "placeholder": "Court, County, City, State",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_30596",
+                      "type": "textbox",
+                      "label": "Charge",
+                      "formControlName": "div_custq_30596",
+                      "placeholder": "Charge",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                },
+                {
+                  "id": "custq_61943",
+                  "type": "yesno",
+                  "label": "Has your license ever been revoked, suspended, canceled or withdrawn, or have you been denied an operator's license, permit or privilege for any reason (including failure to pay ticket)?",
+                  "formControlName": "custq_61943",
+                  "options": ["Yes", "No"],
+                  "cssClasses": ["form-check"],
+                  "subElements": [
+                    {
+                      "id": "div_custq_61944",
+                      "type": "textbox",
+                      "label": "Date(s)",
+                      "formControlName": "div_custq_61944",
+                      "placeholder": "Date(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    },
+                    {
+                      "id": "div_custq_61945",
+                      "type": "textbox",
+                      "label": "Reason(s)",
+                      "formControlName": "div_custq_61945",
+                      "placeholder": "Reason(s)",
+                      "cssClasses": ["form-control"],
+                      "required": false,
+                      "validation": false
+                    }
+                  ],
+                  "required": false,
+                  "validation": false
+                }
+
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+    },  
+      "app-incident-details": {
+        "id": "app-incident-details",
+        "type": "form",
+        "formGroup": "userForm",
+        "submitAction": "onSubmit",
+        "multiple": true,
+        "pages": {
+          "pagen_0": {
+            "elements": [
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-4"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12"],
+                    "elements": [
+                      {
+                        "id": "heading_incident",
+                        "type": "heading",
+                        "content": "Incident Details",
+                        "cssClasses": ["h3", "text-center", "mb-3"]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-3"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12", "col-md-4"],
+                    "elements": [
+                      {
+                        "id": "Month",
+                        "type": "dropdown",
+                        "label": "Month **",
+                        "required": true,
+                        "validation": true,
+                        "cssClasses": ["form-select"],
+                        "formControlName": "Month",
+                        "options": ["1","2","3","4","5","6","7","8","9","10","11","12"],
+                        "validationMessage": "Month is required."
+                      }
+                    ]
+                  },
+                  {
+                    "cssClasses": ["col-12", "col-md-4"],
+                    "elements": [
+                      {
+                        "id": "Year",
+                        "type": "textbox",
+                        "label": "Year **",
+                        "placeholder": "YYYY",
+                        "required": true,
+                        "validation": "^\\d{4}$",
+                        "cssClasses": ["form-control"],
+                        "formControlName": "Year",
+                        "validationMessage": "Enter a 4‑digit year."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-3"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12", "col-md-6"],
+                    "elements": [
+                      {
+                        "id": "Charge",
+                        "type": "dropdown",
+                        "label": "Charge / Description **",
+                        "required": true,
+                        "validation": true,
+                        "cssClasses": ["form-select"],
+                        "formControlName": "Charge",
+                        "options": [
+                          "Careless/Reckless Driving","Driving Without A License","DUI/OWI",
+                          "Failure to Obey Signal","Following Too Closely","Improper Lane Change",
+                          "Seat Belt","Speeding","Too Fast for Conditions","Violation Resulting from Accident",
+                          "Driving with Suspended License","Failure to Report Accident","Failure to Yield",
+                          "Improper Passing","Improper Turn","Improper Backing","No Insurance / Proof of Insurance",
+                          "Leaving Scene of Accident","Defective Equipment","Hazmat Violation","Lane Violation",
+                          "Overweight","Cell Phone Usage","Texting While Driving","Inattentive Driving",
+                          "Hours of Service","Other"
+                        ],
+                        "validationMessage": "Charge/Description is required."
+                      }
+                    ]
+                  },
+                  {
+                    "cssClasses": ["col-12", "col-md-6"],
+                    "elements": [
+                      {
+                        "id": "mphOverLimit",
+                        "type": "dropdown",
+                        "label": "MPH Over Limit",
+                        "cssClasses": ["form-select"],
+                        "formControlName": "mphOverLimit",
+                        "options": [
+                          "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15",
+                          "16","17","18","19","20","21","22","23","24","25","26","27","28","29","30+"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-3"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12", "col-md-6"],
+                    "elements": [
+                      {
+                        "id": "country",
+                        "type": "countryDropdown",
+                        "label": "Country **",
+                        "required": true,
+                        "validation": true,
+                        "cssClasses": ["form-select"],
+                        "formControlName": "country",
+                        "stateControlName": "state"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-3"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12", "col-md-6"],
+                    "elements": [
+                      {
+                        "id": "cVehicle",
+                        "type": "yesno",
+                        "label": "Were you in a Commercial Vehicle? **",
+                        "required": true,
+                        "cssClasses": ["form-check"],
+                        "formControlName": "cVehicle",
+                        "options": ["Yes", "No"],
+                        "validationMessage": "This field is required."
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-3"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12"],
+                    "elements": [
+                      {
+                        "id": "penaltyHeading",
+                        "type": "heading",
+                        "content": "Penalty / Fine ** (check all that apply)",
+                        "cssClasses": ["h6", "mb-2"]
+                      }
+                    ]
+                  },
+                  {
+                    "cssClasses": ["col-md-3"],
+                    "elements": [
+                      {
+                        "id": "finePenalty",
+                        "type": "checkbox",
+                        "label": "Fine",
+                        "formControlName": "finePenalty",
+                        "cssClasses": ["form-check"]
+                      },
+                      {
+                        "id": "suspensionPenalty",
+                        "type": "checkbox",
+                        "label": "Suspension",
+                        "formControlName": "suspensionPenalty",
+                        "cssClasses": ["form-check"]
+                      }
+                    ]
+                  },
+                  {
+                    "cssClasses": ["col-md-3"],
+                    "elements": [
+                      {
+                        "id": "revocationPenalty",
+                        "type": "checkbox",
+                        "label": "Revocation",
+                        "formControlName": "revocationPenalty",
+                        "cssClasses": ["form-check"]
+                      },
+                      {
+                        "id": "communityServicePenalty",
+                        "type": "checkbox",
+                        "label": "Community Service",
+                        "formControlName": "communityServicePenalty",
+                        "cssClasses": ["form-check"]
+                      }
+                    ]
+                  },
+                  {
+                    "cssClasses": ["col-md-3"],
+                    "elements": [
+                      {
+                        "id": "otherPenalty",
+                        "type": "checkbox",
+                        "label": "Other",
+                        "formControlName": "otherPenalty",
+                        "cssClasses": ["form-check"]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-3"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12", "col-md-4"],
+                    "elements": [
+                      {
+                        "id": "fineAmount",
+                        "type": "dropdown",
+                        "label": "Fine Amount",
+                        "cssClasses": ["form-select"],
+                        "formControlName": "fineAmount",
+                        "options": [
+                          "$0 - $99","$100 - $199","$200 - $299",
+                          "$300 - $399","$400 - $499","$500+"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "row",
+                "cssClasses": ["row", "mb-4"],
+                "columns": [
+                  {
+                    "cssClasses": ["col-12"],
+                    "elements": [
+                      {
+                        "id": "comments",
+                        "type": "textarea",
+                        "label": "Comments (detail if \"Other\")",
+                        "placeholder": "Enter comments",
+                        "cssClasses": ["form-control"],
+                        "formControlName": "comments"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+    }
+  }
+}

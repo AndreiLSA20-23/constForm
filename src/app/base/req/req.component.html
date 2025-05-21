@@ -1,0 +1,93 @@
+<!--req.html-->
+<ng-container *ngIf="storage">
+  <div class="requirements">
+    <h5 class="text-center text-dark mb-4">
+      {{ storage.sampleCmpName }} Owner Operator Minimum Requirements
+    </h5>
+
+    <p>
+      To qualify with <strong>{{ storage.sampleCmpName }}</strong>, you must meet the following criteria:
+    </p>
+
+    <h5 class="text-danger mt-4">Owner Operator Minimum Requirements</h5>
+    <ul>
+      <li>
+        Must be at least {{ storage.age }} years old and hold a valid Class A CDL (or Class B for Expedited)
+        with HazMat (H) or combination (X) endorsement.
+      </li>
+      <li>
+        No more than two at-fault accidents and two moving violations within the past {{storage.felonyConvictions}} months,
+        or no more than one at-fault accident and three moving violations within the same period.
+        No involvement in preventable DOT-recordable accidents in the past 12 months.
+      </li>
+      <li>
+        Must have one year (six months for Expedited) of verifiable OTR driving experience in the past three years,
+        or two years of verifiable experience in the last five years operating equipment similar to what is used at
+        {{ storage.sampleCmpName }}.
+      </li>
+      <li>
+        No felony convictions in the past {{ storage.felonyConvictions }} years.
+        Other felony or misdemeanor charges reviewed case-by-case.
+      </li>
+      <li>No positive drug or alcohol test results, including refusals or pre-employment test results.</li>
+      <li>No suspensions longer than 30 days for moving violations in the past {{storage.felonyConvictions}} months.</li>
+      <li>
+        No more than one serious violation as defined in Table 2 of section 383.51 FMCSR within the last {{storage.felonyConvictions}} months.
+      </li>
+      <li>
+        No railroad-highway grade crossing violations as defined in Table 3 of section 383.51 FMCSR within the last 36
+        months.
+      </li>
+      <li>
+        No citations or convictions for Reckless Driving or Careless Endangerment within the past 36 months.
+      </li>
+      <li>
+        No DUI charges within the last {{storage.felonyConvictions*12}} months (personal or non-commercial vehicle),
+        and never in a commercial vehicle.
+      </li>
+      <li>
+        Must be proficient in English to understand traffic signs and signals, respond to inquiries,
+        complete reports, and communicate with the public.
+      </li>
+    </ul>
+
+    <h5 class="text-danger mt-4">Insurance Requirements</h5>
+    <ul>
+      <li>
+        You must maintain approved insurance levels during your lease with
+        <strong>{{ storage.sampleCmpName }}</strong>, including:
+        <ul>
+          <li>
+            Unladen Liability and Occupational Accident coverage, or Workers' Compensation where required.
+            If you opt out of Unladen Liability or CPP programs, comparable coverage must be provided
+            through an approved insurer.
+          </li>
+          <li>
+            If statutory Workers' Compensation coverage is needed and you do not join the fleet plan,
+            coverage must be maintained through licensed providers with acceptable interstate coverage.
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h5 class="text-danger mt-4">Additional Information</h5>
+    <p>
+      These are minimum qualification standards subject to DOT rules.
+      <strong>{{ storage.sampleCmpName }}</strong> reserves the right to enforce stricter requirements
+      at its discretion. Qualification decisions are made case-by-case.
+    </p>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="loading">
+  <p>Loading data...</p>
+</ng-container>
+
+<ng-container *ngIf="error">
+  <p class="text-danger">Error loading data: {{ error }}</p>
+</ng-container>
+
+<div *ngIf="storage?.dbg" class="mt-4 p-3 bg-light border rounded small text-muted">
+  <h6>Debug Output (Raw JSON):</h6>
+  <pre>{{ storage | json }}</pre>
+</div>

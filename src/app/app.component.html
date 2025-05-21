@@ -1,0 +1,47 @@
+<div>
+  <!-- Main component display without routing -->
+  <ng-container *ngIf="!isPrivacyPolicyVisible">
+    <div class="component-container">
+      <!-- Показываем HistoryForm, если успешно авторизовались -->
+      <app-history *ngIf="showHistoryForm"></app-history>
+
+      <!-- Иначе показываем обычные компоненты -->
+      <ng-container *ngIf="!showHistoryForm">
+        <app-start *ngIf="index === 1"></app-start>
+        <app-req *ngIf="index === 2"></app-req>
+        <app-user-auth *ngIf="index === 3" (authSuccess)="onAuthSuccess()"></app-user-auth>
+      </ng-container>
+    </div>
+
+    <!-- Navigation buttons только если НЕ в HistoryForm -->
+    <div *ngIf="!showHistoryForm && index <= 3" class="navigation-buttons mt-3 d-flex justify-content-start">
+      <button *ngIf="canShowPrev()" (click)="prev()" class="btn btn-secondary me-2">
+        Previous
+      </button>
+      <button *ngIf="canShowNext()" (click)="next()" class="btn btn-primary">
+        Next
+      </button>
+    </div>
+
+    <!-- Hidden components to avoid compiler warnings -->
+    <div class="hidden-components" style="display: none;">
+      <app-start></app-start>
+      <app-req></app-req>
+      <app-user-auth></app-user-auth>
+      <app-history></app-history>
+      <input type="text" appSsnMask />
+    </div>
+
+    <!-- Privacy Policy link -->
+    <div class="privacy-policy-link text-center mt-4">
+      <a (click)="showPrivacyPolicy()" class="text-muted small" style="cursor: pointer;">
+        View Privacy Policy
+      </a>
+    </div>
+  </ng-container>
+
+  <!-- Privacy Policy content -->
+  <ng-container *ngIf="isPrivacyPolicyVisible">
+    <app-privacy-policy (back)="hidePrivacyPolicy()"></app-privacy-policy>
+  </ng-container>
+</div>

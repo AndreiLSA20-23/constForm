@@ -1,0 +1,943 @@
+{
+  "variables": {
+    "felonyConvictionsConst": 7,
+    "sampleCmpAddressConst": "13450 KING RD., LEMONT, IL 630439",
+    "homeHistoryConst": 6,
+    "driveLicHistoryConst": 4,
+    "empHistoryConst": 10,
+    "personPhoneOrgConst": "708-252-3829",
+    "ageConst": 23,
+    "trafficAccidentsConst": 6,
+    "companyNameConst": "GOOD NEWS CARRIER"
+  },
+  "components": {
+    "app-perdates": {
+      "id": "form1",
+      "type": "form",
+      "formGroup": "userForm",
+      "submitAction": "onSubmit",
+      "multiple": false,
+      "pages": {
+        "pagen_0": {
+          "elements": [
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-4"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12"
+                  ],
+                  "elements": [
+                    {
+                      "id": "heading1",
+                      "type": "heading",
+                      "content": "User Information Form",
+                      "cssClasses": [
+                        "h6",
+                        "text-center",
+                        "mb-3"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "dropdown1",
+                      "type": "dropdown",
+                      "label": "Suffix",
+                      "required": true,
+                      "options": [
+                        "Jr.",
+                        "II",
+                        "Sr.",
+                        "III",
+                        "IV",
+                        "V"
+                      ],
+                      "cssClasses": [
+                        "form-select",
+                        "form-select-sm"
+                      ],
+                      "formControlName": "suffix"
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox1",
+                      "type": "textbox",
+                      "label": "First Name*",
+                      "required": true,
+                      "placeholder": "Enter your first name",
+                      "validation": "^[A-Za-z]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "firstName",
+                      "validationMessage": "First Name must contain only letters."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox2",
+                      "type": "textbox",
+                      "label": "Middle Name*",
+                      "required": true,
+                      "placeholder": "Enter your middle name",
+                      "validation": "^[A-Za-z]*$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "middleName"
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox3",
+                      "type": "textbox",
+                      "label": "Last Name",
+                      "required": true,
+                      "placeholder": "Enter your last name",
+                      "validation": "^[A-Za-z]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "lastName",
+                      "validationMessage": "Last Name must contain only letters."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "birthday",
+                      "type": "date",
+                      "label": "Birthday",
+                      "required": true,
+                      "placeholder": "Enter your birthday",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "birthday",
+                      "validationMessage": "Please select a valid date."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "email",
+                      "type": "textbox",
+                      "label": "Email",
+                      "required": true,
+                      "placeholder": "Enter your email",
+                      "validation": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "email",
+                      "validationMessage": "Please enter a valid email address."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "driverLicense",
+                      "type": "textbox",
+                      "label": "Driver License Number",
+                      "required": true,
+                      "placeholder": "Enter your driver license number",
+                      "validation": "^[A-Za-z0-9]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "driverLicense",
+                      "validationMessage": "Driver License Number is required."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "phoneNumber",
+                      "type": "textbox",
+                      "label": "Phone Number",
+                      "required": true,
+                      "placeholder": "Enter your phone number",
+                      "validation": "^\\d+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "phoneNumber",
+                      "validationMessage": "Phone Number must contain only digits."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-md-6"
+                  ],
+                  "elements": [
+                    {
+                      "id": "checkbox2",
+                      "type": "checkbox",
+                      "label": "I confirm that I have read the terms and conditions.",
+                      "required": true,
+                      "defaultValue": false,
+                      "validationMessage": "You must confirm this field.",
+                      "cssClasses": [
+                        "form-check-input"
+                      ],
+                      "formControlName": "termsConfirmation"
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-6"
+                  ],
+                  "elements": [
+                    {
+                      "id": "checkboxPromoEmails",
+                      "type": "checkbox",
+                      "label": "Yes, I agree to receive information concerning future opportunities or promotions by email or other commercial electronic communications.",
+                      "required": true,
+                      "defaultValue": false,
+                      "cssClasses": [
+                        "form-check-input"
+                      ],
+                      "formControlName": "promoEmails"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "app-license-details": {
+      "id": "form2",
+      "type": "form",
+      "formGroup": "userForm",
+      "submitAction": "onSubmit",
+      "multiple": false,
+      "pages": {
+        "pagen_0": {
+          "elements": [
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-4"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12"
+                  ],
+                  "elements": [
+                    {
+                      "id": "heading1",
+                      "type": "heading",
+                      "content": "Add license Information Form",
+                      "cssClasses": [
+                        "h6",
+                        "text-center",
+                        "mb-3"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "textbox1",
+                      "type": "textbox",
+                      "label": "License Number ",
+                      "required": true,
+                      "placeholder": "Enter your License Number",
+                      "validation": "^[A-Za-z0-9]+$",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "licenseNumber",
+                      "validationMessage": "License Number is required and must be alphanumeric."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "dropdown1",
+                      "type": "countryDropdown",
+                      "label": "Country",
+                      "required": true,
+                      "validation": true,
+                      "cssClasses": [
+                        "form-select",
+                        "form-select-sm"
+                      ],
+                      "formControlName": "country"
+                    }
+
+
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "licenseExpirationDate",
+                      "type": "date",
+                      "label": "LicenseExpirationDate",
+                      "required": true,
+                      "validation": true,
+                      "placeholder": "Expiration Date is required.",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "licenseExpirationDate",
+                      "validationMessage": "Please select a valid date."
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-12",
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "medicalExpirationDate",
+                      "type": "date",
+                      "label": "MedicalExpirationDate",
+                      "required": true,
+                      "validation": true,
+                      "placeholder": "Expiration Date is required.",
+                      "cssClasses": [
+                        "form-control"
+                      ],
+                      "formControlName": "medicalExpirationDate",
+                      "validationMessage": "Please select a valid date."
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "row",
+                "mb-3"
+              ],
+              "columns": [
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "currentLicense",
+                      "type": "yesno",
+                      "label": "Current license?",
+                      "required": true,
+                      "validation": true,
+                      "defaultValue": null,
+                      "cssClasses": ["form-check"],
+                      "formControlName": "currentLicense",
+                      "options": ["Yes", "No"],
+                      "validationMessage": "Please select an option.",
+                      "subElements": [
+                        {
+                          "id": "licenseType",
+                          "type": "dropdown",
+                          "validation": true,
+                          "label": "Select your license type",
+                          "formControlName": "licenseType",
+                          "options": [
+                            "Class AZ",
+                            "Class B",
+                            "Class A",
+                            "Class C",
+                            "Class D",
+                            "Class E",
+                            "Class F",
+                            "Class O",
+                            "Class R",
+                            "Class 1",
+                            "Class 2",
+                            "Class 3",
+                            "Class 4",
+                            "Class 5",
+                            "Class A Permit",
+                            "Class B Permit",
+                            "Class G",
+                            "Class G1",
+                            "Class G2",
+                            "Other"
+                          ]
+                        },
+                        {
+                          "id": "licenseIssuedState",
+                          "type": "dropdown",
+                          "validation": true,
+                          "label": "License issued state",
+                          "formControlName": "licenseIssuedState",
+                          "options":  [
+                            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+                            "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+                            "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+                            "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+                            "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+                          ]
+                        },
+                        {
+                          "id": "licenseExpirationDate1",
+                          "type": "date",
+                          "validation": true,
+                          "label": "License expiration date",
+                          "formControlName": "licenseExpirationDate1"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "hazmatLicense",
+                      "type": "yesno",
+                      "label": "Hazmat License ?",
+                      "required": true,
+                      "validation": true,
+                      "options": [
+                        "Yes",
+                        "No"
+                      ],
+                      "cssClasses": [
+                        "form-check"
+                      ],
+                      "formControlName": "hazmatLicense",
+                      "subElements": [
+                        {
+                          "id": "hazmatClass",
+                          "type": "dropdown",
+                          "label": "Select Hazmat Class",
+                          "required": true,
+                          "validation": true,
+                          "cssClasses": [
+                            "form-select"
+                          ],
+                          "formControlName": "hazmatClass",
+                          "options": [
+                            "Class 1 - Explosives",
+                            "Class 2 - Gases",
+                            "Class 3 - Flammable Liquids",
+                            "Class 4 - Flammable Solids",
+                            "Class 5 - Oxidizers and Organic Peroxides",
+                            "Class 6 - Toxic and Infectious Substances",
+                            "Class 7 - Radioactive Materials",
+                            "Class 8 - Corrosives",
+                            "Class 9 - Miscellaneous"
+                          ]
+                        },
+                        {
+                          "id": "effectiveDate",
+                          "type": "date",
+                          "label": "Effective Date",
+                          "required": true,
+                          "validation": true,
+                          "cssClasses": [
+                            "form-control"
+                          ],
+                          "formControlName": "effectiveDate"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "commercialLicense",
+                      "type": "yesno",
+                      "label": "Commercial License ?",
+                      "required": true,
+                      "validation": true,
+                      "options": [
+                        "Yes",
+                        "No"
+                      ],
+                      "cssClasses": [
+                        "form-check"
+                      ],
+                      "formControlName": "commercialLicense"
+                    }
+                  ]
+                },
+                {
+                  "cssClasses": [
+                    "col-md-3"
+                  ],
+                  "elements": [
+                    {
+                      "id": "otherEndorsement",
+                      "type": "checkbox",
+                      "label": "Other",
+                      "formControlName": "otherEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    },
+                    {
+                      "id": "tankerEndorsement",
+                      "type": "checkbox",
+                      "label": "Tanker",
+                      "formControlName": "tankerEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    },
+                    {
+                      "id": "doublesTriplesEndorsement",
+                      "type": "checkbox",
+                      "label": "Doubles/Triples",
+                      "formControlName": "doublesTriplesEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    },
+                    {
+                      "id": "xEndorsement",
+                      "type": "checkbox",
+                      "label": "X Endorsement",
+                      "formControlName": "xEndorsement",
+                      "cssClasses": [
+                        "form-check"
+                      ]
+                    }
+                  ]
+                }
+
+              ]
+            },
+            {
+              "type": "row",
+              "cssClasses": [
+                "d-flex",
+                "align-items-center",
+                "mb-3"
+              ]
+            }
+          ]
+        }
+      }
+    },
+     "app-driver-training": {
+    "id": "form_driver_training",
+    "type": "form",
+    "formGroup": "userForm",
+    "submitAction": "onSubmit",
+    "multiple": true,
+    "pages": {
+      "pagen_0": {
+        "elements": [
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-4"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "heading1",
+                    "type": "heading",
+                    "content": "Driver Training Form",
+                    "cssClasses": ["h3", "text-center", "mb-3"]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "startDate",
+                    "type": "date",
+                    "label": "Start Date *",
+                    "placeholder": "MM/DD/YYYY",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "startDate",
+                    "validationMessage": "Start Date is required."
+                  
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "endDate",
+                    "type": "date",
+                    "label": "End Date *",
+                    "placeholder": "If currently in school, enter current month/year",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "endDate",
+                    "validationMessage": "End Date is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "province",
+                    "type": "textbox",
+                    "label": "Province * (where school is located)",
+                    "required": true,
+                    "placeholder": "Enter state or province",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "province",
+                    "validationMessage": "State/Province is required.",
+                    "validation": "^[a-zA-Z\\s]{2,}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "schoolName",
+                    "type": "textbox",
+                    "label": "School Name *",
+                    "required": true,
+                    "validation": "^.+$",
+                    "placeholder": "Enter school name",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "schoolName",
+                    "validationMessage": "School Name is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "telephone",
+                    "type": "textbox",
+                    "label": "Telephone",
+                    "required": true,
+                    "placeholder": "Enter telephone number",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "telephone",
+                    "validation": "^\\+?\\d{7,15}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "address",
+                    "type": "textbox",
+                    "label": "Address",
+                    "required": true,
+                    "placeholder": "Enter address",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "address",
+                    "validationMessage": "Enter address.",
+                    "validation": "^[a-zA-Z\\s]{2,}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "address2",
+                    "type": "textbox",
+                    "label": "Address 2",
+                    "placeholder": "Apartment, suite, etc. (optional)",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "address2"
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "city",
+                    "type": "textbox",
+                    "label": "City *",
+                    "required": true,
+                    "placeholder": "Enter city",
+                    "cssClasses": ["form-control"],
+                    "formControlName": "city",
+                    "validationMessage": "City is required.",
+                    "validation": "^[a-zA-Z\\s]{2,}$"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "country",
+                    "type": "countryDropdown",
+                    "label": "Country *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "country",
+                    "stateControlName": "state",
+                    "validationMessage": "Country is required."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "didGraduate",
+                    "type": "dropdown",
+                    "label": "Did you graduate? *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "didGraduate",
+                    "options": ["Yes", "No"],
+                    "validationMessage": "This field is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "subjectToRegulations",
+                    "type": "dropdown",
+                    "label": "Were you subject to the Federal Motor Carrier or Transport Canada Safety Regulations while attending this truck school? *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "subjectToRegulations",
+                    "options": ["Yes", "No"],
+                    "validationMessage": "This field is required."
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-4"],
+                "elements": [
+                  {
+                    "id": "safetySensitive",
+                    "type": "dropdown",
+                    "label": "Did you perform any safety sensitive functions at this truck school, regulated by DOT, and subject to drug and alcohol testing? *",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "safetySensitive",
+                    "options": ["Yes", "No"],
+                    "validationMessage": "This field is required."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-3"],
+            "columns": [
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "gpa",
+                    "type": "textbox",
+                    "label": "GPA",
+                    "placeholder": "Enter GPA",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "gpa"
+                  }
+                ]
+              },
+              {
+                "cssClasses": ["col-12", "col-md-6"],
+                "elements": [
+                  {
+                    "id": "instructionHours",
+                    "type": "textbox",
+                    "label": "Hours of Instruction",
+                    "placeholder": "Enter total hours",
+                    "required": true,
+                    "cssClasses": ["form-control"],
+                    "formControlName": "instructionHours"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "row",
+            "cssClasses": ["row", "mb-4"],
+            "columns": [
+              {
+                "cssClasses": ["col-12"],
+                "elements": [
+                  {
+                    "id": "skillsTrained",
+                    "type": "multiselect",
+                    "label": "Which of the following skills were trained in your program? (Select all that apply)",
+                    "required": true,
+                    "cssClasses": ["form-select"],
+                    "formControlName": "skillsTrained",
+                    "options": [
+                      "200+",
+                      "Border Crossing",
+                      "Log Books",
+                      "Federal Motor Carrier Regulations",
+                      "Hazardous Materials"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+    }
+}
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Employment Application for {{ ssn }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; font-size: 14px; }
+    h1, h2, h3 { border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+    .block { margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #aaa; padding: 5px; text-align: left; }
+    ul { padding-left: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Employment Application</h1>
+
+  <div class="block">
+    <h2>Personal Information</h2>
+    <p><strong>Name:</strong> {{ data['app-perdates'].firstName }} {{ data['app-perdates'].middleName }} {{ data['app-perdates'].lastName }}</p>
+    <p><strong>Birthday:</strong> {{ data['app-perdates'].birthday }}</p>
+    <p><strong>Email:</strong> {{ data['app-perdates'].email }}</p>
+    <p><strong>Phone:</strong> {{ data['app-perdates'].phoneNumber }}</p>
+  </div>
+
+  <div class="block">
+    <h2>License Details</h2>
+    {% set lic = data['app-license-details'] %}
+    <p><strong>License #:</strong> {{ lic.licenseNumber }} ({{ lic.country }})</p>
+    <p><strong>Expiration:</strong> {{ lic.licenseExpirationDate }}</p>
+    <p><strong>Medical Expiration:</strong> {{ lic.medicalExpirationDate }}</p>
+    <p><strong>Class:</strong> {{ lic.currentLicense.licenseType }} ({{ lic.currentLicense.licenseIssuedState }})</p>
+    <p><strong>Hazmat:</strong> {{ lic.hazmatLicense.hazmatClass }} from {{ lic.hazmatLicense.effectiveDate }}</p>
+    <p><strong>Commercial:</strong> {{ lic.commercialLicense.value }}</p>
+    <p><strong>Endorsements:</strong>
+      {% if lic.tankerEndorsement %} Tanker {% endif %}
+      {% if lic.doublesTriplesEndorsement %} Doubles/Triples {% endif %}
+      {% if lic.xEndorsement %} X {% endif %}
+    </p>
+  </div>
+
+  <div class="block">
+    <h2>Driver Training</h2>
+    <table>
+      <tr><th>School</th><th>City</th><th>Country</th><th>Start</th><th>End</th><th>GPA</th></tr>
+      {% for item in data['app-driver-training']['items'] %}
+      <tr>
+        <td>{{ item.schoolName }}</td>
+        <td>{{ item.city }}</td>
+        <td>{{ item.country }}</td>
+        <td>{{ item.startDate }}</td>
+        <td>{{ item.endDate }}</td>
+        <td>{{ item.gpa }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="block">
+    <h2>Addresses</h2>
+    <table>
+      <tr><th>Country</th><th>City</th><th>From</th><th>To</th></tr>
+      {% for addr in data['add-address'] %}
+      <tr>
+        <td>{{ addr.country }}</td>
+        <td>{{ addr.city }}</td>
+        <td>{{ addr.startDate }}</td>
+        <td>{{ addr.endDate }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="block">
+    <h2>Experience History</h2>
+    <ul>
+      {% for exp in data['experience-history'] %}
+        <li><strong>{{ exp.type|capitalize }}</strong> ({{ exp.startDate }} to {{ exp.endDate }})</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="block">
+    <h2>Full Application Details</h2>
+    <pre>{{ data['app-full-res'] | tojson(indent=2) }}</pre>
+  </div>
+
+</body>
+</html>
